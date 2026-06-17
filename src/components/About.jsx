@@ -5,22 +5,22 @@ const About = () => {
   const skills = [
     {
       category: "Skills",
-      icon: "/public/icon/skill.png", // ganti dengan logo frontend
+      icon: "/icon/skill.png", // ganti dengan logo frontend
       items: [
-        { name: "React", logo: "/public/icon/react.png" },
-        { name: "Tailwind", logo: "/public/icon/tailwind.png" },
-        { name: "JavaScript", logo: "/public/icon/js.png" },
-        { name: "HTML5", logo: "/public/icon/html.png" },
-        { name: "CSS3", logo: "/public/icon/css.png" },
+        { name: "React", logo: "/icon/react.png" },
+        { name: "Tailwind", logo: "/icon/tailwind.png" },
+        { name: "JavaScript", logo: "/icon/js.png" },
+        { name: "HTML5", logo: "/icon/html.png" },
+        { name: "CSS3", logo: "/icon/css.png" },
       ],
     },
     {
       category: "Tools",
-      icon: "/public/icon/tool.png", // ganti dengan logo tools/devops
+      icon: "/icon/tool.png", // ganti dengan logo tools/devops
       items: [
-        { name: "GitHub", logo: "/public/icon/github.png" },
-        { name: "Vercel", logo: "/public/icon/vercel.png" },
-        { name: "VS Code", logo: "/public/icon/vsc.png" },
+        { name: "GitHub", logo: "/icon/github.png" },
+        { name: "Vercel", logo: "/icon/vercel.png" },
+        { name: "VS Code", logo: "/icon/vsc.png" },
       ],
     },
   ];
