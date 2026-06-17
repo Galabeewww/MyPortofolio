@@ -53,7 +53,7 @@ const Hero = () => {
           </div> */}
 
           {/* Judul Utama */}
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight font-display text-white leading-[1.1]">
+          <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight font-display text-white leading-[1.1] break-words">
             Halooo , <br />
             <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
               Saya Muhammad Abi Rafdi Pratama
@@ -89,11 +89,11 @@ const Hero = () => {
           </div>
 
           {/* Link Media Sosial */}
-          <div className="flex items-center gap-4 pt-6 text-slate-400">
+          <div className="flex flex-wrap items-center gap-4 pt-6 text-slate-400">
             <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
               Temukan saya:
             </span>
-            <div className="h-[1px] w-8 bg-slate-700"></div>
+            <div className="h-[1px] w-8 bg-slate-700 hidden sm:block"></div>
             <a
               href="https://github.com/Galabeewww"
               target="_blank"
@@ -139,7 +139,7 @@ const Hero = () => {
               <img
                 src="/foto.jpg" // ganti dengan path gambar kamu
                 alt="Foto Profil"
-                className="rounded-lg w-100 h-100 object-cover border border-slate-500"
+                className="rounded-lg w-full h-auto aspect-square object-cover border border-slate-500"
               />
               {/* <div>
                 <span className="text-purple-400">const</span>{" "}
