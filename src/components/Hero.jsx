@@ -137,7 +137,7 @@ const Hero = () => {
 
             <div className="space-y-4 font-mono text-xs text-slate-300 text-left">
               <img
-                src="src/assets/foto.jpg" // ganti dengan path gambar kamu
+                src="/public/foto.jpg" // ganti dengan path gambar kamu
                 alt="Foto Profil"
                 className="rounded-lg w-100 h-100 object-cover border border-slate-500"
               />

@@ -5,22 +5,22 @@ const About = () => {
   const skills = [
     {
       category: "Skills",
-      icon: "/src/assets/icon/skill.png", // ganti dengan logo frontend
+      icon: "/public/icon/skill.png", // ganti dengan logo frontend
       items: [
-        { name: "React", logo: "/src/assets/icon/react.png" },
-        { name: "Tailwind", logo: "/src/assets/icon/tailwind.png" },
-        { name: "JavaScript", logo: "/src/assets/icon/js.png" },
-        { name: "HTML5", logo: "/src/assets/icon/html.png" },
-        { name: "CSS3", logo: "/src/assets/icon/css.png" },
+        { name: "React", logo: "/public/icon/react.png" },
+        { name: "Tailwind", logo: "/public/icon/tailwind.png" },
+        { name: "JavaScript", logo: "/public/icon/js.png" },
+        { name: "HTML5", logo: "/public/icon/html.png" },
+        { name: "CSS3", logo: "/public/icon/css.png" },
       ],
     },
     {
       category: "Tools",
-      icon: "/src/assets/icon/tool.png", // ganti dengan logo tools/devops
+      icon: "/public/icon/tool.png", // ganti dengan logo tools/devops
       items: [
-        { name: "GitHub", logo: "/src/assets/icon/github.png" },
-        { name: "Vercel", logo: "/src/assets/icon/vercel.png" },
-        { name: "VS Code", logo: "/src/assets/icon/vsc.png" },
+        { name: "GitHub", logo: "/public/icon/github.png" },
+        { name: "Vercel", logo: "/public/icon/vercel.png" },
+        { name: "VS Code", logo: "/public/icon/vsc.png" },
       ],
     },
   ];
