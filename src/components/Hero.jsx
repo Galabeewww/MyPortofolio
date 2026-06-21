@@ -53,23 +53,21 @@ const Hero = () => {
           </div> */}
 
           {/* Judul Utama */}
-          <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight font-display text-white leading-[1.1] break-words">
+          <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight font-display text-white leading-[1.1] break-words animate-fadeInUp">
             Halooo , <br />
-            <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent animate-fadeInUp">
               Saya Muhammad Abi Rafdi Pratama
             </span>
           </h1>
 
           {/* Deskripsi */}
-          <p className="text-slate-400 text-lg max-w-xl leading-relaxed">
-            ✨ Halo! Saya Abi, Junior Web Programmer pemula yang suka explorasi
-            untuk menciptakan website . Selain itu, saya juga tertarik dengan
-            Quality Assurance (QA) untuk memastikan aplikasi yang saya
-            kembangkan memiliki kualitas dan keandalan yang tinggi.
-          </p>
+          {/* Deskripsi */}
+          <h3 className="text-slate-400 text-2xl max-w-xl leading-relaxed opacity-0 animate-fadeInUp">
+            Junior Web Developer & QA Tester
+          </h3>
 
           {/* Tombol Aksi */}
-          <div className="flex flex-wrap gap-4 pt-2">
+          <div className="flex flex-wrap gap-4 pt-2 animate-fadeInUp">
             <a
               href="#projects"
               className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-semibold text-sm shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300 group"
@@ -89,7 +87,7 @@ const Hero = () => {
           </div>
 
           {/* Link Media Sosial */}
-          <div className="flex flex-wrap items-center gap-4 pt-6 text-slate-400">
+          <div className="flex flex-wrap items-center gap-4 pt-6 text-slate-400 animate-fadeInUp">
             <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
               Temukan saya:
             </span>
@@ -135,7 +133,7 @@ const Hero = () => {
               <span className="text-xs text-slate-500 font-mono">image.js</span>
             </div>
 
-            <div className="space-y-4 font-mono text-xs text-slate-300 text-left">
+            <div className="space-y-4 font-mono text-xs text-slate-300 text-left ">
               <img
                 src="/foto.jpg" // ganti dengan path gambar kamu
                 alt="Foto Profil"

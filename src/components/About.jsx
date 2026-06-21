@@ -1,5 +1,4 @@
 import React from "react";
-import { Terminal, Cpu } from "lucide-react";
 
 const About = () => {
   const skills = [
@@ -8,10 +7,13 @@ const About = () => {
       icon: "/icon/skill.png", // ganti dengan logo frontend
       items: [
         { name: "React", logo: "/icon/react.png" },
-        { name: "Tailwind", logo: "/icon/tailwind.png" },
         { name: "JavaScript", logo: "/icon/js.png" },
+        { name: "Php", logo: "/icon/php.png" },
+        { name: "Bootstrap", logo: "/icon/icb.png" },
+        { name: "Tailwind", logo: "/icon/tailwind.png" },
         { name: "HTML5", logo: "/icon/html.png" },
         { name: "CSS3", logo: "/icon/css.png" },
+        { name: "MySQL", logo: "/icon/mysql.png" },
       ],
     },
     {
@@ -21,6 +23,8 @@ const About = () => {
         { name: "GitHub", logo: "/icon/github.png" },
         { name: "Vercel", logo: "/icon/vercel.png" },
         { name: "VS Code", logo: "/icon/vsc.png" },
+        { name: "Postman", logo: "/icon/postman.png" },
+        { name: "Figma", logo: "/icon/figma.png" },
       ],
     },
   ];
@@ -36,76 +40,46 @@ const About = () => {
           </span>
         </h2>
         <p className="text-slate-400 text-sm sm:text-base leading-relaxed">
+          Halooo, Saya Abi, Junior Web Developer pemula yang suka explorasi
+          untuk menciptakan website . Selain itu, saya juga tertarik dengan
+          Quality Assurance (QA) untuk memastikan aplikasi yang saya kembangkan
+          memiliki kualitas dan keandalan yang tinggi.
+        </p>
+        {/* <p className="text-slate-400 text-sm sm:text-base leading-relaxed">
           Saya orang yang sangat senang mempelajari teknologi baru dan
           bereksperimen dengan teknologi yang sedang berkembang pada saat ini.
-        </p>
+        </p> */}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-        {/* Cerita Singkat */}
-        <div className="lg:col-span-5 text-left space-y-6">
-          {/* Latar Belakang */}
-          <div className="glass-panel p-8 rounded-2xl border border-white/5 relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-2 h-full bg-gradient-to-b from-indigo-500 to-purple-500"></div>
-            <div className="flex items-center gap-3 mb-4 text-white font-bold text-lg">
-              <Terminal size={20} className="text-indigo-400" />
-              <span>Latar Belakang</span>
-            </div>
-            <p className="text-slate-300 text-sm leading-relaxed mb-4">
-              Saya adalah lulusan Teknik Informatika Universitas Komputer
-              Indonesia (UNIKOM) dengan minat besar di bidang Web Development
-              dan Quality Assurance (QA).
-            </p>
-          </div>
-
-          {/* Tujuan Karir */}
-          <div className="glass-panel p-8 rounded-2xl border border-white/5 relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-2 h-full bg-gradient-to-b from-purple-500 to-cyan-500"></div>
-            <div className="flex items-center gap-3 mb-4 text-white font-bold text-lg">
-              <Cpu size={20} className="text-purple-400" />
-              <span>Tujuan Karir</span>
-            </div>
-            <p className="text-slate-300 text-sm leading-relaxed">
-              Fokus saya adalah mengasah kemampuan Frontend, belajar Backend
-              (Node.js/Express) untuk menjadi Full-Stack Developer, serta
-              memperdalam minat di bidang Quality Assurance (QA).
-            </p>
-          </div>
-        </div>
-
-        {/* Skills dengan Logo */}
-        <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-6 text-left">
-          {skills.map((skillGroup, index) => (
-            <div
-              key={index}
-              className="glow-card rounded-2xl p-6 flex flex-col justify-between"
-            >
-              <div>
-                <div className="flex items-center gap-3 mb-6">
-                  <img
-                    src={skillGroup.icon}
-                    alt={skillGroup.category}
-                    className="w-8 h-8"
-                  />
-                  <h3 className="font-bold text-white text-base sm:text-lg font-display">
-                    {skillGroup.category}
-                  </h3>
-                </div>
-                <br />
-                <div className="flex flex-wrap gap-4">
-                  {skillGroup.items.map((skill, sIdx) => (
+      {/* Skills & Tools - Tanpa Card, Semua Ikon Berjajar di Tengah */}
+      <div className="max-w-3xl mx-auto text-center space-y-7">
+        {skills.map((skillGroup, index) => (
+          <div key={index}>
+            <h3 className="text-lg font-semibold uppercase tracking-widest text-slate-300 mb-6">
+              {skillGroup.category}
+            </h3>
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-5 justify-center">
+              {skillGroup.items.map((skill, sIdx) => (
+                <div
+                  key={sIdx}
+                  className="flex flex-col items-center gap-2 group"
+                >
+                  <div className="p-3 rounded-xl bg-white/5 border border-white/15 group-hover:bg-indigo-500/10 group-hover:border-indigo-500/20 transition-all duration-300">
                     <img
-                      key={sIdx}
                       src={skill.logo}
                       alt={skill.name}
-                      className="w-10 h-10"
+                      title={skill.name}
+                      className="w-13 h-13 group-hover:scale-110 transition-transform duration-300"
                     />
-                  ))}
+                  </div>
+                  <span className="text-xs text-slate-400 group-hover:text-indigo-300 font-medium transition-colors duration-300">
+                    {skill.name}
+                  </span>
                 </div>
-              </div>
+              ))}
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
     </section>
   );

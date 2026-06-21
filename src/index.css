@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-  --font-display: 'Outfit', system-ui, -apple-system, sans-serif;
+  --font-sans: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+  --font-display: "Outfit", system-ui, -apple-system, sans-serif;
 }
 
 /* Kustomisasi scrollbar modern */
@@ -29,30 +29,30 @@ html {
 
 body {
   font-family: var(--font-sans);
-  background-color: #0b0f19; /* Latar belakang gelap premium */
+  background-color: #0f172a; /* Latar belakang gelap yang lebih cerah (slate-900) */
   color: #e2e8f0;
   overflow-x: hidden;
 }
 
 /* Desain Glassmorphism & kartu bercahaya */
 .glass-panel {
-  background: rgba(15, 23, 42, 0.6);
+  background: rgba(30, 41, 59, 0.55); /* Lebih cerah menggunakan slate-800 */
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .glow-card {
   position: relative;
-  background: rgba(17, 24, 39, 0.5);
+  background: rgba(30, 41, 59, 0.45); /* Lebih cerah */
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .glow-card::before {
-  content: '';
+  content: "";
   position: absolute;
   inset: -1px;
   background: linear-gradient(45deg, #6366f1, #a855f7, #06b6d4);
@@ -75,14 +75,15 @@ body {
 /* Background grid hiasan */
 .bg-grid-pattern {
   background-size: 40px 40px;
-  background-image: 
+  background-image:
     linear-gradient(to right, rgba(255, 255, 255, 0.015) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
 }
 
 /* Animasi mengapung lambat */
 @keyframes float {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0px);
   }
   50% {
@@ -92,4 +93,23 @@ body {
 
 .animate-float {
   animation: float 6s ease-in-out infinite;
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeInUp {
+  animation: fadeInUp 3s ease-out forwards;
+}
+
+.font-minecraft {
+  font-family: "Minecraftia", sans-serif;
 }
