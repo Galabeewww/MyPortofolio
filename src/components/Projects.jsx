@@ -92,7 +92,7 @@ const Projects = () => {
       ],
       // liveLink: "https://example.com",
       githubLink: "https://github.com",
-      image: "/dist/project/backbone.jpg",
+      image: "/project/backbone.jpg",
       icon: <CheckSquare className="text-indigo-400" size={32} />,
     },
     {
