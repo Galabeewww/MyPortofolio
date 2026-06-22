@@ -66,15 +66,23 @@ const Projects = () => {
       ],
       // liveLink: "https://example.com",
       githubLink: "https://github.com",
-      image: "/project/olt.jpg",
+      image: "/dist/project/olt.jpg",
       icon: <ShoppingBag className="text-cyan-400" size={32} />,
     },
     {
-      title: "Task Management App",
+      title: "BACKBONE OLT",
       description:
         "Aplikasi produktivitas untuk mengelola tugas harian. Memiliki fitur tambah tugas, coret tugas selesai, filter status (Aktif/Selesai), dan penyimpanan data lokal (LocalStorage).",
-      category: "Frontend",
-      tech: ["React JS", "Tailwind CSS", "LocalStorage"],
+      category: "WEB",
+      tech: [
+        "PHP",
+        "JavaScript",
+        "HTML 5",
+        "CSS 3",
+        "Bootstrap 5",
+        "Laravel",
+        "Mapbox API",
+      ],
       features: [
         "Tambah, edit, dan hapus tugas harian",
         "Tandai tugas selesai dengan coretan visual",
@@ -84,7 +92,7 @@ const Projects = () => {
       ],
       // liveLink: "https://example.com",
       githubLink: "https://github.com",
-      image: "/project/react.png",
+      image: "/dist/project/backbone.jpg",
       icon: <CheckSquare className="text-indigo-400" size={32} />,
     },
     {
