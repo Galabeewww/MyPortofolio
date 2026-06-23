@@ -58,11 +58,21 @@ const Navbar = () => {
               </a>
             ))}
             <a
-              href="#contact"
-              className="px-5 py-2 rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white text-sm font-medium shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/35 hover:scale-105 active:scale-95 transition-all duration-300"
+              href="/cv.pdf"
+              download
+              onClick={() => setIsOpen(false)}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-semibold text-sm shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300 group"
             >
-              Hire Me
+              Resume
             </a>
+            {/* <a
+              href="/cv.pdf"
+              download
+              onClick={() => setIsOpen(false)}
+              className="block w-full text-center py-2.5 rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-medium text-sm transition-all duration-300"
+            >
+              Resume
+            </a> */}
           </div>
 
           {/* Mobile Menu Button */}
@@ -82,7 +92,7 @@ const Navbar = () => {
       <div
         className={`md:hidden absolute top-full left-0 w-full glass-panel border-b border-white/5 shadow-2xl transition-all duration-300 overflow-hidden ${
           isOpen
-            ? "max-h-64 opacity-100"
+            ? "max-h-80 opacity-100"
             : "max-h-0 opacity-0 pointer-events-none"
         }`}
       >
@@ -97,15 +107,24 @@ const Navbar = () => {
               {link.name}
             </a>
           ))}
+
           <div className="px-3 pt-2">
             <a
+              href="/cv.pdf"
+              download
+              onClick={() => setIsOpen(false)}
+              className="block w-full text-center py-2.5 rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-medium text-sm transition-all duration-300"
+            >
+              Resume
+            </a>
+          </div>
+          {/* <a
               href="#contact"
               onClick={() => setIsOpen(false)}
               className="block w-full text-center py-2.5 rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-medium text-sm transition-all duration-300"
             >
               Hire Me
-            </a>
-          </div>
+            </a> */}
         </div>
       </div>
     </nav>

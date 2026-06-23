@@ -11,15 +11,9 @@ const About = () => {
         { name: "Php", logo: "/icon/php.png" },
         { name: "Bootstrap", logo: "/icon/icb.png" },
         { name: "Tailwind", logo: "/icon/tailwind.png" },
-        { name: "HTML5", logo: "/icon/html.png" },
+        { name: "HTML5", logo: "/icon/html-5.png" },
         { name: "CSS3", logo: "/icon/css.png" },
         { name: "MySQL", logo: "/icon/mysql.png" },
-      ],
-    },
-    {
-      category: "Tools",
-      icon: "/icon/tool.png", // ganti dengan logo tools/devops
-      items: [
         { name: "GitHub", logo: "/icon/github.png" },
         { name: "Vercel", logo: "/icon/vercel.png" },
         { name: "VS Code", logo: "/icon/vsc.png" },
@@ -27,6 +21,17 @@ const About = () => {
         { name: "Figma", logo: "/icon/figma.png" },
       ],
     },
+    // {
+    //   category: "Tools",
+    //   icon: "/icon/tool.png", // ganti dengan logo tools/devops
+    //   items: [
+    //     { name: "GitHub", logo: "/icon/github.png" },
+    //     { name: "Vercel", logo: "/icon/vercel.png" },
+    //     { name: "VS Code", logo: "/icon/vsc.png" },
+    //     { name: "Postman", logo: "/icon/postman.png" },
+    //     { name: "Figma", logo: "/icon/figma.png" },
+    //   ],
+    // },
   ];
 
   return (
@@ -58,7 +63,7 @@ const About = () => {
             <h3 className="text-lg font-semibold uppercase tracking-widest text-slate-300 mb-6">
               {skillGroup.category}
             </h3>
-            <div className="grid grid-cols-2 sm:grid-cols-5 gap-5 justify-center">
+            <div className="grid grid-cols-3 sm:grid-cols-5 gap-3 sm:gap-5 justify-center">
               {skillGroup.items.map((skill, sIdx) => (
                 <div
                   key={sIdx}
@@ -69,7 +74,7 @@ const About = () => {
                       src={skill.logo}
                       alt={skill.name}
                       title={skill.name}
-                      className="w-13 h-13 group-hover:scale-110 transition-transform duration-300"
+                      className="w-16 h-16 group-hover:scale-110 transition-transform duration-300"
                     />
                   </div>
                   <span className="text-xs text-slate-400 group-hover:text-indigo-300 font-medium transition-colors duration-300">

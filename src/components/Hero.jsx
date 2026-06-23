@@ -45,7 +45,8 @@ const Hero = () => {
     >
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
         {/* Konten Kiri (Teks & Tombol) */}
-        <div className="lg:col-span-7 space-y-6 text-left relative z-10">
+
+        <div className="lg:col-span-7 space-y-6 text-left relative z-10 order-2 lg:order-1">
           {/* Badge Status */}
           {/* <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 text-xs font-semibold tracking-wide uppercase">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
@@ -118,12 +119,14 @@ const Hero = () => {
         </div>
 
         {/* Konten Kanan (Visual / Mockup Kartu Interaktif) */}
-        <div className="lg:col-span-5 relative flex justify-center items-center z-10 lg:mt-0 mt-8">
+        {/* <div className="lg:col-span-5 relative flex justify-center items-center z-10 lg:mt-0 mt-8"> */}
+        <div className="lg:col-span-5 relative flex justify-center items-center z-10 lg:mt-0 mt-8 order-1 lg:order-2">
           {/* Hiasan Cahaya Belakang */}
           <div className="absolute w-72 h-72 rounded-full bg-indigo-500/15 blur-[60px] animate-pulse"></div>
 
           {/* Kartu Profil Interaktif (Aset UI Premium) */}
-          <div className="w-full max-w-[380px] glow-card rounded-2xl p-6 relative overflow-hidden animate-float">
+          {/* <div className="w-full max-w-[380px] glow-card rounded-2xl p-6 relative overflow-hidden animate-float"> */}
+          <div className="w-full max-w-[300px] sm:max-w-[380px] glow-card rounded-2xl p-6 relative overflow-hidden animate-float">
             <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-6">
               <div className="flex items-center gap-1.5">
                 <span className="w-3 h-3 rounded-full bg-rose-500"></span>
