@@ -179,7 +179,8 @@ const Hero = () => {
       </div>
 
       {/* Indikator Scroll Down */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-slate-500 hover:text-indigo-400 transition-colors duration-300 z-10 cursor-pointer">
+      {/* <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-slate-500 hover:text-indigo-400 transition-colors duration-300 z-10 cursor-pointer"> */}
+      <div className="relative mt-10 sm:absolute sm:bottom-8 sm:left-1/2 sm:-translate-x-1/2 flex flex-col items-center gap-2 text-slate-500 hover:text-indigo-400 transition-colors duration-300 z-10 cursor-pointer">
         <span className="text-[10px] uppercase tracking-widest font-semibold">
           Scroll Down
         </span>
