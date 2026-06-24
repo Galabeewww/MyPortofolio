@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Menu, X, Code2 } from "lucide-react";
+import { Menu, X, Code2, Download } from "lucide-react";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -64,6 +64,7 @@ const Navbar = () => {
               className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-semibold text-sm shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300 group"
             >
               Resume
+              <Download size={18} />
             </a>
             {/* <a
               href="/cv.pdf"
@@ -113,11 +114,27 @@ const Navbar = () => {
               href="/cv.pdf"
               download
               onClick={() => setIsOpen(false)}
-              className="block w-full text-center py-2.5 rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-medium text-sm transition-all duration-300"
+              className="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg 
+               bg-gradient-to-r from-indigo-600 to-purple-600 
+               hover:from-indigo-500 hover:to-purple-500 
+               text-white font-medium text-sm transition-all duration-300"
             >
               Resume
+              <Download size={18} className="text-white" />
             </a>
           </div>
+
+          {/* <div className="px-3 pt-2">
+            <a
+              href="/cv.pdf"
+              download
+              onClick={() => setIsOpen(false)}
+              className="block w-full text-center py-2.5 rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-medium text-sm transition-all duration-300"
+            >
+              CV
+              <Download size={18} />
+            </a>
+          </div> */}
           {/* <a
               href="#contact"
               onClick={() => setIsOpen(false)}

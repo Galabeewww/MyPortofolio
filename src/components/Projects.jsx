@@ -60,7 +60,7 @@ const Projects = () => {
       features: [
         "GIS-Based Visualization",
         "Real-Time Project Monitoring",
-        "ntegrated Data Management",
+        "Integrated Data Management",
         "Operational Efficiency Tools",
       ],
       // liveLink: "https://example.com",
@@ -195,7 +195,35 @@ const Projects = () => {
   return (
     <section id="projects" className="py-24 relative border-t border-white/5">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-center max-w-6xl mx-auto mb-16 gap-6 px-4">
+      <div className="max-w-6xl mx-auto mb-16 px-4">
+        {/* Heading + Paragraf di tengah */}
+        <div className="flex flex-col items-center text-center space-y-4">
+          <h2 className="text-3xl sm:text-4xl font-bold font-display text-white">
+            Proyek{" "}
+            <span className="bg-gradient-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent">
+              Pilihan
+            </span>
+          </h2>
+          <p className="text-slate-400 text-sm sm:text-base leading-relaxed">
+            Berikut adalah beberapa proyek yang telah saya rancang dan bangun.
+          </p>
+        </div>
+
+        {/* Tombol View All di bawah, menempel ke kanan */}
+        <div className="flex justify-end mt-6">
+          <button
+            onClick={() => {
+              setViewAll(!viewAll);
+              setStartIndex(0);
+            }}
+            className="px-5 py-2.5 rounded-full bg-white/5 hover:bg-white/10 text-cyan-400 hover:text-cyan-300 border border-white/10 text-sm font-semibold transition cursor-pointer active:scale-95 duration-200"
+          >
+            {viewAll ? "Hide Slider" : "View All"}
+          </button>
+        </div>
+      </div>
+      {/* Header */}
+      {/* <div className="flex flex-col sm:flex-row justify-between items-center max-w-6xl mx-auto mb-16 gap-6 px-4">
         <div className="text-center sm:text-left space-y-4">
           <h2 className="text-3xl sm:text-4xl font-bold font-display text-white">
             Proyek{" "}
@@ -217,7 +245,7 @@ const Projects = () => {
         >
           {viewAll ? "Hide Slider" : "View All"}
         </button>
-      </div>
+      </div> */}
 
       {/* Kontainer Slider Utama dengan Panah di Kiri dan Kanan */}
       <div className="relative max-w-7xl mx-auto px-12 md:px-16 flex items-center justify-center">
