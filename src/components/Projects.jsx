@@ -1,5 +1,5 @@
 import {
-  // ExternalLink,
+  ExternalLink,
   // ShoppingBag,
   // CheckSquare,
   // CloudSun,
@@ -43,6 +43,47 @@ const truncateTitle = (title, maxLen = 25) => truncateText(title, maxLen);
 
 const Projects = () => {
   const projects = [
+    {
+      title: "Lensfolio",
+      description:
+        "Lensfolio adalah sebuah web platform yang dirancang untuk memudahkan pengguna dalam mengunggah dan menampilkan portofolio foto maupun video. Tujuannya adalah memberikan pengalaman berbagi visual yang rapi, terorganisir, dan fleksibel, baik untuk koleksi pribadi maupun portofolio kreatif.",
+      category: "WEB",
+      tech: [
+        "Typescript",
+        "NextJS",
+        "Tailwind",
+        "Cloudinary",
+        "Supabase",
+        "PostgreSQL",
+        "Vercel",
+      ],
+      features: [
+        "Photo & Video Upload",
+        "Interactive Preview",
+        "Media Management",
+      ],
+      liveLink: "https://photofolio-azure.vercel.app/",
+      githubLink: "https://github.com/Galabeewww/photofolio",
+      image: "/project/lf.png",
+      // icon: <ShoppingBag className="text-cyan-400" size={32} />,
+    },
+    {
+      title: "MyPortofolio",
+      description:
+        "MyPortfolio adalah aplikasi web modern dan responsif yang menampilkan proyek, keterampilan, serta perjalanan profesional saya. Platform ini dirancang untuk menjadi etalase digital yang menarik, mudah diakses, dan mendukung pengembangan karier.",
+      category: "WEB",
+      tech: ["React", "Tailwind", "Javascript", "Vercel"],
+      features: [
+        "Personal Showcase",
+        "Project Gallery",
+        "About Me Section",
+        "Contact Integration",
+      ],
+      liveLink: "https://my-portofolio-omega-lemon.vercel.app/",
+      githubLink: "https://github.com/Galabeewww/MyPortofolio",
+      image: "/project/mp.png",
+      // icon: <ShoppingBag className="text-cyan-400" size={32} />,
+    },
     {
       title: "SIMOOLTAN",
       description:
@@ -192,6 +233,8 @@ const Projects = () => {
     setPreviewImage(null);
   };
 
+  const [expandedTech, setExpandedTech] = useState({});
+
   return (
     <section id="projects" className="py-24 relative border-t border-white/5">
       {/* Header */}
@@ -324,7 +367,7 @@ const Projects = () => {
 
                 <div>
                   {/* Tech Stack Badges */}
-                  <div className="flex flex-wrap gap-2 mb-6">
+                  {/* <div className="flex flex-wrap gap-2 mb-6">
                     {project.tech.map((t, tIdx) => (
                       <span
                         key={tIdx}
@@ -333,6 +376,38 @@ const Projects = () => {
                         {t}
                       </span>
                     ))}
+                  </div> */}
+                  {/* Tech Stack Badges -- Klik "more" untuk melihat semua di dalam kartu */}
+                  <div className="flex flex-wrap items-center gap-2 mb-6">
+                    {/* Cek apakah kartu ini sedang di-expand */}
+                    {(expandedTech[project.title]
+                      ? project.tech
+                      : project.tech.slice(0, 3)
+                    ).map((t, tIdx) => (
+                      <span
+                        key={tIdx}
+                        className="px-2.5 py-1 rounded-full text-[11px] font-semibold bg-white/5 border border-white/10 text-slate-300"
+                      >
+                        {t}
+                      </span>
+                    ))}
+
+                    {/* Tombol More / Less */}
+                    {project.tech.length > 3 && (
+                      <button
+                        onClick={() =>
+                          setExpandedTech((prev) => ({
+                            ...prev,
+                            [project.title]: !prev[project.title],
+                          }))
+                        }
+                        className="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-indigo-500/10 border border-indigo-500/30 text-slate-400 cursor-pointer hover:bg-indigo-500/20 transition-colors duration-200"
+                      >
+                        {expandedTech[project.title]
+                          ? "- less"
+                          : `+${project.tech.length - 3} more`}
+                      </button>
+                    )}
                   </div>
 
                   {/* Footer Kartu (Aksi) */}
@@ -344,7 +419,7 @@ const Projects = () => {
                       View Details &rarr;
                     </button>
                     <div className="flex items-center gap-3">
-                      {/* <a
+                      <a
                         href={project.liveLink}
                         target="_blank"
                         rel="noreferrer"
@@ -352,7 +427,7 @@ const Projects = () => {
                         title="Live Demo"
                       >
                         <ExternalLink size={18} />
-                      </a> */}
+                      </a>
                       <a
                         href={project.githubLink}
                         target="_blank"
