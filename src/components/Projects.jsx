@@ -44,6 +44,33 @@ const truncateTitle = (title, maxLen = 25) => truncateText(title, maxLen);
 const Projects = () => {
   const projects = [
     {
+      title: "Coreculture",
+      description:
+        "CORECULTURE adalah merek pakaian lokal yang lahir dari semangat football culture dan gaya hidup kasual anak muda. Brand ini tidak hanya menghadirkan pakaian sebagai kebutuhan sehari-hari, tetapi juga sebagai simbol identitas bagi para pecinta sepak bola dan streetwear.",
+      category: "WEB",
+      tech: [
+        "Typescript",
+        "NextJS",
+        "Tailwind",
+        "Cloudinary",
+        "Supabase",
+        "PostgreSQL",
+        "Vercel",
+      ],
+      features: [
+        "Article Upload",
+        "Photoshoot Upload",
+        "Interactive Preview",
+        "Media Management",
+        "Inventory & Stock Control",
+        "Product Catalogue & Category Selection",
+      ],
+      liveLink: "https://coreculture.vercel.app/",
+      githubLink: "https://github.com/Galabeewww/coreculture",
+      image: "/project/cc.png",
+      // icon: <ShoppingBag className="text-cyan-400" size={32} />,
+    },
+    {
       title: "Lensfolio",
       description:
         "Lensfolio adalah sebuah web platform yang dirancang untuk memudahkan pengguna dalam mengunggah dan menampilkan portofolio foto maupun video. Tujuannya adalah memberikan pengalaman berbagi visual yang rapi, terorganisir, dan fleksibel, baik untuk koleksi pribadi maupun portofolio kreatif.",
