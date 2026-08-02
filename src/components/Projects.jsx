@@ -44,6 +44,23 @@ const truncateTitle = (title, maxLen = 25) => truncateText(title, maxLen);
 const Projects = () => {
   const projects = [
     {
+      title: "House Price Prediction",
+      description:
+        "Program Prediksi Harga Rumah (House Price Prediction) menggunakan pemodelan Linear Regression & Random Forest (train_and_evaluate) dan dataset dari Kaggle",
+      category: "WEB",
+      tech: ["Python", "Streamlit"],
+      features: [
+        "Dataset upload feature ",
+        "Selection slider (KBest)",
+        "Engineering and machine learning pipeline automatically",
+        "automated performance analysis",
+      ],
+      // liveLink: "https://coreculture.vercel.app/",
+      githubLink: "https://github.com/Galabeewww/HousePricePrediction",
+      image: "/project/py.png",
+      // icon: <ShoppingBag className="text-cyan-400" size={32} />,
+    },
+    {
       title: "Coreculture",
       description:
         "CORECULTURE adalah merek pakaian lokal yang lahir dari semangat football culture dan gaya hidup kasual anak muda. Brand ini tidak hanya menghadirkan pakaian sebagai kebutuhan sehari-hari, tetapi juga sebagai simbol identitas bagi para pecinta sepak bola dan streetwear.",
