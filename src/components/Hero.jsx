@@ -1,5 +1,6 @@
 import React from "react";
 import { ArrowRight } from "lucide-react";
+import { useLanguage } from "../context/LanguageContext";
 
 const GithubIcon = (props) => (
   <svg
@@ -39,25 +40,9 @@ const LinkedinIcon = (props) => (
 );
 
 const Hero = () => {
-  const marqueeItems = [
-    "JUNIOR WEB DEVELOPER",
-    "/",
-    "FRONTEND DEV",
-    "/",
-    "REACT & NEXT.JS",
-    "/",
-    "QUALITY ASSURANCE",
-    "/",
-    "QA TESTING",
-    "/",
-    "SOFTWARE TESTING",
-    "/",
-    "WEB DEVELOPMENT",
-    "/",
-    "FRONTEND DEV",
-    "/",
-  ];
+  const { t } = useLanguage();
 
+  const marqueeItems = t.hero.marqueeItems;
   const fullMarquee = [
     ...marqueeItems,
     ...marqueeItems,
@@ -79,23 +64,22 @@ const Hero = () => {
       <div className="w-full text-center relative z-10 pt-4">
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[var(--badge-bg)] text-[var(--badge-text)] border border-[var(--badge-border)] text-xs font-bold tracking-wider uppercase shadow-sm">
           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-          MUHAMMAD ABI RAFDI PRATAMA
+          {t.hero.tagline}
         </div>
       </div>
 
       {/* Main Banner: Giant Text + Diagonal Ribbon (Kiri Bawah → Kanan Atas) */}
       <div className="relative w-full my-auto flex flex-col items-center justify-center z-10 py-2">
-        {/* Giant Name Typography — Ukuran besar seperti NANDA */}
+        {/* Giant Name Typography */}
         <div className="w-full flex justify-center items-center">
           <h1 className="hero-giant-text font-black font-display tracking-[-0.06em] leading-[0.85] uppercase text-[var(--text-primary)] text-center w-full px-0 select-none">
             GALABEEWW
           </h1>
         </div>
 
-        {/* Diagonal Ribbon: Dari Pojok Kiri Bawah → Pojok Kanan Atas (Persis seperti NANDA) */}
+        {/* Diagonal Ribbon */}
         <div className="hero-ribbon absolute inset-0 z-20 flex items-center justify-center pointer-events-none">
           <div className="hero-ribbon-band bg-sky-500 text-slate-950 font-black uppercase text-xs sm:text-sm md:text-base tracking-wider shadow-2xl border-y-2 border-slate-950/20 overflow-hidden flex items-center pointer-events-auto">
-            {/* Semua Tulisan Bergerak SATU ARAH (Kanan ke Kiri) */}
             <div className="animate-marquee whitespace-nowrap flex items-center gap-5 sm:gap-8">
               {fullMarquee.map((item, idx) => (
                 <span key={idx} className="shrink-0">
@@ -105,7 +89,7 @@ const Hero = () => {
             </div>
           </div>
 
-          {/* Foto Profil Melingkar — Presisi Tengah Ribbon */}
+          {/* Foto Profil Melingkar */}
           <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-30 pointer-events-auto group cursor-pointer">
             <div className="w-16 h-16 sm:w-24 sm:h-24 rounded-full border-4 border-slate-950/80 overflow-hidden shadow-2xl bg-slate-900 group-hover:scale-110 transition-transform duration-300 ring-4 ring-sky-500/30">
               <img
@@ -126,15 +110,14 @@ const Hero = () => {
       {/* Subtitle Bio & View Projects Button */}
       <div className="flex flex-col items-center text-center space-y-6 max-w-xl mx-auto px-4 relative z-10 pt-2">
         <p className="text-[var(--text-secondary)] text-sm sm:text-base font-medium leading-relaxed">
-          I build modern web applications and quality software that deliver
-          exceptional user experiences with precision and speed.
+          {t.hero.bio}
         </p>
 
         <a
           href="#projects"
           className="inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-[var(--accent-btn)] hover:bg-[var(--accent-btn-hover)] text-[var(--accent-btn-text)] font-extrabold text-xs sm:text-sm tracking-widest uppercase shadow-xl hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer group"
         >
-          <span>VIEW PROJECTS</span>
+          <span>{t.hero.viewProjects}</span>
           <ArrowRight
             size={16}
             className="group-hover:translate-x-1 transition-transform duration-300"
@@ -151,7 +134,7 @@ const Hero = () => {
             rel="noreferrer"
             className="hover:text-[var(--text-primary)] transition-colors cursor-pointer flex items-center gap-1.5"
           >
-            <GithubIcon size={14} /> GITHUB
+            <GithubIcon size={14} /> {t.hero.socialGithub}
           </a>
           <a
             href="https://www.linkedin.com/in/muhammad-abi-rafdi-pratama-436044290/"
@@ -159,7 +142,7 @@ const Hero = () => {
             rel="noreferrer"
             className="hover:text-[var(--text-primary)] transition-colors cursor-pointer flex items-center gap-1.5"
           >
-            <LinkedinIcon size={14} /> LINKEDIN
+            <LinkedinIcon size={14} /> {t.hero.socialLinkedin}
           </a>
           <a
             href="https://mail.google.com/mail/?view=cm&fs=1&to=pratamaabi28@gmail.com"
@@ -167,14 +150,14 @@ const Hero = () => {
             rel="noopener noreferrer"
             className="hover:text-[var(--text-primary)] transition-colors cursor-pointer hidden sm:inline-block"
           >
-            EMAIL
+            {t.hero.socialEmail}
           </a>
         </div>
 
         <div className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
           <span className="text-[var(--text-secondary)]">
-            AVAILABLE FOR WORK
+            {t.hero.available}
           </span>
         </div>
       </div>

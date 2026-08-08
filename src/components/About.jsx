@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Code2, CheckCircle2, Sparkles, MapPin, Briefcase, GraduationCap } from "lucide-react";
+import { Code2, CheckCircle2, Sparkles, MapPin, Briefcase } from "lucide-react";
 import { supabase, isSupabaseConfigured } from "../lib/supabaseClient";
+import { useLanguage } from "../context/LanguageContext";
 
 const INITIAL_SKILLS = [
   { name: "React", logo: "/icon/react.png", category: "Frontend" },
@@ -21,6 +22,7 @@ const INITIAL_SKILLS = [
 
 const About = () => {
   const [skillsList, setSkillsList] = useState(INITIAL_SKILLS);
+  const { t } = useLanguage();
 
   useEffect(() => {
     fetchSkills();
@@ -71,14 +73,14 @@ const About = () => {
       id="about"
       className="py-24 relative border-t border-[var(--border-color)] overflow-hidden space-y-24"
     >
-      {/* ===== BAGIAN ABOUT ME (DIATAS SKILLS) ===== */}
+      {/* ===== BAGIAN ABOUT ME ===== */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 space-y-12">
         <div className="text-center max-w-3xl mx-auto space-y-3">
           <h2 className="text-3xl sm:text-5xl font-extrabold font-display text-[var(--text-primary)] tracking-tight">
-            About <span className="text-sky-500">Me</span>.
+            {t.about.titlePrefix}<span className="text-sky-500">{t.about.titleSuffix}</span>
           </h2>
           <p className="text-[var(--text-secondary)] text-sm sm:text-base font-medium leading-relaxed">
-            A dedicated Junior Web Developer & Quality Assurance Specialist based in Indonesia.
+            {t.about.subtitle}
           </p>
         </div>
 
@@ -88,19 +90,19 @@ const About = () => {
           <div className="lg:col-span-7 space-y-6 text-left">
             <div className="space-y-3">
               <span className="inline-block px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider bg-sky-500/10 text-sky-500 border border-sky-500/30">
-                Web Dev & QA Tester
+                {t.about.badge}
               </span>
               <h3 className="text-2xl sm:text-3xl font-bold font-display text-[var(--text-primary)] leading-snug">
-                Halo, Saya Muhammad Abi Rafdi Pratama
+                {t.about.greeting}
               </h3>
             </div>
 
             <p className="text-[var(--text-secondary)] text-sm sm:text-base leading-relaxed">
-              Saya seorang Junior Web Developer yang bersemangat dalam menciptakan website modern, responsif, dan mudah digunakan. Saya menyukai eksplorasi teknologi baru seperti React, Next.js, dan Tailwind CSS untuk memberikan antarmuka visual yang memukau.
+              {t.about.para1}
             </p>
 
             <p className="text-[var(--text-secondary)] text-sm sm:text-base leading-relaxed">
-              Selain pengembangan web, saya juga sangat tertarik dengan bidang <strong>Quality Assurance (QA)</strong> untuk memastikan seluruh aplikasi yang dikembangkan memiliki performa tinggi, keamanan teruji, dan bebas dari kendala.
+              {t.about.para2}
             </p>
 
             {/* List Detail Singkat */}
@@ -109,14 +111,14 @@ const About = () => {
                 <div className="p-2 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)]">
                   <MapPin size={16} className="text-sky-500" />
                 </div>
-                <span>Indonesia</span>
+                <span>{t.about.location}</span>
               </div>
 
               <div className="flex items-center gap-3 text-xs sm:text-sm font-semibold text-[var(--text-primary)]">
                 <div className="p-2 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)]">
                   <Briefcase size={16} className="text-emerald-500" />
                 </div>
-                <span>Web Dev & QA Tester</span>
+                <span>{t.about.role}</span>
               </div>
             </div>
           </div>
@@ -128,9 +130,9 @@ const About = () => {
                 <Code2 size={22} />
               </div>
               <div className="text-left space-y-1">
-                <h4 className="font-bold text-sm text-[var(--text-primary)]">Web Development</h4>
+                <h4 className="font-bold text-sm text-[var(--text-primary)]">{t.about.pillar1Title}</h4>
                 <p className="text-xs text-[var(--text-muted)] leading-relaxed">
-                  Membangun antarmuka web modern dengan React, Next.js, dan Tailwind CSS.
+                  {t.about.pillar1Desc}
                 </p>
               </div>
             </div>
@@ -140,9 +142,9 @@ const About = () => {
                 <CheckCircle2 size={22} />
               </div>
               <div className="text-left space-y-1">
-                <h4 className="font-bold text-sm text-[var(--text-primary)]">Quality Assurance (QA)</h4>
+                <h4 className="font-bold text-sm text-[var(--text-primary)]">{t.about.pillar2Title}</h4>
                 <p className="text-xs text-[var(--text-muted)] leading-relaxed">
-                  Pengujian aplikasi, identifikasi bug, dan skenario pengujian kualitas software.
+                  {t.about.pillar2Desc}
                 </p>
               </div>
             </div>
@@ -152,9 +154,9 @@ const About = () => {
                 <Sparkles size={22} />
               </div>
               <div className="text-left space-y-1">
-                <h4 className="font-bold text-sm text-[var(--text-primary)]">Continuous Learning</h4>
+                <h4 className="font-bold text-sm text-[var(--text-primary)]">{t.about.pillar3Title}</h4>
                 <p className="text-xs text-[var(--text-muted)] leading-relaxed">
-                  Selalu belajar dan beradaptasi dengan tren serta arsitektur teknologi terbaru.
+                  {t.about.pillar3Desc}
                 </p>
               </div>
             </div>
@@ -162,14 +164,14 @@ const About = () => {
         </div>
       </div>
 
-      {/* ===== BAGIAN TECHNICAL SKILLS (DIBAWAH ABOUT ME) ===== */}
-      <div className="space-y-8 pt-6">
+      {/* ===== BAGIAN TECHNICAL SKILLS (DIBAWAH ABOUT ME DENGAN ID="SKILLS") ===== */}
+      <div id="skills" className="space-y-8 pt-6 scroll-mt-28">
         <div className="text-center max-w-3xl mx-auto space-y-3 px-4">
           <h3 className="text-2xl sm:text-4xl font-extrabold font-display text-[var(--text-primary)] tracking-tight">
-            Technical <span className="text-sky-500">Skills</span>.
+            {t.about.skillsTitlePrefix}<span className="text-sky-500">{t.about.skillsTitleSuffix}</span>
           </h3>
           <p className="text-[var(--text-secondary)] text-sm sm:text-base font-medium leading-relaxed max-w-xl mx-auto">
-            A breakdown of my software engineering capabilities and technologies I use daily.
+            {t.about.skillsSubtitle}
           </p>
         </div>
 

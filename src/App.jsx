@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from './context/ThemeContext';
 import { AuthProvider } from './context/AuthContext';
+import { LanguageProvider } from './context/LanguageContext';
 
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
@@ -20,7 +21,6 @@ function MainPortfolio() {
     <div className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] relative bg-grid-pattern overflow-x-hidden transition-colors duration-250">
       <div className="relative z-10">
         <Navbar />
-        {/* Hero Full-Bleed Edge-to-Edge tanpa terpotong max-w kontainer */}
         <Hero />
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <About />
@@ -38,20 +38,22 @@ function App() {
   return (
     <ThemeProvider>
       <AuthProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<MainPortfolio />} />
-            <Route path="/admin/login" element={<Login />} />
-            <Route
-              path="/admin"
-              element={
-                <ProtectedRoute>
-                  <AdminDashboard />
-                </ProtectedRoute>
-              }
-            />
-          </Routes>
-        </BrowserRouter>
+        <LanguageProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<MainPortfolio />} />
+              <Route path="/admin/login" element={<Login />} />
+              <Route
+                path="/admin"
+                element={
+                  <ProtectedRoute>
+                    <AdminDashboard />
+                  </ProtectedRoute>
+                }
+              />
+            </Routes>
+          </BrowserRouter>
+        </LanguageProvider>
       </AuthProvider>
     </ThemeProvider>
   );
