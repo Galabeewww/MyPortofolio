@@ -1,11 +1,11 @@
 import React from 'react';
-import { ArrowRight, Mail, ArrowDown } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 const GithubIcon = (props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width={props.size || 20}
-    height={props.size || 20}
+    width={props.size || 18}
+    height={props.size || 18}
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
@@ -22,8 +22,8 @@ const GithubIcon = (props) => (
 const LinkedinIcon = (props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width={props.size || 20}
-    height={props.size || 20}
+    width={props.size || 18}
+    height={props.size || 18}
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
@@ -42,117 +42,116 @@ const Hero = () => {
   return (
     <section
       id="home"
-      className="min-h-screen flex flex-col justify-center pt-24 pb-12 relative overflow-hidden"
+      className="min-h-screen flex flex-col justify-between pt-28 pb-8 relative overflow-hidden select-none"
     >
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-        {/* Konten Kiri (Teks & Tombol Aksi) */}
-        <div className="lg:col-span-7 space-y-6 text-left relative z-10 order-2 lg:order-1">
-          {/* Subtitle Badge */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[var(--badge-bg)] text-[var(--badge-text)] border border-[var(--badge-border)] text-xs font-semibold">
-            <span className="w-2 h-2 rounded-full bg-[var(--text-primary)] animate-pulse" />
-            Junior Web Developer & QA Tester
-          </div>
+      {/* Background Decorative Lighting */}
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-sky-500/10 dark:bg-sky-500/15 blur-[120px] pointer-events-none rounded-full" />
 
-          {/* Judul Utama Monokrom Minimalis */}
-          <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight font-display text-[var(--text-primary)] leading-[1.15]">
-            Halooo , <br />
-            <span>Saya Muhammad Abi Rafdi Pratama</span>
-          </h1>
-
-          {/* Deskripsi */}
-          <p className="text-[var(--text-secondary)] text-base sm:text-lg max-w-xl leading-relaxed">
-            Pengembang web pemula yang berdedikasi membangun aplikasi modern, responsif, dan teruji dengan standar kualitas terbaik.
-          </p>
-
-          {/* Tombol Aksi */}
-          <div className="flex flex-wrap gap-4 pt-2">
-            <a
-              href="#projects"
-              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-[var(--accent-btn)] hover:bg-[var(--accent-btn-hover)] text-[var(--accent-btn-text)] font-semibold text-sm shadow-md transition-all duration-300 group hover:-translate-y-0.5"
-            >
-              Lihat Proyek Saya
-              <ArrowRight
-                size={16}
-                className="group-hover:translate-x-1 transition-transform duration-300"
-              />
-            </a>
-            <a
-              href="#contact"
-              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-[var(--bg-secondary)] hover:bg-[var(--border-color)] text-[var(--text-primary)] font-semibold text-sm border border-[var(--border-color)] transition-all duration-300 hover:-translate-y-0.5"
-            >
-              Hubungi Saya
-            </a>
-          </div>
-
-          {/* Link Media Sosial */}
-          <div className="flex flex-wrap items-center gap-4 pt-6 text-[var(--text-secondary)]">
-            <span className="text-xs font-semibold uppercase tracking-wider text-[var(--text-muted)]">
-              Temukan saya:
-            </span>
-            <div className="h-[1px] w-8 bg-[var(--border-color)] hidden sm:block" />
-            <a
-              href="https://github.com/Galabeewww"
-              target="_blank"
-              rel="noreferrer"
-              className="p-2.5 rounded-xl bg-[var(--bg-card)] hover:bg-[var(--bg-card-hover)] text-[var(--text-primary)] border border-[var(--border-color)] transition-all duration-200"
-              title="GitHub"
-            >
-              <GithubIcon size={18} />
-            </a>
-            <a
-              href="https://www.linkedin.com/in/muhammad-abi-rafdi-pratama-436044290/"
-              target="_blank"
-              rel="noreferrer"
-              className="p-2.5 rounded-xl bg-[var(--bg-card)] hover:bg-[var(--bg-card-hover)] text-[var(--text-primary)] border border-[var(--border-color)] transition-all duration-200"
-              title="LinkedIn"
-            >
-              <LinkedinIcon size={18} />
-            </a>
-            <a
-              href="https://mail.google.com/mail/?view=cm&fs=1&to=pratamaabi28@gmail.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-2.5 rounded-xl bg-[var(--bg-card)] hover:bg-[var(--bg-card-hover)] text-[var(--text-primary)] border border-[var(--border-color)] transition-all duration-200"
-              title="Email"
-            >
-              <Mail size={18} />
-            </a>
-          </div>
+      {/* Top Tagline */}
+      <div className="w-full text-center relative z-10">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[var(--badge-bg)] text-[var(--badge-text)] border border-[var(--badge-border)] text-xs font-bold tracking-wider uppercase shadow-sm">
+          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+          Muhammad Abi Rafdi Pratama
         </div>
+      </div>
 
-        {/* Konten Kanan (Foto Profil Kartu Minimalis) */}
-        <div className="lg:col-span-5 relative flex justify-center items-center z-10 lg:mt-0 mt-8 order-1 lg:order-2">
-          <div className="w-full max-w-[300px] sm:max-w-[360px] glow-card rounded-2xl p-6 relative overflow-hidden bg-[var(--bg-card)] border border-[var(--border-color)] animate-float">
-            <div className="flex items-center justify-between border-b border-[var(--border-color)] pb-3 mb-5">
-              <div className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-[var(--text-primary)]"></span>
-                <span className="w-2.5 h-2.5 rounded-full bg-[var(--text-muted)]"></span>
-                <span className="w-2.5 h-2.5 rounded-full bg-[var(--border-color)]"></span>
+      {/* Main Banner: Giant Text + Diagonal Overlay Ribbon + Centered Avatar */}
+      <div className="relative w-full my-auto flex flex-col items-center justify-center z-10 py-6">
+        {/* Giant Name Typography */}
+        <h1 className="text-[16vw] sm:text-[18vw] font-black font-display tracking-tighter leading-none uppercase text-[var(--text-primary)] text-center opacity-95">
+          ABI
+        </h1>
+
+        {/* Diagonal Overlay Ribbon Sesuai Referensi Gambar */}
+        <div className="w-[110%] -ml-[5%] py-2.5 sm:py-3.5 bg-sky-500 text-slate-950 font-black uppercase text-[10px] sm:text-sm tracking-wider shadow-2xl relative z-20 rotate-[-3.5deg] -mt-[8vw] sm:-mt-[9vw] flex items-center justify-center overflow-hidden border-y-2 border-slate-950/20">
+          <div className="flex items-center justify-between w-full max-w-6xl px-4 sm:px-8 gap-2 sm:gap-6">
+            <span className="truncate hidden sm:inline">
+              JUNIOR WEB DEVELOPER &nbsp;/&nbsp; FRONTEND DEV
+            </span>
+            <span className="truncate sm:hidden">
+              WEB DEV &nbsp;/&nbsp; FRONTEND
+            </span>
+
+            {/* Circular Avatar Photo Centered in the Ribbon */}
+            <div className="relative z-30 shrink-0 mx-2 rotate-[3.5deg] group cursor-pointer">
+              <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-full border-4 border-slate-950 overflow-hidden shadow-2xl bg-slate-900 group-hover:scale-110 transition-transform duration-300">
+                <img
+                  src="/foto.jpg"
+                  alt="Foto Profil"
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src =
+                      'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80';
+                  }}
+                />
               </div>
-              <span className="text-xs text-[var(--text-muted)] font-mono">abi_profile.jpg</span>
             </div>
 
-            <div className="space-y-4">
-              <img
-                src="/foto.jpg"
-                alt="Foto Profil"
-                className="rounded-xl w-full h-auto aspect-square object-cover border border-[var(--border-color)] transition-all duration-500 shadow-md"
-                onError={(e) => {
-                  e.target.onerror = null;
-                  e.target.src = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80';
-                }}
-              />
-            </div>
+            <span className="truncate hidden sm:inline">
+              QUALITY ASSURANCE &nbsp;/&nbsp; QA TESTING
+            </span>
+            <span className="truncate sm:hidden">
+              QA TESTER &nbsp;/&nbsp; SOFTWARE
+            </span>
           </div>
         </div>
       </div>
 
-      {/* Indikator Scroll Down */}
-      <div className="relative mt-12 sm:absolute sm:bottom-8 sm:left-1/2 sm:-translate-x-1/2 flex flex-col items-center gap-2 text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors duration-300 z-10 cursor-pointer">
-        <span className="text-[10px] uppercase tracking-widest font-semibold">
-          Scroll Down
-        </span>
-        <ArrowDown size={14} className="animate-bounce" />
+      {/* Subtitle Bio & View Projects Button */}
+      <div className="flex flex-col items-center text-center space-y-6 max-w-xl mx-auto px-4 relative z-10 pt-4">
+        <p className="text-[var(--text-secondary)] text-sm sm:text-base font-medium leading-relaxed">
+          I build modern web applications and quality software that deliver exceptional user experiences with precision and speed.
+        </p>
+
+        {/* Action Button: VIEW PROJECTS (Menggantikan START A PROJECT) */}
+        <a
+          href="#projects"
+          className="inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-[var(--accent-btn)] hover:bg-[var(--accent-btn-hover)] text-[var(--accent-btn-text)] font-extrabold text-xs sm:text-sm tracking-widest uppercase shadow-xl hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer group"
+        >
+          <span>VIEW PROJECTS</span>
+          <ArrowRight
+            size={16}
+            className="group-hover:translate-x-1 transition-transform duration-300"
+          />
+        </a>
+      </div>
+
+      {/* Bottom Footer Bar: Social Links + Available For Work Status */}
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-8 pt-8 flex items-center justify-between text-xs font-bold uppercase tracking-wider text-[var(--text-muted)] relative z-10 flex-wrap gap-4">
+        {/* Left Social Links */}
+        <div className="flex items-center gap-4 sm:gap-6">
+          <a
+            href="https://github.com/Galabeewww"
+            target="_blank"
+            rel="noreferrer"
+            className="hover:text-[var(--text-primary)] transition-colors cursor-pointer flex items-center gap-1.5"
+          >
+            <GithubIcon size={14} /> GITHUB
+          </a>
+          <a
+            href="https://www.linkedin.com/in/muhammad-abi-rafdi-pratama-436044290/"
+            target="_blank"
+            rel="noreferrer"
+            className="hover:text-[var(--text-primary)] transition-colors cursor-pointer flex items-center gap-1.5"
+          >
+            <LinkedinIcon size={14} /> LINKEDIN
+          </a>
+          <a
+            href="https://mail.google.com/mail/?view=cm&fs=1&to=pratamaabi28@gmail.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-[var(--text-primary)] transition-colors cursor-pointer hidden sm:inline-block"
+          >
+            EMAIL
+          </a>
+        </div>
+
+        {/* Right Status Badge */}
+        <div className="flex items-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+          <span className="text-[var(--text-secondary)]">AVAILABLE FOR WORK</span>
+        </div>
       </div>
     </section>
   );
