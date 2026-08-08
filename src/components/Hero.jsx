@@ -136,7 +136,7 @@ const Hero = () => {
               <img
                 src="/foto.jpg"
                 alt="Foto Profil"
-                className="rounded-xl w-full h-auto aspect-square object-cover border border-[var(--border-color)] grayscale hover:grayscale-0 transition-all duration-500"
+                className="rounded-xl w-full h-auto aspect-square object-cover border border-[var(--border-color)] transition-all duration-500 shadow-md"
                 onError={(e) => {
                   e.target.onerror = null;
                   e.target.src = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80';

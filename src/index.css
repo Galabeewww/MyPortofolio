@@ -27,26 +27,37 @@
 }
 
 [data-theme="light"] {
-  --bg-primary: #ffffff;
-  --bg-secondary: #f4f4f5;
+  --bg-primary: #f0f7ff;
+  --bg-secondary: #ffffff;
   --bg-card: #ffffff;
-  --bg-card-hover: #fafafa;
-  --border-color: #e4e4e7;
-  --border-color-hover: #d4d4d8;
-  --text-primary: #09090b;
-  --text-secondary: #52525b;
-  --text-muted: #71717a;
-  --accent-btn: #09090b;
+  --bg-card-hover: #f8fafc;
+  --border-color: #e2e8f0;
+  --border-color-hover: #cbd5e1;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+  --accent-btn: #0f172a;
   --accent-btn-text: #ffffff;
-  --accent-btn-hover: #27272a;
-  --badge-bg: #f4f4f5;
-  --badge-text: #27272a;
-  --badge-border: #e4e4e7;
-  --shadow-color: rgba(0, 0, 0, 0.06);
-  --grid-line: rgba(0, 0, 0, 0.04);
+  --accent-btn-hover: #1e293b;
+  --badge-bg: #ffffff;
+  --badge-text: #0f172a;
+  --badge-border: #e2e8f0;
+  --shadow-color: rgba(15, 23, 42, 0.08);
+  --grid-line: rgba(15, 23, 42, 0.04);
 }
 
-/* Scrollbar Modern Hitam Putih */
+/* Pointer cursor untuk semua elemen interaktif */
+button,
+a,
+input[type="submit"],
+input[type="button"],
+select,
+[role="button"],
+.cursor-pointer {
+  cursor: pointer !important;
+}
+
+/* Scrollbar Modern */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -134,4 +145,40 @@ body {
 
 .animate-fadeInUp {
   animation: fadeInUp 0.5s ease-out forwards;
+}
+
+/* Marquee Continuous Scrolling Animation */
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes marquee-reverse {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 30s linear infinite;
+}
+
+.animate-marquee-reverse {
+  display: flex;
+  width: max-content;
+  animation: marquee-reverse 30s linear infinite;
+}
+
+.marquee-container:hover .animate-marquee,
+.marquee-container:hover .animate-marquee-reverse {
+  animation-play-state: paused;
 }

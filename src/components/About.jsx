@@ -2,19 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { supabase, isSupabaseConfigured } from '../lib/supabaseClient';
 
 const INITIAL_SKILLS = [
-  { name: 'React', logo: '/icon/react.png', category: 'Skills' },
-  { name: 'JavaScript', logo: '/icon/js.png', category: 'Skills' },
-  { name: 'Php', logo: '/icon/php.png', category: 'Skills' },
-  { name: 'Bootstrap', logo: '/icon/icb.png', category: 'Skills' },
-  { name: 'Tailwind', logo: '/icon/tailwind.png', category: 'Skills' },
-  { name: 'HTML5', logo: '/icon/html-5.png', category: 'Skills' },
-  { name: 'CSS3', logo: '/icon/css.png', category: 'Skills' },
-  { name: 'MySQL', logo: '/icon/mysql.png', category: 'Skills' },
-  { name: 'GitHub', logo: '/icon/github.png', category: 'Tools' },
-  { name: 'Vercel', logo: '/icon/vercel.png', category: 'Tools' },
+  { name: 'React', logo: '/icon/react.png', category: 'Frontend' },
+  { name: 'Next.js', logo: '/icon/react.png', category: 'Framework' },
+  { name: 'JavaScript', logo: '/icon/js.png', category: 'Language' },
+  { name: 'PHP', logo: '/icon/php.png', category: 'Backend' },
+  { name: 'Bootstrap', logo: '/icon/icb.png', category: 'UI' },
+  { name: 'Tailwind CSS', logo: '/icon/tailwind.png', category: 'UI' },
+  { name: 'HTML5', logo: '/icon/html-5.png', category: 'Markup' },
+  { name: 'CSS3', logo: '/icon/css.png', category: 'Styling' },
+  { name: 'MySQL', logo: '/icon/mysql.png', category: 'Database' },
+  { name: 'GitHub', logo: '/icon/github.png', category: 'DevOps' },
+  { name: 'Vercel', logo: '/icon/vercel.png', category: 'Deployment' },
   { name: 'VS Code', logo: '/icon/vsc.png', category: 'Tools' },
-  { name: 'Postman', logo: '/icon/postman.png', category: 'Tools' },
-  { name: 'Figma', logo: '/icon/figma.png', category: 'Tools' },
+  { name: 'Postman', logo: '/icon/postman.png', category: 'Testing' },
+  { name: 'Figma', logo: '/icon/figma.png', category: 'Design' },
 ];
 
 const About = () => {
@@ -57,45 +58,74 @@ const About = () => {
     }
   };
 
+  // Divide skills into 2 rows for opposite scrolling marquee
+  const halfLength = Math.ceil(skillsList.length / 2);
+  const row1 = skillsList.slice(0, halfLength);
+  const row2 = skillsList.slice(halfLength);
+
+  // Duplicate rows for seamless infinite marquee effect
+  const marqueeRow1 = [...row1, ...row1, ...row1, ...row1];
+  const marqueeRow2 = [...row2, ...row2, ...row2, ...row2];
+
   return (
-    <section id="about" className="py-24 relative border-t border-[var(--border-color)]">
-      {/* Judul Bagian */}
-      <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-        <h2 className="text-3xl sm:text-4xl font-bold font-display text-[var(--text-primary)]">
-          Tentang <span className="underline underline-offset-8 decoration-1">Saya</span>
+    <section id="about" className="py-24 relative border-t border-[var(--border-color)] overflow-hidden">
+      {/* Judul & Deskripsi Sesuai Gambar Referensi */}
+      <div className="text-center max-w-3xl mx-auto mb-16 space-y-4 px-4">
+        <h2 className="text-3xl sm:text-5xl font-extrabold font-display text-[var(--text-primary)] tracking-tight">
+          Technical <span className="text-blue-500">Skills</span>.
         </h2>
-        <p className="text-[var(--text-secondary)] text-sm sm:text-base leading-relaxed">
-          Halooo, Saya Abi, Junior Web Developer pemula yang suka eksplorasi untuk menciptakan website modern.
-          Selain itu, saya juga tertarik dengan Quality Assurance (QA) untuk memastikan aplikasi yang saya kembangkan memiliki kualitas dan keandalan yang tinggi.
+        <p className="text-[var(--text-secondary)] text-sm sm:text-base leading-relaxed max-w-xl mx-auto font-medium">
+          A breakdown of my software engineering capabilities and technologies I use daily.
         </p>
       </div>
 
-      {/* Skills & Tools - Berjajar di Tengah */}
-      <div className="max-w-3xl mx-auto text-center space-y-10">
-        <div>
-          <h3 className="text-sm font-bold uppercase tracking-widest text-[var(--text-muted)] mb-6">
-            Skills & Tools
-          </h3>
+      {/* Marquee Interaktif Bergerak (Sesuai Referensi Gambar) */}
+      <div className="relative max-w-7xl mx-auto marquee-container py-4">
+        {/* Gradient Blur Fade Mask di Kiri dan Kanan */}
+        <div className="pointer-events-none absolute inset-y-0 left-0 w-20 sm:w-36 bg-gradient-to-r from-[var(--bg-primary)] via-[var(--bg-primary)]/80 to-transparent z-20" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 w-20 sm:w-36 bg-gradient-to-l from-[var(--bg-primary)] via-[var(--bg-primary)]/80 to-transparent z-20" />
 
-          <div className="grid grid-cols-3 sm:grid-cols-5 gap-4 sm:gap-6 justify-center">
-            {skillsList.map((skill, sIdx) => (
+        <div className="space-y-6 overflow-hidden">
+          {/* Row 1: Bergerak ke Kiri */}
+          <div className="animate-marquee flex gap-4 sm:gap-6 items-center">
+            {marqueeRow1.map((skill, idx) => (
               <div
-                key={sIdx}
-                className="flex flex-col items-center gap-2 group cursor-pointer"
+                key={`r1_${idx}`}
+                className="flex-shrink-0 flex items-center gap-3.5 px-6 py-4 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-color)] text-[var(--text-primary)] shadow-sm hover:border-[var(--border-color-hover)] hover:scale-105 transition-all duration-300 cursor-pointer select-none group"
               >
-                <div className="p-3.5 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-color)] group-hover:border-[var(--border-color-hover)] transition-all duration-300 shadow-sm group-hover:-translate-y-1">
-                  <img
-                    src={skill.logo}
-                    alt={skill.name}
-                    title={skill.name}
-                    className="w-12 h-12 object-contain group-hover:scale-110 transition-transform duration-300"
-                    onError={(e) => {
-                      e.target.onerror = null;
-                      e.target.src = '/icon/react.png';
-                    }}
-                  />
-                </div>
-                <span className="text-xs text-[var(--text-secondary)] group-hover:text-[var(--text-primary)] font-semibold transition-colors duration-200">
+                <img
+                  src={skill.logo}
+                  alt={skill.name}
+                  className="w-7 h-7 sm:w-8 sm:h-8 object-contain transition-transform duration-300 group-hover:scale-110"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = '/icon/react.png';
+                  }}
+                />
+                <span className="font-bold text-sm sm:text-base tracking-tight font-sans">
+                  {skill.name}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          {/* Row 2: Bergerak ke Kanan (Reverse) */}
+          <div className="animate-marquee-reverse flex gap-4 sm:gap-6 items-center">
+            {marqueeRow2.map((skill, idx) => (
+              <div
+                key={`r2_${idx}`}
+                className="flex-shrink-0 flex items-center gap-3.5 px-6 py-4 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-color)] text-[var(--text-primary)] shadow-sm hover:border-[var(--border-color-hover)] hover:scale-105 transition-all duration-300 cursor-pointer select-none group"
+              >
+                <img
+                  src={skill.logo}
+                  alt={skill.name}
+                  className="w-7 h-7 sm:w-8 sm:h-8 object-contain transition-transform duration-300 group-hover:scale-110"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = '/icon/react.png';
+                  }}
+                />
+                <span className="font-bold text-sm sm:text-base tracking-tight font-sans">
                   {skill.name}
                 </span>
               </div>
