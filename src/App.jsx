@@ -9,6 +9,7 @@ import About from './components/About';
 import Projects from './components/Projects';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
+import FloatingThemeToggle from './components/FloatingThemeToggle';
 
 import Login from './pages/Login';
 import AdminDashboard from './pages/AdminDashboard';
@@ -26,6 +27,7 @@ function MainPortfolio() {
           <Contact />
         </main>
         <Footer />
+        <FloatingThemeToggle />
       </div>
     </div>
   );

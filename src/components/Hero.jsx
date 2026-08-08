@@ -1,5 +1,5 @@
-import React from 'react';
-import { ArrowRight } from 'lucide-react';
+import React from "react";
+import { ArrowRight } from "lucide-react";
 
 const GithubIcon = (props) => (
   <svg
@@ -42,69 +42,92 @@ const Hero = () => {
   return (
     <section
       id="home"
-      className="min-h-screen flex flex-col justify-between pt-28 pb-8 relative overflow-hidden select-none"
+      className="min-h-screen flex flex-col justify-between pt-24 pb-8 relative overflow-hidden select-none w-full"
     >
-      {/* Background Decorative Lighting */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-sky-500/10 dark:bg-sky-500/15 blur-[120px] pointer-events-none rounded-full" />
+      {/* Background Decorative Glow */}
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-sky-500/10 dark:bg-sky-500/15 blur-[140px] pointer-events-none rounded-full" />
 
       {/* Top Tagline */}
       <div className="w-full text-center relative z-10">
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[var(--badge-bg)] text-[var(--badge-text)] border border-[var(--badge-border)] text-xs font-bold tracking-wider uppercase shadow-sm">
           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-          Muhammad Abi Rafdi Pratama
+          MUHAMMAD ABI RAFDI PRATAMA
         </div>
       </div>
 
-      {/* Main Banner: Giant Text + Diagonal Overlay Ribbon + Centered Avatar */}
-      <div className="relative w-full my-auto flex flex-col items-center justify-center z-10 py-6">
-        {/* Giant Name Typography */}
-        <h1 className="text-[16vw] sm:text-[18vw] font-black font-display tracking-tighter leading-none uppercase text-[var(--text-primary)] text-center opacity-95">
-          ABI
-        </h1>
+      {/* Main Banner: Fullscreen Edge-to-Edge Typography + Animated Diagonal Ribbon */}
+      <div className="relative w-full my-auto flex flex-col items-center justify-center z-10 py-4 overflow-hidden">
+        {/* Giant Name Typography (Full width fit) */}
+        <div className="w-full overflow-hidden flex justify-center items-center">
+          <h1 className="text-[12.5vw] sm:text-[13.5vw] md:text-[14.5vw] font-black font-display tracking-tighter leading-none uppercase text-[var(--text-primary)] text-center w-full px-1">
+            GALABEEWW
+          </h1>
+        </div>
 
-        {/* Diagonal Overlay Ribbon Sesuai Referensi Gambar */}
-        <div className="w-[110%] -ml-[5%] py-2.5 sm:py-3.5 bg-sky-500 text-slate-950 font-black uppercase text-[10px] sm:text-sm tracking-wider shadow-2xl relative z-20 rotate-[-3.5deg] -mt-[8vw] sm:-mt-[9vw] flex items-center justify-center overflow-hidden border-y-2 border-slate-950/20">
-          <div className="flex items-center justify-between w-full max-w-6xl px-4 sm:px-8 gap-2 sm:gap-6">
-            <span className="truncate hidden sm:inline">
-              JUNIOR WEB DEVELOPER &nbsp;/&nbsp; FRONTEND DEV
-            </span>
-            <span className="truncate sm:hidden">
-              WEB DEV &nbsp;/&nbsp; FRONTEND
-            </span>
-
-            {/* Circular Avatar Photo Centered in the Ribbon */}
-            <div className="relative z-30 shrink-0 mx-2 rotate-[3.5deg] group cursor-pointer">
-              <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-full border-4 border-slate-950 overflow-hidden shadow-2xl bg-slate-900 group-hover:scale-110 transition-transform duration-300">
-                <img
-                  src="/foto.jpg"
-                  alt="Foto Profil"
-                  className="w-full h-full object-cover"
-                  onError={(e) => {
-                    e.target.onerror = null;
-                    e.target.src =
-                      'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80';
-                  }}
-                />
-              </div>
+        {/* Diagonal Overlay Ribbon Fullscreen Edge-to-Edge dengan Animasi Tulisan Bergerak Dinamis */}
+        <div className="w-screen relative left-1/2 -translate-x-1/2 py-3 sm:py-4 bg-sky-500 text-slate-950 font-black uppercase text-xs sm:text-sm tracking-wider shadow-2xl relative z-20 rotate-[-3.5deg] -mt-[6.5vw] sm:-mt-[7.5vw] flex items-center justify-between border-y-2 border-slate-950/20 overflow-hidden">
+          {/* Sisi Kiri: Animasi Tulisan Bergerak Dinamis */}
+          <div className="flex-1 overflow-hidden flex items-center">
+            <div className="animate-marquee whitespace-nowrap flex items-center gap-6 pr-4">
+              <span>JUNIOR WEB DEVELOPER</span>
+              <span>/</span>
+              <span>FRONTEND DEV</span>
+              <span>/</span>
+              <span>REACT & NEXT.JS</span>
+              <span>/</span>
+              <span>JUNIOR WEB DEVELOPER</span>
+              <span>/</span>
+              <span>FRONTEND DEV</span>
+              <span>/</span>
+              <span>REACT & NEXT.JS</span>
+              <span>/</span>
             </div>
+          </div>
 
-            <span className="truncate hidden sm:inline">
-              QUALITY ASSURANCE &nbsp;/&nbsp; QA TESTING
-            </span>
-            <span className="truncate sm:hidden">
-              QA TESTER &nbsp;/&nbsp; SOFTWARE
-            </span>
+          {/* Foto Profil Melingkar di Tengah Ribbon */}
+          <div className="relative z-30 shrink-0 mx-3 sm:mx-6 rotate-[3.5deg] group cursor-pointer">
+            <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-full border-4 border-slate-950 overflow-hidden shadow-2xl bg-slate-900 group-hover:scale-110 transition-transform duration-300">
+              <img
+                src="/foto.jpg"
+                alt="Foto Profil"
+                className="w-full h-full object-cover"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src =
+                    "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80";
+                }}
+              />
+            </div>
+          </div>
+
+          {/* Sisi Kanan: Animasi Tulisan Bergerak Dinamis */}
+          <div className="flex-1 overflow-hidden flex items-center">
+            <div className="animate-marquee-reverse whitespace-nowrap flex items-center gap-6 pl-4">
+              <span>QUALITY ASSURANCE</span>
+              <span>/</span>
+              <span>QA TESTING</span>
+              <span>/</span>
+              <span>SOFTWARE QA</span>
+              <span>/</span>
+              <span>QUALITY ASSURANCE</span>
+              <span>/</span>
+              <span>QA TESTING</span>
+              <span>/</span>
+              <span>SOFTWARE QA</span>
+              <span>/</span>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Subtitle Bio & View Projects Button */}
-      <div className="flex flex-col items-center text-center space-y-6 max-w-xl mx-auto px-4 relative z-10 pt-4">
+      <div className="flex flex-col items-center text-center space-y-6 max-w-xl mx-auto px-4 relative z-10 pt-2">
         <p className="text-[var(--text-secondary)] text-sm sm:text-base font-medium leading-relaxed">
-          I build modern web applications and quality software that deliver exceptional user experiences with precision and speed.
+          I build modern web applications and quality software that deliver
+          exceptional user experiences with precision and speed.
         </p>
 
-        {/* Action Button: VIEW PROJECTS (Menggantikan START A PROJECT) */}
+        {/* Action Button: VIEW PROJECTS */}
         <a
           href="#projects"
           className="inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-[var(--accent-btn)] hover:bg-[var(--accent-btn-hover)] text-[var(--accent-btn-text)] font-extrabold text-xs sm:text-sm tracking-widest uppercase shadow-xl hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer group"
@@ -118,7 +141,7 @@ const Hero = () => {
       </div>
 
       {/* Bottom Footer Bar: Social Links + Available For Work Status */}
-      <div className="w-full max-w-7xl mx-auto px-4 sm:px-8 pt-8 flex items-center justify-between text-xs font-bold uppercase tracking-wider text-[var(--text-muted)] relative z-10 flex-wrap gap-4">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-8 pt-6 flex items-center justify-between text-xs font-bold uppercase tracking-wider text-[var(--text-muted)] relative z-10 flex-wrap gap-4">
         {/* Left Social Links */}
         <div className="flex items-center gap-4 sm:gap-6">
           <a
@@ -150,7 +173,9 @@ const Hero = () => {
         {/* Right Status Badge */}
         <div className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-          <span className="text-[var(--text-secondary)]">AVAILABLE FOR WORK</span>
+          <span className="text-[var(--text-secondary)]">
+            AVAILABLE FOR WORK
+          </span>
         </div>
       </div>
     </section>

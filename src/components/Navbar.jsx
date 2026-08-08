@@ -90,24 +90,8 @@ const Navbar = () => {
           })}
         </div>
 
-        {/* Right Section: Theme Toggle & Admin / EN Pill */}
+        {/* Right Section: Admin / EN Pill */}
         <div className="flex items-center gap-1.5 sm:gap-2">
-          {/* Dark / Light Mode Toggle Button dengan Animasi Air Tumpah */}
-          <button
-            onClick={(e) => toggleTheme(e)}
-            className="p-2 sm:p-2.5 rounded-full hover:bg-slate-100 dark:hover:bg-zinc-800 text-slate-700 dark:text-zinc-300 transition-colors duration-200 cursor-pointer"
-            title={
-              theme === "dark" ? "Ubah ke Mode Terang" : "Ubah ke Mode Gelap"
-            }
-            aria-label="Toggle Theme"
-          >
-            {theme === "dark" ? (
-              <Sun size={18} className="text-amber-400 animate-spin-slow" />
-            ) : (
-              <Moon size={18} className="text-slate-700" />
-            )}
-          </button>
-
           {/* Admin / EN Pill Button Sesuai Gambar Referensi */}
           <Link
             to={isAuthenticated ? "/admin" : "/admin/login"}
