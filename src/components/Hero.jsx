@@ -39,53 +39,63 @@ const LinkedinIcon = (props) => (
 );
 
 const Hero = () => {
+  const marqueeItems = [
+    "JUNIOR WEB DEVELOPER",
+    "/",
+    "FRONTEND DEV",
+    "/",
+    "REACT & NEXT.JS",
+    "/",
+    "QUALITY ASSURANCE",
+    "/",
+    "QA TESTING",
+    "/",
+    "SOFTWARE TESTING",
+    "/",
+  ];
+
+  // Repeat for continuous seamless loop
+  const fullMarquee = [...marqueeItems, ...marqueeItems, ...marqueeItems, ...marqueeItems];
+
   return (
     <section
       id="home"
       className="min-h-screen flex flex-col justify-between pt-24 pb-8 relative overflow-hidden select-none w-full"
     >
-      {/* Background Decorative Glow */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-sky-500/10 dark:bg-sky-500/15 blur-[140px] pointer-events-none rounded-full" />
+      {/* Background Glow */}
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-sky-500/10 dark:bg-sky-500/15 blur-[140px] pointer-events-none rounded-full" />
 
       {/* Top Tagline */}
-      <div className="w-full text-center relative z-10">
+      <div className="w-full text-center relative z-10 pt-4">
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[var(--badge-bg)] text-[var(--badge-text)] border border-[var(--badge-border)] text-xs font-bold tracking-wider uppercase shadow-sm">
           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
           MUHAMMAD ABI RAFDI PRATAMA
         </div>
       </div>
 
-      {/* Main Banner: Fullscreen Edge-to-Edge Typography + Animated Diagonal Ribbon */}
+      {/* Main Banner: Giant Text + Diagonal Overlay Ribbon Mentok Ujung ke Ujung */}
       <div className="relative w-full my-auto flex flex-col items-center justify-center z-10 py-4 overflow-hidden">
-        {/* Giant Name Typography (Full width fit) */}
-        <div className="w-full overflow-hidden flex justify-center items-center">
-          <h1 className="text-[12.5vw] sm:text-[13.5vw] md:text-[14.5vw] font-black font-display tracking-tighter leading-none uppercase text-[var(--text-primary)] text-center w-full px-1">
+        {/* Giant Name Typography Fit Screen */}
+        <div className="w-full flex justify-center items-center overflow-hidden">
+          <h1 className="text-[13vw] sm:text-[14.5vw] font-black font-display tracking-tighter leading-none uppercase text-[var(--text-primary)] text-center w-full px-0 select-none">
             GALABEEWW
           </h1>
         </div>
 
-        {/* Diagonal Overlay Ribbon Fullscreen Edge-to-Edge dengan Animasi Tulisan Bergerak Dinamis */}
-        <div className="w-screen relative left-1/2 -translate-x-1/2 py-3 sm:py-4 bg-sky-500 text-slate-950 font-black uppercase text-xs sm:text-sm tracking-wider shadow-2xl relative z-20 rotate-[-3.5deg] -mt-[6.5vw] sm:-mt-[7.5vw] flex items-center justify-between border-y-2 border-slate-950/20 overflow-hidden">
-          {/* Sisi Kiri: Animasi Tulisan Bergerak Dinamis */}
-          <div className="flex-1 overflow-hidden flex items-center">
-            <div className="animate-marquee whitespace-nowrap flex items-center gap-6 pr-4">
-              <span>JUNIOR WEB DEVELOPER</span>
-              <span>/</span>
-              <span>FRONTEND DEV</span>
-              <span>/</span>
-              <span>REACT & NEXT.JS</span>
-              <span>/</span>
-              <span>JUNIOR WEB DEVELOPER</span>
-              <span>/</span>
-              <span>FRONTEND DEV</span>
-              <span>/</span>
-              <span>REACT & NEXT.JS</span>
-              <span>/</span>
-            </div>
+        {/* Diagonal Overlay Ribbon Fullscreen Mentok dari Ujung Kanan ke Ujung Kiri Layar */}
+        <div className="w-[120vw] -ml-[10vw] py-3.5 sm:py-4.5 bg-sky-500 text-slate-950 font-black uppercase text-xs sm:text-base tracking-wider shadow-2xl relative z-20 rotate-[-3.5deg] -mt-[6.5vw] sm:-mt-[7.5vw] border-y-2 border-slate-950/20 overflow-hidden flex items-center justify-center">
+          
+          {/* Semua Tulisan Bergerak SATU ARAH (Dari Kanan ke Kiri) di dalam Ribbon */}
+          <div className="animate-marquee whitespace-nowrap flex items-center gap-6 w-full">
+            {fullMarquee.map((item, idx) => (
+              <span key={idx} className="shrink-0">
+                {item}
+              </span>
+            ))}
           </div>
 
-          {/* Foto Profil Melingkar di Tengah Ribbon */}
-          <div className="relative z-30 shrink-0 mx-3 sm:mx-6 rotate-[3.5deg] group cursor-pointer">
+          {/* Foto Profil Melingkar Terkunci di Tengah Ribbon */}
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-30 rotate-[3.5deg] group cursor-pointer">
             <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-full border-4 border-slate-950 overflow-hidden shadow-2xl bg-slate-900 group-hover:scale-110 transition-transform duration-300">
               <img
                 src="/foto.jpg"
@@ -97,24 +107,6 @@ const Hero = () => {
                     "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80";
                 }}
               />
-            </div>
-          </div>
-
-          {/* Sisi Kanan: Animasi Tulisan Bergerak Dinamis */}
-          <div className="flex-1 overflow-hidden flex items-center">
-            <div className="animate-marquee-reverse whitespace-nowrap flex items-center gap-6 pl-4">
-              <span>QUALITY ASSURANCE</span>
-              <span>/</span>
-              <span>QA TESTING</span>
-              <span>/</span>
-              <span>SOFTWARE QA</span>
-              <span>/</span>
-              <span>QUALITY ASSURANCE</span>
-              <span>/</span>
-              <span>QA TESTING</span>
-              <span>/</span>
-              <span>SOFTWARE QA</span>
-              <span>/</span>
             </div>
           </div>
         </div>

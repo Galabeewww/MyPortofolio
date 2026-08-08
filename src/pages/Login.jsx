@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { Lock, User, ArrowLeft, LogIn } from 'lucide-react';
-import Swal from 'sweetalert2';
-import withReactContent from 'sweetalert2-react-content';
-import { useAuth } from '../context/AuthContext';
+import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { Lock, User, ArrowLeft, LogIn } from "lucide-react";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import { useAuth } from "../context/AuthContext";
 
 const MySwal = withReactContent(Swal);
 
 const Login = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const { login } = useAuth();
   const navigate = useNavigate();
 
@@ -20,24 +20,24 @@ const Login = () => {
 
     if (res.success) {
       MySwal.fire({
-        icon: 'success',
-        title: 'Login Berhasil!',
-        text: 'Selamat datang di Panel Admin Dashboard.',
+        icon: "success",
+        title: "Login Berhasil!",
+        text: "Selamat datang di Panel Admin Dashboard.",
         timer: 1500,
         showConfirmButton: false,
-        background: 'var(--bg-card)',
-        color: 'var(--text-primary)',
+        background: "var(--bg-card)",
+        color: "var(--text-primary)",
       }).then(() => {
-        navigate('/admin');
+        navigate("/admin");
       });
     } else {
       MySwal.fire({
-        icon: 'error',
-        title: 'Login Gagal',
+        icon: "error",
+        title: "Login Gagal",
         text: res.message,
-        confirmButtonColor: '#09090b',
-        background: 'var(--bg-card)',
-        color: 'var(--text-primary)',
+        confirmButtonColor: "#09090b",
+        background: "var(--bg-card)",
+        color: "var(--text-primary)",
       });
     }
   };
@@ -76,7 +76,7 @@ const Login = () => {
                 required
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                placeholder="Masukkan username (admin)"
+                placeholder="Masukkan username"
                 className="w-full pl-10 pr-4 py-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--text-primary)] transition-colors duration-200 text-sm"
               />
             </div>
@@ -93,15 +93,23 @@ const Login = () => {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Masukkan password (admin)"
+                placeholder="Masukkan password"
                 className="w-full pl-10 pr-4 py-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--text-primary)] transition-colors duration-200 text-sm"
               />
             </div>
           </div>
 
           <div className="p-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-xs text-[var(--text-muted)]">
-            <span className="font-semibold text-[var(--text-secondary)]">Tips:</span> Kredensial default admin adalah: <br />
-            Username: <code className="text-[var(--text-primary)] font-bold">admin</code> | Password: <code className="text-[var(--text-primary)] font-bold">admin</code>
+            <span className="font-semibold text-[var(--text-secondary)]">
+              Tips:
+            </span>{" "}
+            Kredensial default admin adalah: <br />
+            Username:{" "}
+            <code className="text-[var(--text-primary)] font-bold">
+              admin
+            </code>{" "}
+            | Password:{" "}
+            <code className="text-[var(--text-primary)] font-bold">admin</code>
           </div>
 
           <button

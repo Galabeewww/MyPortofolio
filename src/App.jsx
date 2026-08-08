@@ -20,8 +20,9 @@ function MainPortfolio() {
     <div className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] relative bg-grid-pattern overflow-x-hidden transition-colors duration-250">
       <div className="relative z-10">
         <Navbar />
+        {/* Hero Full-Bleed Edge-to-Edge tanpa terpotong max-w kontainer */}
+        <Hero />
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <Hero />
           <About />
           <Projects />
           <Contact />
