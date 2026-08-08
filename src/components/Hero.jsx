@@ -73,7 +73,7 @@ const Hero = () => {
         {/* Giant Name Typography */}
         <div className="w-full flex justify-center items-center">
           <h1 className="hero-giant-text font-black font-display tracking-[-0.06em] leading-[0.85] uppercase text-[var(--text-primary)] text-center w-full px-0 select-none">
-            GALABEEWW
+            Galabew
           </h1>
         </div>
 
