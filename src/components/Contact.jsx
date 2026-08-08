@@ -113,7 +113,10 @@ const Contact = () => {
   };
 
   return (
-    <section id="contact" className="py-24 relative border-t border-[var(--border-color)]">
+    <section
+      id="contact"
+      className="py-24 relative border-t border-[var(--border-color)]"
+    >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 space-y-12">
         {/* Title & Subtitle */}
         <div className="text-center max-w-3xl mx-auto space-y-4">
@@ -126,202 +129,105 @@ const Contact = () => {
         </div>
 
         {/* Main Contact Layout - Two Columns */}
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
-          {/* Left: Contact Info Card */}
-          <div className="lg:col-span-2 rounded-3xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 dark:from-zinc-900 dark:via-zinc-800 dark:to-zinc-900 border border-slate-700/50 p-8 space-y-8 shadow-2xl relative overflow-hidden [data-theme='light']_&:from-slate-100 [data-theme='light']_&:to-white">
-            {/* Decorative gradient blob */}
-            <div className="absolute top-0 right-0 w-40 h-40 bg-sky-500/10 blur-3xl rounded-full pointer-events-none" />
-            <div className="absolute bottom-0 left-0 w-32 h-32 bg-sky-500/5 blur-2xl rounded-full pointer-events-none" />
 
-            <div className="relative z-10 space-y-8">
-              <div>
-                <h3 className="text-xl font-bold font-display text-white dark:text-white mb-2">
-                  {t.contact.infoTitle}
+        {/* Right: 3 Contact Cards + Send Message */}
+        <div className="lg:col-span-3 space-y-6">
+          {/* 3 Quick Action Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {/* Email Card */}
+            <a
+              href="https://mail.google.com/mail/?view=cm&fs=1&to=pratamaabi28@gmail.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="glow-card p-6 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-color)] flex flex-col items-center justify-center space-y-3 hover:border-sky-500/50 transition-all duration-300 shadow-lg group cursor-pointer text-center"
+            >
+              <div className="p-3 rounded-2xl bg-sky-500/10 text-sky-500 border border-sky-500/20 group-hover:scale-110 transition-transform">
+                <Mail size={22} />
+              </div>
+              <div className="space-y-0.5">
+                <h3 className="text-sm font-bold font-display text-[var(--text-primary)]">
+                  Email
                 </h3>
-                <p className="text-sm text-slate-300 dark:text-zinc-400 leading-relaxed">
-                  {t.contact.infoDesc}
+                <p className="text-[11px] text-[var(--text-secondary)] font-medium">
+                  pratamaabi28@gmail.com
                 </p>
               </div>
+              <ArrowUpRight
+                size={14}
+                className="text-[var(--text-muted)] group-hover:text-sky-500 transition-colors"
+              />
+            </a>
 
-              {/* Email */}
-              <div className="flex items-start gap-4">
-                <div className="p-3 rounded-2xl bg-sky-500/10 border border-sky-500/20 text-sky-400 shrink-0">
-                  <Mail size={20} />
-                </div>
-                <div>
-                  <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1">
-                    {t.contact.emailTitle}
-                  </p>
-                  <a
-                    href="https://mail.google.com/mail/?view=cm&fs=1&to=pratamaabi28@gmail.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-sm font-bold text-white hover:text-sky-400 transition-colors"
-                  >
-                    pratamaabi28@gmail.com
-                  </a>
-                </div>
+            {/* LinkedIn Card */}
+            <a
+              href="https://www.linkedin.com/in/muhammad-abi-rafdi-pratama-436044290/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="glow-card p-6 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-color)] flex flex-col items-center justify-center space-y-3 hover:border-sky-500/50 transition-all duration-300 shadow-lg group cursor-pointer text-center"
+            >
+              <div className="p-3 rounded-2xl bg-sky-500/10 text-sky-500 border border-sky-500/20 group-hover:scale-110 transition-transform">
+                <LinkedinIcon size={22} />
               </div>
-
-              {/* Location */}
-              <div className="flex items-start gap-4">
-                <div className="p-3 rounded-2xl bg-sky-500/10 border border-sky-500/20 text-sky-400 shrink-0">
-                  <MapPin size={20} />
-                </div>
-                <div>
-                  <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1">
-                    {t.contact.locationTitle}
-                  </p>
-                  <p className="text-sm font-bold text-white">Indonesia</p>
-                </div>
-              </div>
-
-              {/* Work Status */}
-              <div className="flex items-start gap-4">
-                <div className="p-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 shrink-0">
-                  <Briefcase size={20} />
-                </div>
-                <div>
-                  <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1">
-                    {t.contact.statusTitle}
-                  </p>
-                  <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                    <p className="text-sm font-bold text-emerald-400">{t.contact.statusText}</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Social Icons */}
-              <div className="pt-4 border-t border-slate-700/50">
-                <p className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-4">
-                  Follow Me
+              <div className="space-y-0.5">
+                <h3 className="text-sm font-bold font-display text-[var(--text-primary)]">
+                  LinkedIn
+                </h3>
+                <p className="text-[11px] text-[var(--text-secondary)] font-medium">
+                  Muhammad Abi Rafdi P.
                 </p>
-                <div className="flex items-center gap-3">
-                  <a
-                    href="https://github.com/Galabeewww"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="p-3 rounded-xl bg-slate-800/80 hover:bg-sky-500/20 border border-slate-700/50 hover:border-sky-500/30 text-slate-300 hover:text-sky-400 transition-all duration-300 hover:scale-110 cursor-pointer"
-                  >
-                    <GithubIcon size={18} />
-                  </a>
-                  <a
-                    href="https://www.linkedin.com/in/muhammad-abi-rafdi-pratama-436044290/"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="p-3 rounded-xl bg-slate-800/80 hover:bg-sky-500/20 border border-slate-700/50 hover:border-sky-500/30 text-slate-300 hover:text-sky-400 transition-all duration-300 hover:scale-110 cursor-pointer"
-                  >
-                    <LinkedinIcon size={18} />
-                  </a>
-                  <a
-                    href="https://instagram.com/galabeewww"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="p-3 rounded-xl bg-slate-800/80 hover:bg-sky-500/20 border border-slate-700/50 hover:border-sky-500/30 text-slate-300 hover:text-sky-400 transition-all duration-300 hover:scale-110 cursor-pointer"
-                  >
-                    <InstagramIcon size={18} />
-                  </a>
-                </div>
               </div>
-            </div>
+              <ArrowUpRight
+                size={14}
+                className="text-[var(--text-muted)] group-hover:text-sky-500 transition-colors"
+              />
+            </a>
+
+            {/* GitHub Card */}
+            <a
+              href="https://github.com/Galabeewww"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="glow-card p-6 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-color)] flex flex-col items-center justify-center space-y-3 hover:border-sky-500/50 transition-all duration-300 shadow-lg group cursor-pointer text-center"
+            >
+              <div className="p-3 rounded-2xl bg-sky-500/10 text-sky-500 border border-sky-500/20 group-hover:scale-110 transition-transform">
+                <GithubIcon size={22} />
+              </div>
+              <div className="space-y-0.5">
+                <h3 className="text-sm font-bold font-display text-[var(--text-primary)]">
+                  GitHub
+                </h3>
+                <p className="text-[11px] text-[var(--text-secondary)] font-medium">
+                  @Galabeewww
+                </p>
+              </div>
+              <ArrowUpRight
+                size={14}
+                className="text-[var(--text-muted)] group-hover:text-sky-500 transition-colors"
+              />
+            </a>
           </div>
 
-          {/* Right: 3 Contact Cards + Send Message */}
-          <div className="lg:col-span-3 space-y-6">
-            {/* 3 Quick Action Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              {/* Email Card */}
-              <a
-                href="https://mail.google.com/mail/?view=cm&fs=1&to=pratamaabi28@gmail.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="glow-card p-6 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-color)] flex flex-col items-center justify-center space-y-3 hover:border-sky-500/50 transition-all duration-300 shadow-lg group cursor-pointer text-center"
-              >
-                <div className="p-3 rounded-2xl bg-sky-500/10 text-sky-500 border border-sky-500/20 group-hover:scale-110 transition-transform">
-                  <Mail size={22} />
-                </div>
-                <div className="space-y-0.5">
-                  <h3 className="text-sm font-bold font-display text-[var(--text-primary)]">
-                    Email
-                  </h3>
-                  <p className="text-[11px] text-[var(--text-secondary)] font-medium">
-                    pratamaabi28@gmail.com
-                  </p>
-                </div>
-                <ArrowUpRight
-                  size={14}
-                  className="text-[var(--text-muted)] group-hover:text-sky-500 transition-colors"
-                />
-              </a>
-
-              {/* LinkedIn Card */}
-              <a
-                href="https://www.linkedin.com/in/muhammad-abi-rafdi-pratama-436044290/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="glow-card p-6 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-color)] flex flex-col items-center justify-center space-y-3 hover:border-sky-500/50 transition-all duration-300 shadow-lg group cursor-pointer text-center"
-              >
-                <div className="p-3 rounded-2xl bg-sky-500/10 text-sky-500 border border-sky-500/20 group-hover:scale-110 transition-transform">
-                  <LinkedinIcon size={22} />
-                </div>
-                <div className="space-y-0.5">
-                  <h3 className="text-sm font-bold font-display text-[var(--text-primary)]">
-                    LinkedIn
-                  </h3>
-                  <p className="text-[11px] text-[var(--text-secondary)] font-medium">
-                    Muhammad Abi Rafdi P.
-                  </p>
-                </div>
-                <ArrowUpRight
-                  size={14}
-                  className="text-[var(--text-muted)] group-hover:text-sky-500 transition-colors"
-                />
-              </a>
-
-              {/* GitHub Card */}
-              <a
-                href="https://github.com/Galabeewww"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="glow-card p-6 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-color)] flex flex-col items-center justify-center space-y-3 hover:border-sky-500/50 transition-all duration-300 shadow-lg group cursor-pointer text-center"
-              >
-                <div className="p-3 rounded-2xl bg-sky-500/10 text-sky-500 border border-sky-500/20 group-hover:scale-110 transition-transform">
-                  <GithubIcon size={22} />
-                </div>
-                <div className="space-y-0.5">
-                  <h3 className="text-sm font-bold font-display text-[var(--text-primary)]">
-                    GitHub
-                  </h3>
-                  <p className="text-[11px] text-[var(--text-secondary)] font-medium">
-                    @Galabeewww
-                  </p>
-                </div>
-                <ArrowUpRight
-                  size={14}
-                  className="text-[var(--text-muted)] group-hover:text-sky-500 transition-colors"
-                />
-              </a>
+          {/* CTA: Send Message Button */}
+          <div className="rounded-2xl bg-[var(--bg-card)] border border-[var(--border-color)] p-8 text-center space-y-5 shadow-lg">
+            <div className="space-y-2">
+              <h3 className="text-lg font-bold font-display text-[var(--text-primary)]">
+                {t.contact.titlePrefix}
+                {t.contact.titleSuffix}
+              </h3>
+              <p className="text-xs text-[var(--text-secondary)] max-w-md mx-auto">
+                {t.contact.subtitle}
+              </p>
             </div>
-
-            {/* CTA: Send Message Button */}
-            <div className="rounded-2xl bg-[var(--bg-card)] border border-[var(--border-color)] p-8 text-center space-y-5 shadow-lg">
-              <div className="space-y-2">
-                <h3 className="text-lg font-bold font-display text-[var(--text-primary)]">
-                  {t.contact.titlePrefix}{t.contact.titleSuffix}
-                </h3>
-                <p className="text-xs text-[var(--text-secondary)] max-w-md mx-auto">
-                  {t.contact.subtitle}
-                </p>
-              </div>
-              <button
-                onClick={() => setIsFormModalOpen(true)}
-                className="inline-flex items-center gap-3 px-10 py-4 rounded-2xl bg-[var(--accent-btn)] hover:bg-[var(--accent-btn-hover)] text-[var(--accent-btn-text)] font-extrabold text-xs sm:text-sm tracking-widest uppercase shadow-2xl hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer group"
-              >
-                <Send size={16} className="group-hover:translate-x-1 transition-transform" />
-                <span>{t.contact.sendBtn}</span>
-              </button>
-            </div>
+            <button
+              onClick={() => setIsFormModalOpen(true)}
+              className="inline-flex items-center gap-3 px-10 py-4 rounded-2xl bg-[var(--accent-btn)] hover:bg-[var(--accent-btn-hover)] text-[var(--accent-btn-text)] font-extrabold text-xs sm:text-sm tracking-widest uppercase shadow-2xl hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer group"
+            >
+              <Send
+                size={16}
+                className="group-hover:translate-x-1 transition-transform"
+              />
+              <span>{t.contact.sendBtn}</span>
+            </button>
           </div>
         </div>
       </div>
@@ -408,7 +314,9 @@ const Contact = () => {
                 disabled={status === "sending"}
                 className="w-full py-3.5 px-6 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-extrabold text-xs uppercase tracking-widest shadow-xl transition-all cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2"
               >
-                {status === "sending" ? t.contact.sendingBtn : t.contact.sendBtn}
+                {status === "sending"
+                  ? t.contact.sendingBtn
+                  : t.contact.sendBtn}
               </button>
             </form>
           </div>
