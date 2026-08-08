@@ -206,6 +206,37 @@ const AdminDashboard = () => {
       created_at: projectData.created_at || new Date().toISOString(),
     };
 
+    // ===== Detect "No Changes" on Update =====
+    if (isEdit) {
+      const original = projects.find((p) => p.id === formattedProject.id);
+      if (original) {
+        const fieldsToCompare = ['title', 'description', 'full_description', 'category', 'live_link', 'github_link', 'cover_image'];
+        const noFieldChanges = fieldsToCompare.every(
+          (key) => (original[key] || '') === (formattedProject[key] || '')
+        );
+        const origTech = JSON.stringify(Array.isArray(original.tech) ? original.tech : []);
+        const newTech = JSON.stringify(Array.isArray(formattedProject.tech) ? formattedProject.tech : []);
+        const origFeatures = JSON.stringify(Array.isArray(original.features) ? original.features : []);
+        const newFeatures = JSON.stringify(Array.isArray(formattedProject.features) ? formattedProject.features : []);
+        const origImages = JSON.stringify(original.images || []);
+        const newImages = JSON.stringify(formattedProject.images || []);
+        const origCreatedAt = original.created_at ? new Date(original.created_at).toISOString().substring(0, 7) : '';
+        const newCreatedAt = formattedProject.created_at ? new Date(formattedProject.created_at).toISOString().substring(0, 7) : '';
+
+        if (noFieldChanges && origTech === newTech && origFeatures === newFeatures && origImages === newImages && origCreatedAt === newCreatedAt) {
+          MySwal.fire({
+            icon: 'info',
+            title: 'No Changes Detected',
+            text: 'No data has been modified. Please make changes before saving.',
+            confirmButtonColor: '#0284c7',
+            background: 'var(--bg-card)',
+            color: 'var(--text-primary)',
+          });
+          return;
+        }
+      }
+    }
+
     if (isSupabaseConfigured) {
       try {
         if (isEdit) {
@@ -214,6 +245,7 @@ const AdminDashboard = () => {
             .update({
               title: formattedProject.title,
               description: formattedProject.description,
+              full_description: formattedProject.full_description,
               category: formattedProject.category,
               tech: formattedProject.tech,
               features: formattedProject.features,
@@ -229,6 +261,7 @@ const AdminDashboard = () => {
             {
               title: formattedProject.title,
               description: formattedProject.description,
+              full_description: formattedProject.full_description,
               category: formattedProject.category,
               tech: formattedProject.tech,
               features: formattedProject.features,
@@ -260,10 +293,10 @@ const AdminDashboard = () => {
     // SweetAlert notification
     MySwal.fire({
       icon: 'success',
-      title: isEdit ? 'Proyek Diperbarui!' : 'Proyek Ditambahkan!',
+      title: isEdit ? 'Project Updated!' : 'Project Added!',
       text: isEdit
-        ? `Proyek "${formattedProject.title}" berhasil diperbarui.`
-        : `Proyek "${formattedProject.title}" berhasil disimpan secara permanen.`,
+        ? `Project "${formattedProject.title}" has been successfully updated.`
+        : `Project "${formattedProject.title}" has been saved permanently.`,
       timer: 2000,
       showConfirmButton: false,
       background: 'var(--bg-card)',
@@ -317,6 +350,28 @@ const AdminDashboard = () => {
       id: skillData.id || `s_${Date.now()}`,
     };
 
+    // ===== Detect "No Changes" on Update =====
+    if (isEdit) {
+      const original = skills.find((s) => s.id === formattedSkill.id);
+      if (original) {
+        const noChanges =
+          (original.name || '') === (formattedSkill.name || '') &&
+          (original.logo_url || '') === (formattedSkill.logo_url || '') &&
+          (original.category || '') === (formattedSkill.category || '');
+        if (noChanges) {
+          MySwal.fire({
+            icon: 'info',
+            title: 'No Changes Detected',
+            text: 'No data has been modified. Please make changes before saving.',
+            confirmButtonColor: '#0284c7',
+            background: 'var(--bg-card)',
+            color: 'var(--text-primary)',
+          });
+          return;
+        }
+      }
+    }
+
     if (isSupabaseConfigured) {
       try {
         if (isEdit) {
@@ -354,8 +409,8 @@ const AdminDashboard = () => {
 
     MySwal.fire({
       icon: 'success',
-      title: isEdit ? 'Skill Diperbarui!' : 'Skill Ditambahkan!',
-      text: `Skill "${formattedSkill.name}" berhasil disimpan.`,
+      title: isEdit ? 'Skill Updated!' : 'Skill Added!',
+      text: `Skill "${formattedSkill.name}" has been saved successfully.`,
       timer: 2000,
       showConfirmButton: false,
       background: 'var(--bg-card)',
@@ -409,6 +464,22 @@ const AdminDashboard = () => {
       id: catData.id || `c_${Date.now()}`,
     };
 
+    // ===== Detect "No Changes" on Update =====
+    if (isEdit) {
+      const original = categories.find((c) => c.id === formattedCat.id);
+      if (original && (original.name || '') === (formattedCat.name || '')) {
+        MySwal.fire({
+          icon: 'info',
+          title: 'No Changes Detected',
+          text: 'No data has been modified. Please make changes before saving.',
+          confirmButtonColor: '#0284c7',
+          background: 'var(--bg-card)',
+          color: 'var(--text-primary)',
+        });
+        return;
+      }
+    }
+
     if (isSupabaseConfigured) {
       try {
         if (isEdit) {
@@ -433,8 +504,8 @@ const AdminDashboard = () => {
 
     MySwal.fire({
       icon: 'success',
-      title: isEdit ? 'Kategori Diperbarui!' : 'Kategori Ditambahkan!',
-      text: `Kategori "${formattedCat.name}" berhasil disimpan.`,
+      title: isEdit ? 'Category Updated!' : 'Category Added!',
+      text: `Category "${formattedCat.name}" has been saved successfully.`,
       timer: 1800,
       showConfirmButton: false,
       background: 'var(--bg-card)',

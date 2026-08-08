@@ -137,6 +137,12 @@ const ProjectDetailModal = ({
     ? project.tech.split(",").map((t) => t.trim())
     : [];
 
+  const featuresList = Array.isArray(project.features)
+    ? project.features.filter((f) => f && f.trim() !== "")
+    : typeof project.features === "string"
+    ? project.features.split(",").map((f) => f.trim()).filter((f) => f.length > 0)
+    : [];
+
   const longDescription = project.full_description || project.description;
 
   return (
@@ -334,6 +340,59 @@ const ProjectDetailModal = ({
                 ))}
               </div>
             </div>
+
+            {/* Features (from CRUD) */}
+            {featuresList.length > 0 && (
+              <div className="space-y-2.5 pt-2">
+                <h4 className="text-xs font-extrabold uppercase tracking-wider text-slate-800 dark:text-zinc-200">
+                  Key Features
+                </h4>
+                <ul className="space-y-2">
+                  {featuresList.map((feature, idx) => (
+                    <li
+                      key={idx}
+                      className="flex items-start gap-2.5 text-sm text-slate-600 dark:text-zinc-300"
+                    >
+                      <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-sky-500 shrink-0" />
+                      <span>{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {/* Live Demo & GitHub Links */}
+            {(project.live_link || project.github_link) && (
+              <div className="space-y-2.5 pt-2">
+                <h4 className="text-xs font-extrabold uppercase tracking-wider text-slate-800 dark:text-zinc-200">
+                  Links
+                </h4>
+                <div className="space-y-2">
+                  {project.live_link && project.live_link.trim() !== "" && (
+                    <a
+                      href={project.live_link}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="flex items-center gap-2 text-sm text-sky-500 hover:text-sky-400 font-medium transition-colors break-all"
+                    >
+                      <ExternalLink size={14} className="shrink-0" />
+                      <span>{project.live_link}</span>
+                    </a>
+                  )}
+                  {project.github_link && project.github_link.trim() !== "" && (
+                    <a
+                      href={project.github_link}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="flex items-center gap-2 text-sm text-slate-600 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white font-medium transition-colors break-all"
+                    >
+                      <GithubIcon size={14} className="shrink-0" />
+                      <span>{project.github_link}</span>
+                    </a>
+                  )}
+                </div>
+              </div>
+            )}
 
             <hr className="border-slate-100 dark:border-zinc-800" />
 

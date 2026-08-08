@@ -1,13 +1,70 @@
 import React, { useState } from "react";
-import { Mail, Send } from "lucide-react";
+import { Mail, Send, X, MapPin, Briefcase, ArrowUpRight } from "lucide-react";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { useLanguage } from "../context/LanguageContext";
 
 const MySwal = withReactContent(Swal);
 
+const GithubIcon = (props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={props.size || 24}
+    height={props.size || 24}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    {...props}
+  >
+    <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
+    <path d="M9 18c-4.51 2-5-2-7-2" />
+  </svg>
+);
+
+const LinkedinIcon = (props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={props.size || 24}
+    height={props.size || 24}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    {...props}
+  >
+    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+    <rect width="4" height="12" x="2" y="9" rx="1" />
+    <circle cx="4" cy="4" r="2" />
+  </svg>
+);
+
+const InstagramIcon = (props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={props.size || 24}
+    height={props.size || 24}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    {...props}
+  >
+    <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+    <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+  </svg>
+);
+
 const Contact = () => {
   const { t } = useLanguage();
+  const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -39,6 +96,7 @@ const Contact = () => {
     setTimeout(() => {
       setStatus("success");
       setFormData({ name: "", email: "", message: "" });
+      setIsFormModalOpen(false);
 
       MySwal.fire({
         icon: "success",
@@ -56,179 +114,306 @@ const Contact = () => {
 
   return (
     <section id="contact" className="py-24 relative border-t border-[var(--border-color)]">
-      <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-        <h2 className="text-3xl sm:text-5xl font-extrabold font-display text-[var(--text-primary)]">
-          {t.contact.titlePrefix}<span className="text-sky-500">{t.contact.titleSuffix}</span>
-        </h2>
-        <p className="text-[var(--text-secondary)] text-sm sm:text-base font-medium leading-relaxed">
-          {t.contact.subtitle}
-        </p>
-      </div>
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 space-y-12">
+        {/* Title & Subtitle */}
+        <div className="text-center max-w-3xl mx-auto space-y-4">
+          <h2 className="text-3xl sm:text-5xl font-extrabold font-display text-[var(--text-primary)] tracking-tight">
+            Get In <span className="text-sky-500">Touch</span>
+          </h2>
+          <p className="text-[var(--text-secondary)] text-sm sm:text-base font-medium leading-relaxed">
+            {t.contact.subtitle}
+          </p>
+        </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 text-left">
-        {/* Informasi Kontak */}
-        <div className="lg:col-span-5 space-y-6">
-          <div className="glow-card p-8 rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card)] space-y-8 shadow-xl">
-            <h3 className="text-xl font-bold text-[var(--text-primary)] font-display">
-              {t.contact.infoTitle}
-            </h3>
+        {/* Main Contact Layout - Two Columns */}
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+          {/* Left: Contact Info Card */}
+          <div className="lg:col-span-2 rounded-3xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 dark:from-zinc-900 dark:via-zinc-800 dark:to-zinc-900 border border-slate-700/50 p-8 space-y-8 shadow-2xl relative overflow-hidden [data-theme='light']_&:from-slate-100 [data-theme='light']_&:to-white">
+            {/* Decorative gradient blob */}
+            <div className="absolute top-0 right-0 w-40 h-40 bg-sky-500/10 blur-3xl rounded-full pointer-events-none" />
+            <div className="absolute bottom-0 left-0 w-32 h-32 bg-sky-500/5 blur-2xl rounded-full pointer-events-none" />
 
-            {/* Email */}
-            <div className="flex items-start gap-4">
-              <div className="p-3 rounded-xl bg-[var(--bg-secondary)] text-[var(--text-primary)] border border-[var(--border-color)]">
-                <Mail size={20} className="text-sky-500" />
-              </div>
+            <div className="relative z-10 space-y-8">
               <div>
-                <p className="text-xs text-[var(--text-muted)] font-semibold uppercase tracking-wider">
-                  {t.contact.emailTitle}
+                <h3 className="text-xl font-bold font-display text-white dark:text-white mb-2">
+                  {t.contact.infoTitle}
+                </h3>
+                <p className="text-sm text-slate-300 dark:text-zinc-400 leading-relaxed">
+                  {t.contact.infoDesc}
                 </p>
-                <a
-                  href="https://mail.google.com/mail/?view=cm&fs=1&to=pratamaabi28@gmail.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-[var(--text-primary)] hover:underline font-medium"
-                >
-                  pratamaabi28@gmail.com
-                </a>
               </div>
-            </div>
 
-            {/* LinkedIn */}
-            <div className="flex items-start gap-4">
-              <div className="p-3 rounded-xl bg-[var(--bg-secondary)] text-[var(--text-primary)] border border-[var(--border-color)]">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                  className="text-sky-500"
-                >
-                  <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.049c.476-.9 1.637-1.852 3.37-1.852 3.602 0 4.263 2.37 4.263 5.455v6.288zM5.337 7.433a2.062 2.062 0 110-4.124 2.062 2.062 0 010 4.124zM6.995 20.452H3.675V9h3.32v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.226.792 24 1.771 24h20.451C23.2 24 24 23.226 24 22.271V1.729C24 .774 23.2 0 22.225 0z" />
-                </svg>
+              {/* Email */}
+              <div className="flex items-start gap-4">
+                <div className="p-3 rounded-2xl bg-sky-500/10 border border-sky-500/20 text-sky-400 shrink-0">
+                  <Mail size={20} />
+                </div>
+                <div>
+                  <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1">
+                    {t.contact.emailTitle}
+                  </p>
+                  <a
+                    href="https://mail.google.com/mail/?view=cm&fs=1&to=pratamaabi28@gmail.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm font-bold text-white hover:text-sky-400 transition-colors"
+                  >
+                    pratamaabi28@gmail.com
+                  </a>
+                </div>
               </div>
-              <div>
-                <p className="text-xs text-[var(--text-muted)] font-semibold uppercase tracking-wider">
-                  LinkedIn
-                </p>
-                <a
-                  href="https://www.linkedin.com/in/muhammad-abi-rafdi-pratama-436044290/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-[var(--text-primary)] hover:underline font-medium"
-                >
-                  Muhammad Abi Rafdi Pratama
-                </a>
-              </div>
-            </div>
 
-            {/* GitHub */}
-            <div className="flex items-start gap-4">
-              <div className="p-3 rounded-xl bg-[var(--bg-secondary)] text-[var(--text-primary)] border border-[var(--border-color)]">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                  className="text-sky-500"
-                >
-                  <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.757-1.333-1.757-1.089-.744.083-.729.083-.729 1.205.084 1.84 1.236 1.84 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.775.418-1.305.762-1.605-2.665-.305-5.466-1.335-5.466-5.93 0-1.31.468-2.38 1.236-3.22-.124-.303-.536-1.523.117-3.176 0 0 1.008-.322 3.3 1.23a11.52 11.52 0 013.003-.404c1.018.005 2.042.138 3.003.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.873.118 3.176.77.84 1.236 1.91 1.236 3.22 0 4.61-2.805 5.624-5.475 5.922.43.372.823 1.102.823 2.222 0 1.606-.014 2.896-.014 3.286 0 .317.218.687.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
-                </svg>
+              {/* Location */}
+              <div className="flex items-start gap-4">
+                <div className="p-3 rounded-2xl bg-sky-500/10 border border-sky-500/20 text-sky-400 shrink-0">
+                  <MapPin size={20} />
+                </div>
+                <div>
+                  <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1">
+                    {t.contact.locationTitle}
+                  </p>
+                  <p className="text-sm font-bold text-white">Indonesia</p>
+                </div>
               </div>
-              <div>
-                <p className="text-xs text-[var(--text-muted)] font-semibold uppercase tracking-wider">
-                  GitHub
+
+              {/* Work Status */}
+              <div className="flex items-start gap-4">
+                <div className="p-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 shrink-0">
+                  <Briefcase size={20} />
+                </div>
+                <div>
+                  <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1">
+                    {t.contact.statusTitle}
+                  </p>
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                    <p className="text-sm font-bold text-emerald-400">{t.contact.statusText}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Social Icons */}
+              <div className="pt-4 border-t border-slate-700/50">
+                <p className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-4">
+                  Follow Me
                 </p>
-                <a
-                  href="https://github.com/Galabeewww"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-[var(--text-primary)] hover:underline font-medium"
-                >
-                  Galabeewww
-                </a>
+                <div className="flex items-center gap-3">
+                  <a
+                    href="https://github.com/Galabeewww"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="p-3 rounded-xl bg-slate-800/80 hover:bg-sky-500/20 border border-slate-700/50 hover:border-sky-500/30 text-slate-300 hover:text-sky-400 transition-all duration-300 hover:scale-110 cursor-pointer"
+                  >
+                    <GithubIcon size={18} />
+                  </a>
+                  <a
+                    href="https://www.linkedin.com/in/muhammad-abi-rafdi-pratama-436044290/"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="p-3 rounded-xl bg-slate-800/80 hover:bg-sky-500/20 border border-slate-700/50 hover:border-sky-500/30 text-slate-300 hover:text-sky-400 transition-all duration-300 hover:scale-110 cursor-pointer"
+                  >
+                    <LinkedinIcon size={18} />
+                  </a>
+                  <a
+                    href="https://instagram.com/galabeewww"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="p-3 rounded-xl bg-slate-800/80 hover:bg-sky-500/20 border border-slate-700/50 hover:border-sky-500/30 text-slate-300 hover:text-sky-400 transition-all duration-300 hover:scale-110 cursor-pointer"
+                  >
+                    <InstagramIcon size={18} />
+                  </a>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Formulir Pesan */}
-        <div className="lg:col-span-7">
-          <form
-            onSubmit={handleSubmit}
-            className="glow-card rounded-2xl p-8 space-y-5 bg-[var(--bg-card)] border border-[var(--border-color)] shadow-xl"
-          >
-            <div>
-              <label
-                htmlFor="name"
-                className="block text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider mb-2"
+          {/* Right: 3 Contact Cards + Send Message */}
+          <div className="lg:col-span-3 space-y-6">
+            {/* 3 Quick Action Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              {/* Email Card */}
+              <a
+                href="https://mail.google.com/mail/?view=cm&fs=1&to=pratamaabi28@gmail.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="glow-card p-6 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-color)] flex flex-col items-center justify-center space-y-3 hover:border-sky-500/50 transition-all duration-300 shadow-lg group cursor-pointer text-center"
               >
-                {t.contact.nameLabel}
-              </label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                placeholder={t.contact.namePlaceholder}
-                className="w-full px-4 py-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:border-sky-500 transition-colors duration-200"
-              />
+                <div className="p-3 rounded-2xl bg-sky-500/10 text-sky-500 border border-sky-500/20 group-hover:scale-110 transition-transform">
+                  <Mail size={22} />
+                </div>
+                <div className="space-y-0.5">
+                  <h3 className="text-sm font-bold font-display text-[var(--text-primary)]">
+                    Email
+                  </h3>
+                  <p className="text-[11px] text-[var(--text-secondary)] font-medium">
+                    pratamaabi28@gmail.com
+                  </p>
+                </div>
+                <ArrowUpRight
+                  size={14}
+                  className="text-[var(--text-muted)] group-hover:text-sky-500 transition-colors"
+                />
+              </a>
+
+              {/* LinkedIn Card */}
+              <a
+                href="https://www.linkedin.com/in/muhammad-abi-rafdi-pratama-436044290/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="glow-card p-6 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-color)] flex flex-col items-center justify-center space-y-3 hover:border-sky-500/50 transition-all duration-300 shadow-lg group cursor-pointer text-center"
+              >
+                <div className="p-3 rounded-2xl bg-sky-500/10 text-sky-500 border border-sky-500/20 group-hover:scale-110 transition-transform">
+                  <LinkedinIcon size={22} />
+                </div>
+                <div className="space-y-0.5">
+                  <h3 className="text-sm font-bold font-display text-[var(--text-primary)]">
+                    LinkedIn
+                  </h3>
+                  <p className="text-[11px] text-[var(--text-secondary)] font-medium">
+                    Muhammad Abi Rafdi P.
+                  </p>
+                </div>
+                <ArrowUpRight
+                  size={14}
+                  className="text-[var(--text-muted)] group-hover:text-sky-500 transition-colors"
+                />
+              </a>
+
+              {/* GitHub Card */}
+              <a
+                href="https://github.com/Galabeewww"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="glow-card p-6 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-color)] flex flex-col items-center justify-center space-y-3 hover:border-sky-500/50 transition-all duration-300 shadow-lg group cursor-pointer text-center"
+              >
+                <div className="p-3 rounded-2xl bg-sky-500/10 text-sky-500 border border-sky-500/20 group-hover:scale-110 transition-transform">
+                  <GithubIcon size={22} />
+                </div>
+                <div className="space-y-0.5">
+                  <h3 className="text-sm font-bold font-display text-[var(--text-primary)]">
+                    GitHub
+                  </h3>
+                  <p className="text-[11px] text-[var(--text-secondary)] font-medium">
+                    @Galabeewww
+                  </p>
+                </div>
+                <ArrowUpRight
+                  size={14}
+                  className="text-[var(--text-muted)] group-hover:text-sky-500 transition-colors"
+                />
+              </a>
             </div>
 
-            <div>
-              <label
-                htmlFor="email"
-                className="block text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider mb-2"
+            {/* CTA: Send Message Button */}
+            <div className="rounded-2xl bg-[var(--bg-card)] border border-[var(--border-color)] p-8 text-center space-y-5 shadow-lg">
+              <div className="space-y-2">
+                <h3 className="text-lg font-bold font-display text-[var(--text-primary)]">
+                  {t.contact.titlePrefix}{t.contact.titleSuffix}
+                </h3>
+                <p className="text-xs text-[var(--text-secondary)] max-w-md mx-auto">
+                  {t.contact.subtitle}
+                </p>
+              </div>
+              <button
+                onClick={() => setIsFormModalOpen(true)}
+                className="inline-flex items-center gap-3 px-10 py-4 rounded-2xl bg-[var(--accent-btn)] hover:bg-[var(--accent-btn-hover)] text-[var(--accent-btn-text)] font-extrabold text-xs sm:text-sm tracking-widest uppercase shadow-2xl hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer group"
               >
-                {t.contact.emailLabel}
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                placeholder={t.contact.emailPlaceholder}
-                className="w-full px-4 py-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:border-sky-500 transition-colors duration-200"
-              />
+                <Send size={16} className="group-hover:translate-x-1 transition-transform" />
+                <span>{t.contact.sendBtn}</span>
+              </button>
             </div>
-
-            <div>
-              <label
-                htmlFor="message"
-                className="block text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider mb-2"
-              >
-                {t.contact.messageLabel}
-              </label>
-              <textarea
-                id="message"
-                name="message"
-                rows={4}
-                value={formData.message}
-                onChange={handleChange}
-                placeholder={t.contact.messagePlaceholder}
-                className="w-full px-4 py-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:border-sky-500 transition-colors duration-200"
-              />
-            </div>
-
-            <button
-              type="submit"
-              disabled={status === "sending"}
-              className="w-full inline-flex items-center justify-center gap-2 py-3.5 rounded-xl bg-[var(--accent-btn)] hover:bg-[var(--accent-btn-hover)] text-[var(--accent-btn-text)] font-extrabold text-xs uppercase tracking-widest shadow-xl transition-all duration-200 cursor-pointer disabled:opacity-50"
-            >
-              {status === "sending" ? (
-                t.contact.sendingBtn
-              ) : (
-                <>
-                  <Send size={16} /> {t.contact.sendBtn}
-                </>
-              )}
-            </button>
-          </form>
+          </div>
         </div>
       </div>
+
+      {/* Modal Form */}
+      {isFormModalOpen && (
+        <div
+          onClick={() => setIsFormModalOpen(false)}
+          className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 animate-[fadeIn_0.2s_ease-out]"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="w-full max-w-lg rounded-3xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 shadow-2xl p-6 sm:p-8 space-y-6 text-left relative"
+          >
+            <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-zinc-800">
+              <h3 className="text-xl font-bold font-display text-slate-900 dark:text-white">
+                {t.contact.sendBtn}
+              </h3>
+              <button
+                onClick={() => setIsFormModalOpen(false)}
+                className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-zinc-800 text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label
+                  htmlFor="name"
+                  className="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-zinc-400 mb-2"
+                >
+                  {t.contact.nameLabel}
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  placeholder={t.contact.namePlaceholder}
+                  className="w-full px-4 py-3 rounded-xl bg-slate-100 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 text-slate-900 dark:text-white focus:outline-none focus:border-sky-500 transition-colors"
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="email"
+                  className="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-zinc-400 mb-2"
+                >
+                  {t.contact.emailLabel}
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder={t.contact.emailPlaceholder}
+                  className="w-full px-4 py-3 rounded-xl bg-slate-100 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 text-slate-900 dark:text-white focus:outline-none focus:border-sky-500 transition-colors"
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="message"
+                  className="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-zinc-400 mb-2"
+                >
+                  {t.contact.messageLabel}
+                </label>
+                <textarea
+                  id="message"
+                  name="message"
+                  rows={4}
+                  value={formData.message}
+                  onChange={handleChange}
+                  placeholder={t.contact.messagePlaceholder}
+                  className="w-full px-4 py-3 rounded-xl bg-slate-100 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 text-slate-900 dark:text-white focus:outline-none focus:border-sky-500 transition-colors"
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={status === "sending"}
+                className="w-full py-3.5 px-6 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-extrabold text-xs uppercase tracking-widest shadow-xl transition-all cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2"
+              >
+                {status === "sending" ? t.contact.sendingBtn : t.contact.sendBtn}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
     </section>
   );
 };

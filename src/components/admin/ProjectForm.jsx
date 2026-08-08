@@ -6,7 +6,9 @@ const ProjectForm = ({ project, categories = [], onSave, onClose }) => {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
+    full_description: '',
     category: 'WEB',
+    created_at: new Date().toISOString().substring(0, 7), // YYYY-MM
     tech: '',
     features: [''],
     live_link: '',
@@ -26,7 +28,11 @@ const ProjectForm = ({ project, categories = [], onSave, onClose }) => {
       setFormData({
         title: project.title || '',
         description: project.description || '',
+        full_description: project.full_description || project.description || '',
         category: project.category || 'WEB',
+        created_at: project.created_at
+          ? new Date(project.created_at).toISOString().substring(0, 7)
+          : new Date().toISOString().substring(0, 7),
         tech: Array.isArray(project.tech) ? project.tech.join(', ') : project.tech || '',
         features: Array.isArray(project.features) && project.features.length > 0 ? project.features : [''],
         live_link: project.live_link || project.liveLink || '',
@@ -80,8 +86,9 @@ const ProjectForm = ({ project, categories = [], onSave, onClose }) => {
       tech: techArray,
       features: featuresArray,
       cover_image: cover_image,
-      image: cover_image, // backward compatibility
+      image: cover_image,
       images: formData.images,
+      created_at: formData.created_at ? `${formData.created_at}-01T00:00:00Z` : new Date().toISOString(),
     };
 
     onSave(payload);
@@ -108,9 +115,9 @@ const ProjectForm = ({ project, categories = [], onSave, onClose }) => {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Judul & Kategori */}
+          {/* Judul, Kategori & Tanggal Pembuatan */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div className="sm:col-span-2">
+            <div>
               <label className="block text-xs font-semibold uppercase tracking-wider text-[var(--text-secondary)] mb-2">
                 Judul Proyek *
               </label>
@@ -124,6 +131,7 @@ const ProjectForm = ({ project, categories = [], onSave, onClose }) => {
                 className="w-full px-4 py-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--text-primary)] transition-colors duration-200"
               />
             </div>
+
             <div>
               <label className="block text-xs font-semibold uppercase tracking-wider text-[var(--text-secondary)] mb-2">
                 Kategori
@@ -141,20 +149,49 @@ const ProjectForm = ({ project, categories = [], onSave, onClose }) => {
                 ))}
               </select>
             </div>
+
+            <div>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-[var(--text-secondary)] mb-2">
+                Created At (Bulan & Tahun) *
+              </label>
+              <input
+                type="month"
+                name="created_at"
+                required
+                value={formData.created_at}
+                onChange={handleChange}
+                className="w-full px-4 py-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--text-primary)] transition-colors duration-200"
+              />
+            </div>
           </div>
 
-          {/* Deskripsi */}
+          {/* Deskripsi Singkat */}
           <div>
             <label className="block text-xs font-semibold uppercase tracking-wider text-[var(--text-secondary)] mb-2">
-              Deskripsi Proyek *
+              Deskripsi Singkat Proyek *
             </label>
             <textarea
               name="description"
               required
-              rows={4}
+              rows={2}
               value={formData.description}
               onChange={handleChange}
-              placeholder="Jelaskan gambaran umum tentang proyek ini..."
+              placeholder="Ringkasan singkat proyek untuk kartu tampilan..."
+              className="w-full px-4 py-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--text-primary)] transition-colors duration-200"
+            />
+          </div>
+
+          {/* Deskripsi Lengkap (Full Description) */}
+          <div>
+            <label className="block text-xs font-semibold uppercase tracking-wider text-[var(--text-secondary)] mb-2">
+              Deskripsi Lengkap Proyek (Pop-up Modal)
+            </label>
+            <textarea
+              name="full_description"
+              rows={4}
+              value={formData.full_description}
+              onChange={handleChange}
+              placeholder="Penjelasan mendalam proyek yang akan tampil di bagian Description pop-up modal..."
               className="w-full px-4 py-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--text-primary)] transition-colors duration-200"
             />
           </div>
@@ -170,7 +207,7 @@ const ProjectForm = ({ project, categories = [], onSave, onClose }) => {
           {/* Teknologi */}
           <div>
             <label className="block text-xs font-semibold uppercase tracking-wider text-[var(--text-secondary)] mb-2">
-              Teknologi (pisahkan dengan koma)
+              Teknologi / Tags (pisahkan dengan koma)
             </label>
             <input
               type="text"
@@ -186,7 +223,7 @@ const ProjectForm = ({ project, categories = [], onSave, onClose }) => {
           <div>
             <div className="flex items-center justify-between mb-2">
               <label className="block text-xs font-semibold uppercase tracking-wider text-[var(--text-secondary)]">
-                Fitur Utama (Opsional)
+                Fitur Utama (Akan tampil di pop-up modal)
               </label>
               <button
                 type="button"

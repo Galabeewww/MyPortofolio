@@ -64,15 +64,24 @@ const Navbar = () => {
     setIsAdminDropdownOpen(false);
     Swal.fire({
       title: lang === "id" ? "Konfirmasi Logout" : "Logout Confirmation",
-      text: lang === "id" ? "Apakah Anda yakin ingin keluar dari admin?" : "Are you sure you want to log out from admin?",
+      text:
+        lang === "id"
+          ? "Apakah Anda yakin ingin keluar dari admin?"
+          : "Are you sure you want to log out from admin?",
       icon: "question",
       showCancelButton: true,
       confirmButtonColor: "#ef4444",
       cancelButtonColor: "#64748b",
       confirmButtonText: lang === "id" ? "Ya, Keluar" : "Yes, Logout",
       cancelButtonText: lang === "id" ? "Batal" : "Cancel",
-      background: document.documentElement.getAttribute("data-theme") === "dark" ? "#18181b" : "#ffffff",
-      color: document.documentElement.getAttribute("data-theme") === "dark" ? "#fafafa" : "#0f172a",
+      background:
+        document.documentElement.getAttribute("data-theme") === "dark"
+          ? "#18181b"
+          : "#ffffff",
+      color:
+        document.documentElement.getAttribute("data-theme") === "dark"
+          ? "#fafafa"
+          : "#0f172a",
     }).then((result) => {
       if (result.isConfirmed) {
         logout();
@@ -82,8 +91,14 @@ const Navbar = () => {
           text: t.nav.logoutSuccessText,
           timer: 1500,
           showConfirmButton: false,
-          background: document.documentElement.getAttribute("data-theme") === "dark" ? "#18181b" : "#ffffff",
-          color: document.documentElement.getAttribute("data-theme") === "dark" ? "#fafafa" : "#0f172a",
+          background:
+            document.documentElement.getAttribute("data-theme") === "dark"
+              ? "#18181b"
+              : "#ffffff",
+          color:
+            document.documentElement.getAttribute("data-theme") === "dark"
+              ? "#fafafa"
+              : "#0f172a",
         });
       }
     });
@@ -141,10 +156,14 @@ const Navbar = () => {
           <button
             onClick={toggleLanguage}
             className="inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-1.5 rounded-full border border-slate-300 dark:border-zinc-700 hover:border-sky-500 dark:hover:border-sky-500 text-slate-700 dark:text-zinc-200 hover:bg-sky-500/10 text-xs font-bold transition-all duration-200 shadow-sm cursor-pointer"
-            title={lang === "en" ? "Ubah ke Bahasa Indonesia" : "Switch to English"}
+            title={
+              lang === "en" ? "Ubah ke Bahasa Indonesia" : "Switch to English"
+            }
           >
             <Globe size={14} className="text-sky-500" />
-            <span className="uppercase font-mono">{lang === "en" ? "EN" : "ID"}</span>
+            <span className="uppercase font-mono">
+              {lang === "en" ? "EN" : "ID"}
+            </span>
           </button>
 
           {/* Logo Admin HANYA Tampil jika Admin Berhasil Login */}
