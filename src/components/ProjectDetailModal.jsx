@@ -5,9 +5,8 @@ import {
   ChevronRight,
   ExternalLink,
   Calendar,
-  Tag,
-  Mail,
   Folder,
+  Mail,
 } from "lucide-react";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -52,32 +51,13 @@ const LinkedinIcon = (props) => (
   </svg>
 );
 
-const InstagramIcon = (props) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width={props.size || 18}
-    height={props.size || 18}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    {...props}
-  >
-    <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
-    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-    <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
-  </svg>
-);
-
 const ProjectDetailModal = ({
   project,
   projectsList = [],
   onClose,
   onSelectProject,
 }) => {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const [activeImageIndex, setActiveImageIndex] = useState(0);
 
   const getGalleryImages = () => {
@@ -142,7 +122,10 @@ const ProjectDetailModal = ({
     if (!dateString) return "July 2026";
     try {
       const d = new Date(dateString);
-      return d.toLocaleDateString("en-US", { month: "long", year: "numeric" });
+      return d.toLocaleDateString(lang === "id" ? "id-ID" : "en-US", {
+        month: "long",
+        year: "numeric",
+      });
     } catch {
       return "July 2026";
     }
@@ -154,12 +137,14 @@ const ProjectDetailModal = ({
     ? project.tech.split(",").map((t) => t.trim())
     : [];
 
+  const longDescription = project.full_description || project.description;
+
   return (
     <div
       onClick={onClose}
       className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 animate-[fadeIn_0.2s_ease-out] overflow-y-auto"
     >
-      {/* Container Modal Utama Sesuai Referensi Gambar */}
+      {/* Container Modal Utama Sesuai Referensi Gambar Baru */}
       <div
         onClick={(e) => e.stopPropagation()}
         className="w-full max-w-5xl rounded-3xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 shadow-2xl overflow-hidden flex flex-col my-auto max-h-[92vh]"
@@ -204,8 +189,9 @@ const ProjectDetailModal = ({
 
         {/* Body Modal Grid */}
         <div className="p-6 overflow-y-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          {/* Galeri Gambar (Kiri) */}
-          <div className="lg:col-span-7 space-y-4">
+          {/* Galeri Gambar & Deskripsi Panjang (Kiri Sesuai Referensi Gambar) */}
+          <div className="lg:col-span-7 space-y-6">
+            {/* Display Gambar Utama */}
             <div className="relative aspect-[16/10] rounded-2xl bg-slate-950 border border-slate-200 dark:border-zinc-800 overflow-hidden group shadow-lg flex items-center justify-center">
               <img
                 src={galleryImages[activeImageIndex] || "/project/py.png"}
@@ -268,9 +254,19 @@ const ProjectDetailModal = ({
                 ))}
               </div>
             )}
+
+            {/* Section Description (Sesuai Referensi Gambar di Sisi Kiri Bawah Galeri) */}
+            <div className="space-y-3 pt-2 text-left border-t border-slate-100 dark:border-zinc-800">
+              <h3 className="text-xl font-extrabold text-slate-900 dark:text-white font-display">
+                Description
+              </h3>
+              <div className="text-sm text-slate-600 dark:text-zinc-300 leading-relaxed whitespace-pre-line space-y-3">
+                {longDescription}
+              </div>
+            </div>
           </div>
 
-          {/* Metadata Informasi (Kanan) */}
+          {/* Metadata Informasi (Kanan Sesuai Referensi Gambar) */}
           <div className="lg:col-span-5 space-y-6 text-left">
             <div className="flex items-start justify-between gap-4">
               <h2 className="text-2xl sm:text-3xl font-extrabold font-display text-slate-900 dark:text-white leading-tight">
@@ -285,7 +281,7 @@ const ProjectDetailModal = ({
               </button>
             </div>
 
-            <p className="text-sm text-slate-600 dark:text-zinc-300 leading-relaxed">
+            <p className="text-sm text-slate-600 dark:text-zinc-300 leading-relaxed line-clamp-3">
               {project.description}
             </p>
 

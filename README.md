@@ -1,16 +1,91 @@
-# React + Vite
+# 🚀 Modern Interactive Digital Portfolio & CRUD Showcase
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Sebuah aplikasi web portofolio personal yang modern, responsif, dan elegan yang dibangun menggunakan **React.js**, **Tailwind CSS**, **Node.js**, dan **Supabase**. Dilengkapi dengan fitur Manajemen Konten (CRUD), Dukungan Multi-Bahasa (English & Bahasa Indonesia), Animasi *Liquid Theme Spill*, serta Pop-up Detail Proyek Interaktif.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 📌 Fitur Utama
 
-## React Compiler
+- 🎨 **Desain Monokrom Minimalis & Premium**: Antarmuka modern dengan tipografi besar, efek pita diagonal (*diagonal ribbon overlay*), serta tata letak responsif.
+- 🌓 **Mode Terang / Gelap Interaktif (Liquid Theme Spill)**: Saklar tema melayang di sudut kanan bawah dengan efek animasi tumpahan air melingkar yang memancar saat diklik.
+- 🌐 **Dukungan Multi-Bahasa (EN / ID)**: Berbahasa Inggris secara default dengan tombol saklar `EN`/`ID` di navbar untuk berpindah ke Bahasa Indonesia secara instan.
+- 📱 **Pop-up Detail Proyek Interaktif**: Modal dialog detail proyek yang menampilkan galeri gambar carousel (`1/5`), indikator counter, deskripsi lengkap, metadata tanggal & kategori, tags teknologi, serta navigasi proyek (`Next >` & `< Prev`).
+- ⚡ **Manajemen Konten CRUD Penuh (Node.js & Supabase / LocalStorage)**: Dashboard admin privat (`/admin/login`) untuk mengelola Proyek, Keahlian Teknis (Skills), dan Kategori.
+- 🔒 **Keamanan Dashboard Admin**: Route terlindungi (`ProtectedRoute`), menu admin tersembunyi dari publik, logo admin berikon dropdown logout, serta **Auto-Logout Otomatis Sesi Admin** setelah 3 menit tidak ada aktivitas.
+- 🔄 **Animasi Marquee Bergerak Dinamis**: Barisan keahlian teknis dan teks ribbon diagonal bergerak meluncur secara terintegrasi dan sinkron.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## 🛠️ Teknologi & Tools
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+| Kategori | Teknologi / Library |
+| :--- | :--- |
+| **Frontend Framework** | React.js (Vite) |
+| **Styling & Design System** | Tailwind CSS v4, Custom Vanilla CSS |
+| **Icons & Alerts** | Lucide React, SweetAlert2 |
+| **Backend & Online Database** | Supabase (PostgreSQL & Storage) |
+| **State & Auth Management** | React Context API (Theme, Auth, Language) |
+| **Deployment Platform** | Vercel (CI/CD GitHub Integration) |
+
+---
+
+## 💻 Instalasi & Cara Menjalankan Proyek Lokal
+
+### Prasyarat
+- Node.js (Versi 18.x atau terbaru)
+- npm / yarn / pnpm
+
+### 1. Clone Repository
+```bash
+git clone https://github.com/Galabeewww/MyPortofolio.git
+cd MyPortofolio
+```
+
+### 2. Install Dependensi
+```bash
+npm install
+```
+
+### 3. Konfigurasi Environment Variables (Opsional untuk Supabase)
+Buat file `.env` di root direktori proyek jika ingin mengintegrasikan Supabase secara online:
+```env
+VITE_SUPABASE_URL=https://your-supabase-project.supabase.co
+VITE_SUPABASE_ANON_KEY=your-supabase-anon-key
+```
+*Catatan: Jika Supabase tidak dikonfigurasi, aplikasi secara otomatis menggunakan `LocalStorage` mode sehingga fitur CRUD tetap berjalan 100% tanpa error.*
+
+### 4. Jalankan Server Dev Lokal
+```bash
+npm run dev
+```
+Buka browser dan akses `http://localhost:5173`.
+
+### 5. Build Produksi
+Untuk menguji hasil kompilasi produksi:
+```bash
+npm run build
+```
+
+---
+
+## 🔑 Akses Admin Dashboard
+
+- **URL Login Admin**: `/admin/login` (atau `http://localhost:5173/admin/login`)
+- **Username Default**: `admin`
+- **Password Default**: `admin`
+
+---
+
+## 👥 Kontributor
+
+Proyek ini dirancang, dikembangkan, dan dipelihara oleh:
+
+| Nama | Peran | Tautan Profil |
+| :--- | :--- | :--- |
+| **Muhammad Abi Rafdi Pratama** | Lead Developer & Quality Assurance | [<img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white" />](https://github.com/Galabeewww) &nbsp; [<img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=flat&logo=linkedin&logoColor=white" />](https://www.linkedin.com/in/muhammad-abi-rafdi-pratama-436044290/) |
+
+---
+
+## 📄 Lisensi
+
+Proyek ini dilisensikan di bawah lisensi MIT - Bebas digunakan dan dikembangkan kembali.

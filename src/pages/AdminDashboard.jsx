@@ -44,20 +44,26 @@ const GithubIcon = (props) => (
 const INITIAL_PROJECTS = [
   {
     id: 'p1',
-    title: 'House Price Prediction',
-    description: 'Program Prediksi Harga Rumah menggunakan Linear Regression & Random Forest',
-    category: 'WEB',
-    tech: ['Python', 'Streamlit'],
-    features: ['Dataset upload feature', 'Automated analysis'],
-    github_link: 'https://github.com/Galabeewww/HousePricePrediction',
+    title: 'RT Administration System',
+    description:
+      'A Modern Residential Administration and Financial Management Platform for Neighborhood Communities.',
+    full_description:
+      'RT Administration System is a web-based platform designed to digitize and simplify neighborhood administration processes for residential communities. Built specifically for local community management, the system helps RT administrators efficiently manage resident data, housing units, monthly contributions, expenses, and financial reporting through a centralized platform.\n\nThe system manages residential units consisting of permanent houses and temporary rental properties, while maintaining complete resident history and occupancy records. Financial operations are streamlined through an integrated contribution management system that handles monthly security and cleaning fees, tracks payment status per house, and records operational expenses.',
+    category: 'Web Development',
+    tech: ['Next.js', 'Laravel API', 'SSO', 'TanStack Query', 'Full Stack Development'],
+    features: ['Real-time Payment Status', 'Citizen Management', 'Financial Reports'],
+    github_link: '',
     live_link: '',
     cover_image: '/project/py.png',
-    images: [{ id: 'img1', url: '/project/py.png', is_cover: true }],
+    images: [{ id: 'img1', url: '/project/py.png', is_cover: true }, { id: 'img2', url: '/project/cc.png' }],
+    created_at: '2026-07-15T00:00:00Z',
   },
   {
     id: 'p2',
     title: 'Coreculture',
-    description: 'E-commerce platform fashion streetwear & football culture',
+    description: 'E-commerce platform fashion streetwear & football culture.',
+    full_description:
+      'Coreculture is a modern e-commerce and brand showcase platform built for streetwear fashion and football culture enthusiasts. It integrates product collections, story articles, and photoshoot previews with interactive filtering.',
     category: 'WEB',
     tech: ['NextJS', 'Tailwind', 'Supabase', 'Vercel'],
     features: ['Article Upload', 'Photoshoot Upload', 'Interactive Preview'],
@@ -65,6 +71,7 @@ const INITIAL_PROJECTS = [
     github_link: 'https://github.com/Galabeewww/coreculture',
     cover_image: '/project/cc.png',
     images: [{ id: 'img2', url: '/project/cc.png', is_cover: true }],
+    created_at: '2026-06-20T00:00:00Z',
   },
 ];
 
@@ -86,15 +93,13 @@ const INITIAL_CATEGORIES = [
 const AdminDashboard = () => {
   const { logout } = useAuth();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('projects'); // 'projects' | 'skills' | 'categories'
+  const [activeTab, setActiveTab] = useState('projects');
 
-  // Data states
   const [projects, setProjects] = useState([]);
   const [skills, setSkills] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Modal states
   const [editingProject, setEditingProject] = useState(null);
   const [isProjectFormOpen, setIsProjectFormOpen] = useState(false);
   const [editingSkill, setEditingSkill] = useState(null);
@@ -102,7 +107,6 @@ const AdminDashboard = () => {
   const [editingCategory, setEditingCategory] = useState(null);
   const [isCategoryFormOpen, setIsCategoryFormOpen] = useState(false);
 
-  // Fetch initial data
   useEffect(() => {
     fetchData();
   }, []);
@@ -195,75 +199,76 @@ const AdminDashboard = () => {
   const handleSaveProject = async (projectData) => {
     const isEdit = Boolean(projectData.id);
 
+    // Format new project payload
+    const formattedProject = {
+      ...projectData,
+      id: projectData.id || `p_${Date.now()}`,
+      created_at: projectData.created_at || new Date().toISOString(),
+    };
+
     if (isSupabaseConfigured) {
       try {
         if (isEdit) {
-          const { error } = await supabase
+          await supabase
             .from('projects')
             .update({
-              title: projectData.title,
-              description: projectData.description,
-              category: projectData.category,
-              tech: projectData.tech,
-              features: projectData.features,
-              live_link: projectData.live_link,
-              github_link: projectData.github_link,
-              cover_image: projectData.cover_image,
-              updated_at: new Date(),
+              title: formattedProject.title,
+              description: formattedProject.description,
+              category: formattedProject.category,
+              tech: formattedProject.tech,
+              features: formattedProject.features,
+              live_link: formattedProject.live_link,
+              github_link: formattedProject.github_link,
+              cover_image: formattedProject.cover_image,
+              images: formattedProject.images,
+              updated_at: new Date().toISOString(),
             })
-            .eq('id', projectData.id);
-
-          if (error) throw error;
+            .eq('id', formattedProject.id);
         } else {
-          const { error } = await supabase.from('projects').insert([
+          await supabase.from('projects').insert([
             {
-              title: projectData.title,
-              description: projectData.description,
-              category: projectData.category,
-              tech: projectData.tech,
-              features: projectData.features,
-              live_link: projectData.live_link,
-              github_link: projectData.github_link,
-              cover_image: projectData.cover_image,
+              title: formattedProject.title,
+              description: formattedProject.description,
+              category: formattedProject.category,
+              tech: formattedProject.tech,
+              features: formattedProject.features,
+              live_link: formattedProject.live_link,
+              github_link: formattedProject.github_link,
+              cover_image: formattedProject.cover_image,
+              images: formattedProject.images,
             },
           ]);
-
-          if (error) throw error;
         }
-
-        fetchData();
       } catch (err) {
-        console.error(err);
-        updateLocalProject(projectData, isEdit);
+        console.error("Supabase project save error:", err);
       }
-    } else {
-      updateLocalProject(projectData, isEdit);
     }
 
+    // Always update React State & LocalStorage for immediate persistence
+    if (isEdit) {
+      const updatedList = projects.map((p) => (p.id === formattedProject.id ? formattedProject : p));
+      saveProjectsToStorage(updatedList);
+    } else {
+      const updatedList = [formattedProject, ...projects];
+      saveProjectsToStorage(updatedList);
+    }
+
+    // Close form modal
     setIsProjectFormOpen(false);
     setEditingProject(null);
 
+    // SweetAlert notification
     MySwal.fire({
       icon: 'success',
       title: isEdit ? 'Proyek Diperbarui!' : 'Proyek Ditambahkan!',
       text: isEdit
-        ? `Proyek "${projectData.title}" berhasil diperbarui.`
-        : `Proyek "${projectData.title}" berhasil disimpan.`,
+        ? `Proyek "${formattedProject.title}" berhasil diperbarui.`
+        : `Proyek "${formattedProject.title}" berhasil disimpan secara permanen.`,
       timer: 2000,
       showConfirmButton: false,
       background: 'var(--bg-card)',
       color: 'var(--text-primary)',
     });
-  };
-
-  const updateLocalProject = (projectData, isEdit) => {
-    if (isEdit) {
-      const updated = projects.map((p) => (p.id === projectData.id ? projectData : p));
-      saveProjectsToStorage(updated);
-    } else {
-      const newProj = { ...projectData, id: `p_${Date.now()}` };
-      saveProjectsToStorage([newProj, ...projects]);
-    }
   };
 
   const handleDeleteProject = (project) => {
@@ -283,16 +288,12 @@ const AdminDashboard = () => {
         if (isSupabaseConfigured) {
           try {
             await supabase.from('projects').delete().eq('id', project.id);
-            fetchData();
           } catch (err) {
             console.error(err);
-            const updated = projects.filter((p) => p.id !== project.id);
-            saveProjectsToStorage(updated);
           }
-        } else {
-          const updated = projects.filter((p) => p.id !== project.id);
-          saveProjectsToStorage(updated);
         }
+        const updated = projects.filter((p) => p.id !== project.id);
+        saveProjectsToStorage(updated);
 
         MySwal.fire({
           icon: 'success',
@@ -311,39 +312,41 @@ const AdminDashboard = () => {
 
   const handleSaveSkill = async (skillData) => {
     const isEdit = Boolean(skillData.id);
+    const formattedSkill = {
+      ...skillData,
+      id: skillData.id || `s_${Date.now()}`,
+    };
 
     if (isSupabaseConfigured) {
       try {
         if (isEdit) {
-          const { error } = await supabase
+          await supabase
             .from('skills')
             .update({
-              name: skillData.name,
-              logo_url: skillData.logo_url,
-              category: skillData.category,
+              name: formattedSkill.name,
+              logo_url: formattedSkill.logo_url,
+              category: formattedSkill.category,
             })
-            .eq('id', skillData.id);
-
-          if (error) throw error;
+            .eq('id', formattedSkill.id);
         } else {
-          const { error } = await supabase.from('skills').insert([
+          await supabase.from('skills').insert([
             {
-              name: skillData.name,
-              logo_url: skillData.logo_url,
-              category: skillData.category,
+              name: formattedSkill.name,
+              logo_url: formattedSkill.logo_url,
+              category: formattedSkill.category,
             },
           ]);
-
-          if (error) throw error;
         }
-
-        fetchData();
       } catch (err) {
         console.error(err);
-        updateLocalSkill(skillData, isEdit);
       }
+    }
+
+    if (isEdit) {
+      const updated = skills.map((s) => (s.id === formattedSkill.id ? formattedSkill : s));
+      saveSkillsToStorage(updated);
     } else {
-      updateLocalSkill(skillData, isEdit);
+      saveSkillsToStorage([...skills, formattedSkill]);
     }
 
     setIsSkillFormOpen(false);
@@ -352,24 +355,12 @@ const AdminDashboard = () => {
     MySwal.fire({
       icon: 'success',
       title: isEdit ? 'Skill Diperbarui!' : 'Skill Ditambahkan!',
-      text: isEdit
-        ? `Skill "${skillData.name}" berhasil diperbarui.`
-        : `Skill "${skillData.name}" berhasil disimpan.`,
+      text: `Skill "${formattedSkill.name}" berhasil disimpan.`,
       timer: 2000,
       showConfirmButton: false,
       background: 'var(--bg-card)',
       color: 'var(--text-primary)',
     });
-  };
-
-  const updateLocalSkill = (skillData, isEdit) => {
-    if (isEdit) {
-      const updated = skills.map((s) => (s.id === skillData.id ? skillData : s));
-      saveSkillsToStorage(updated);
-    } else {
-      const newSkl = { ...skillData, id: `s_${Date.now()}` };
-      saveSkillsToStorage([...skills, newSkl]);
-    }
   };
 
   const handleDeleteSkill = (skill) => {
@@ -389,16 +380,12 @@ const AdminDashboard = () => {
         if (isSupabaseConfigured) {
           try {
             await supabase.from('skills').delete().eq('id', skill.id);
-            fetchData();
           } catch (err) {
             console.error(err);
-            const updated = skills.filter((s) => s.id !== skill.id);
-            saveSkillsToStorage(updated);
           }
-        } else {
-          const updated = skills.filter((s) => s.id !== skill.id);
-          saveSkillsToStorage(updated);
         }
+        const updated = skills.filter((s) => s.id !== skill.id);
+        saveSkillsToStorage(updated);
 
         MySwal.fire({
           icon: 'success',
@@ -417,21 +404,28 @@ const AdminDashboard = () => {
 
   const handleSaveCategory = async (catData) => {
     const isEdit = Boolean(catData.id);
+    const formattedCat = {
+      ...catData,
+      id: catData.id || `c_${Date.now()}`,
+    };
 
     if (isSupabaseConfigured) {
       try {
         if (isEdit) {
-          await supabase.from('categories').update({ name: catData.name }).eq('id', catData.id);
+          await supabase.from('categories').update({ name: formattedCat.name }).eq('id', formattedCat.id);
         } else {
-          await supabase.from('categories').insert([{ name: catData.name }]);
+          await supabase.from('categories').insert([{ name: formattedCat.name }]);
         }
-        fetchData();
       } catch (err) {
         console.error(err);
-        updateLocalCategory(catData, isEdit);
       }
+    }
+
+    if (isEdit) {
+      const updated = categories.map((c) => (c.id === formattedCat.id ? formattedCat : c));
+      saveCategoriesToStorage(updated);
     } else {
-      updateLocalCategory(catData, isEdit);
+      saveCategoriesToStorage([...categories, formattedCat]);
     }
 
     setIsCategoryFormOpen(false);
@@ -440,22 +434,12 @@ const AdminDashboard = () => {
     MySwal.fire({
       icon: 'success',
       title: isEdit ? 'Kategori Diperbarui!' : 'Kategori Ditambahkan!',
-      text: `Kategori "${catData.name}" berhasil disimpan.`,
+      text: `Kategori "${formattedCat.name}" berhasil disimpan.`,
       timer: 1800,
       showConfirmButton: false,
       background: 'var(--bg-card)',
       color: 'var(--text-primary)',
     });
-  };
-
-  const updateLocalCategory = (catData, isEdit) => {
-    if (isEdit) {
-      const updated = categories.map((c) => (c.id === catData.id ? catData : c));
-      saveCategoriesToStorage(updated);
-    } else {
-      const newCat = { ...catData, id: `c_${Date.now()}` };
-      saveCategoriesToStorage([...categories, newCat]);
-    }
   };
 
   const handleDeleteCategory = (cat) => {
@@ -474,14 +458,11 @@ const AdminDashboard = () => {
         if (isSupabaseConfigured) {
           try {
             await supabase.from('categories').delete().eq('id', cat.id);
-            fetchData();
           } catch (err) {
             console.error(err);
-            saveCategoriesToStorage(categories.filter((c) => c.id !== cat.id));
           }
-        } else {
-          saveCategoriesToStorage(categories.filter((c) => c.id !== cat.id));
         }
+        saveCategoriesToStorage(categories.filter((c) => c.id !== cat.id));
 
         MySwal.fire({
           icon: 'success',
@@ -800,13 +781,13 @@ const AdminDashboard = () => {
                         setEditingCategory(cat);
                         setIsCategoryFormOpen(true);
                       }}
-                      className="p-1.5 rounded-lg hover:bg-[var(--bg-secondary)] text-[var(--text-muted)] hover:text-[var(--text-primary)] cursor-pointer"
+                      className="p-1.5 rounded-lg hover:bg-[var(--bg-secondary)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors duration-200 cursor-pointer"
                     >
                       <Edit size={14} />
                     </button>
                     <button
                       onClick={() => handleDeleteCategory(cat)}
-                      className="p-1.5 rounded-lg hover:bg-rose-500/10 text-rose-500 cursor-pointer"
+                      className="p-1.5 rounded-lg hover:bg-rose-500/10 text-rose-500 transition-colors duration-200 cursor-pointer"
                     >
                       <Trash2 size={14} />
                     </button>
@@ -818,7 +799,7 @@ const AdminDashboard = () => {
         )}
       </main>
 
-      {/* PROJECT MODAL FORM */}
+      {/* Modal Forms */}
       {isProjectFormOpen && (
         <ProjectForm
           project={editingProject}
@@ -831,7 +812,6 @@ const AdminDashboard = () => {
         />
       )}
 
-      {/* SKILL MODAL FORM */}
       {isSkillFormOpen && (
         <SkillForm
           skill={editingSkill}
@@ -843,7 +823,6 @@ const AdminDashboard = () => {
         />
       )}
 
-      {/* CATEGORY MODAL FORM */}
       {isCategoryFormOpen && (
         <CategoryForm
           category={editingCategory}
