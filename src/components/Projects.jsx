@@ -31,64 +31,7 @@ const GithubIcon = (props) => (
   </svg>
 );
 
-const MOCK_PROJECTS = [
-  {
-    id: "1",
-    title: "RT Administration System",
-    description:
-      "A Modern Residential Administration and Financial Management Platform for Neighborhood Communities. Features resident data management, financial tracking, monthly dues collection, and automated reports.",
-    category: "Web Development",
-    tech: ["Next.js", "Laravel API", "SSO", "TanStack Query", "Full Stack Development"],
-    features: ["Real-time Payment Status", "Citizen Management", "Financial Reports"],
-    live_link: "",
-    github_link: "",
-    cover_image: "/project/py.png",
-    images: ["/project/py.png", "/project/cc.png", "/project/lf.png"],
-    created_at: "2026-07-15T00:00:00Z",
-  },
-  {
-    id: "2",
-    title: "Rice Stock Management System – Berkah Lumbung Pangan",
-    description:
-      "Web-based rice stock management and wholesale ordering information system. Built to streamline inventory tracking, wholesale transactions, and sales analytics.",
-    category: "Web Development",
-    tech: ["React", "Tailwind CSS", "Supabase", "PostgreSQL", "Frontend"],
-    features: ["Inventory Tracking", "Wholesale Order System", "Sales Analytics"],
-    live_link: "https://coreculture.vercel.app/",
-    github_link: "https://github.com/Galabeewww/coreculture",
-    cover_image: "/project/cc.png",
-    images: ["/project/cc.png", "/project/py.png", "/project/mp.png"],
-    created_at: "2026-06-20T00:00:00Z",
-  },
-  {
-    id: "3",
-    title: "Lensfolio – Photography Showcase Platform",
-    description:
-      "Photography and videography portfolio platform with modern visual layout, high-performance media management, and custom album filtering.",
-    category: "Web Design",
-    tech: ["TypeScript", "Next.js", "Tailwind", "Cloudinary", "UI/UX"],
-    features: ["Photo & Video Upload", "Interactive Gallery", "Category Filtering"],
-    live_link: "https://photofolio-azure.vercel.app/",
-    github_link: "https://github.com/Galabeewww/photofolio",
-    cover_image: "/project/lf.png",
-    images: ["/project/lf.png", "/project/mp.png", "/project/cc.png"],
-    created_at: "2026-05-10T00:00:00Z",
-  },
-  {
-    id: "4",
-    title: "MyPortofolio Digital Showcase",
-    description:
-      "Interactive personal portfolio web application featuring liquid dark/light mode, CRUD admin panel, and dynamic content management.",
-    category: "Web Development",
-    tech: ["React", "Tailwind", "Supabase", "Vercel", "Full Stack"],
-    features: ["Interactive Showcase", "CRUD Admin Panel", "Dark/Light Theme"],
-    live_link: "https://my-portofolio-omega-lemon.vercel.app/",
-    github_link: "https://github.com/Galabeewww/MyPortofolio",
-    cover_image: "/project/mp.png",
-    images: ["/project/mp.png", "/project/lf.png", "/project/py.png"],
-    created_at: "2026-08-01T00:00:00Z",
-  },
-];
+const MOCK_PROJECTS = [];
 
 const Projects = () => {
   const { t } = useLanguage();

@@ -3,22 +3,7 @@ import { Code2, CheckCircle2, Sparkles, MapPin, Briefcase } from "lucide-react";
 import { supabase, isSupabaseConfigured } from "../lib/supabaseClient";
 import { useLanguage } from "../context/LanguageContext";
 
-const INITIAL_SKILLS = [
-  { name: "React", logo: "/icon/react.png", category: "Frontend" },
-  { name: "Next.js", logo: "/icon/react.png", category: "Framework" },
-  { name: "JavaScript", logo: "/icon/js.png", category: "Language" },
-  { name: "PHP", logo: "/icon/php.png", category: "Backend" },
-  { name: "Bootstrap", logo: "/icon/icb.png", category: "UI" },
-  { name: "Tailwind CSS", logo: "/icon/tailwind.png", category: "UI" },
-  { name: "HTML5", logo: "/icon/html-5.png", category: "Markup" },
-  { name: "CSS3", logo: "/icon/css.png", category: "Styling" },
-  { name: "MySQL", logo: "/icon/mysql.png", category: "Database" },
-  { name: "GitHub", logo: "/icon/github.png", category: "DevOps" },
-  { name: "Vercel", logo: "/icon/vercel.png", category: "Deployment" },
-  { name: "VS Code", logo: "/icon/vsc.png", category: "Tools" },
-  { name: "Postman", logo: "/icon/postman.png", category: "Testing" },
-  { name: "Figma", logo: "/icon/figma.png", category: "Design" },
-];
+const INITIAL_SKILLS = [];
 
 const About = () => {
   const [skillsList, setSkillsList] = useState(INITIAL_SKILLS);

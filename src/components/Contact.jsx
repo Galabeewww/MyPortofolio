@@ -121,7 +121,8 @@ const Contact = () => {
         {/* Title & Subtitle */}
         <div className="text-center max-w-3xl mx-auto space-y-4">
           <h2 className="text-3xl sm:text-5xl font-extrabold font-display text-[var(--text-primary)] tracking-tight">
-            Get In <span className="text-sky-500">Touch</span>
+            {t.contact.titlePrefix}
+            <span className="text-sky-500">{t.contact.titleSuffix}</span>
           </h2>
           <p className="text-[var(--text-secondary)] text-sm sm:text-base font-medium leading-relaxed">
             {t.contact.subtitle}

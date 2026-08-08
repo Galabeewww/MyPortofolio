@@ -41,54 +41,11 @@ const GithubIcon = (props) => (
   </svg>
 );
 
-const INITIAL_PROJECTS = [
-  {
-    id: 'p1',
-    title: 'RT Administration System',
-    description:
-      'A Modern Residential Administration and Financial Management Platform for Neighborhood Communities.',
-    full_description:
-      'RT Administration System is a web-based platform designed to digitize and simplify neighborhood administration processes for residential communities. Built specifically for local community management, the system helps RT administrators efficiently manage resident data, housing units, monthly contributions, expenses, and financial reporting through a centralized platform.\n\nThe system manages residential units consisting of permanent houses and temporary rental properties, while maintaining complete resident history and occupancy records. Financial operations are streamlined through an integrated contribution management system that handles monthly security and cleaning fees, tracks payment status per house, and records operational expenses.',
-    category: 'Web Development',
-    tech: ['Next.js', 'Laravel API', 'SSO', 'TanStack Query', 'Full Stack Development'],
-    features: ['Real-time Payment Status', 'Citizen Management', 'Financial Reports'],
-    github_link: '',
-    live_link: '',
-    cover_image: '/project/py.png',
-    images: [{ id: 'img1', url: '/project/py.png', is_cover: true }, { id: 'img2', url: '/project/cc.png' }],
-    created_at: '2026-07-15T00:00:00Z',
-  },
-  {
-    id: 'p2',
-    title: 'Coreculture',
-    description: 'E-commerce platform fashion streetwear & football culture.',
-    full_description:
-      'Coreculture is a modern e-commerce and brand showcase platform built for streetwear fashion and football culture enthusiasts. It integrates product collections, story articles, and photoshoot previews with interactive filtering.',
-    category: 'WEB',
-    tech: ['NextJS', 'Tailwind', 'Supabase', 'Vercel'],
-    features: ['Article Upload', 'Photoshoot Upload', 'Interactive Preview'],
-    live_link: 'https://coreculture.vercel.app/',
-    github_link: 'https://github.com/Galabeewww/coreculture',
-    cover_image: '/project/cc.png',
-    images: [{ id: 'img2', url: '/project/cc.png', is_cover: true }],
-    created_at: '2026-06-20T00:00:00Z',
-  },
-];
+const INITIAL_PROJECTS = [];
 
-const INITIAL_SKILLS = [
-  { id: 's1', name: 'React', logo_url: '/icon/react.png', category: 'Skills' },
-  { id: 's2', name: 'Tailwind', logo_url: '/icon/tailwind.png', category: 'Skills' },
-  { id: 's3', name: 'JavaScript', logo_url: '/icon/js.png', category: 'Skills' },
-  { id: 's4', name: 'GitHub', logo_url: '/icon/github.png', category: 'Tools' },
-  { id: 's5', name: 'VS Code', logo_url: '/icon/vsc.png', category: 'Tools' },
-];
+const INITIAL_SKILLS = [];
 
-const INITIAL_CATEGORIES = [
-  { id: 'c1', name: 'WEB' },
-  { id: 'c2', name: 'MOBILE' },
-  { id: 'c3', name: 'WEB DESIGN' },
-  { id: 'c4', name: 'UI/UX' },
-];
+const INITIAL_CATEGORIES = [];
 
 const AdminDashboard = () => {
   const { logout } = useAuth();

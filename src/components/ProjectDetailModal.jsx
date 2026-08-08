@@ -384,7 +384,7 @@ const ProjectDetailModal = ({
                       href={project.github_link}
                       target="_blank"
                       rel="noreferrer"
-                      className="flex items-center gap-2 text-sm text-slate-600 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white font-medium transition-colors break-all"
+                      className="flex items-center gap-2 text-sm text-sky-500 hover:text-sky-400 font-medium transition-colors break-all"
                     >
                       <GithubIcon size={14} className="shrink-0" />
                       <span>{project.github_link}</span>

@@ -168,7 +168,7 @@ const ProjectForm = ({ project, categories = [], onSave, onClose }) => {
           {/* Deskripsi Singkat */}
           <div>
             <label className="block text-xs font-semibold uppercase tracking-wider text-[var(--text-secondary)] mb-2">
-              Deskripsi Singkat Proyek *
+              Deskripsi Singkat (Tampil di Kartu & Sisi Kanan Pop-up Modal) *
             </label>
             <textarea
               name="description"
@@ -176,7 +176,7 @@ const ProjectForm = ({ project, categories = [], onSave, onClose }) => {
               rows={2}
               value={formData.description}
               onChange={handleChange}
-              placeholder="Ringkasan singkat proyek untuk kartu tampilan..."
+              placeholder="Ringkasan singkat proyek..."
               className="w-full px-4 py-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--text-primary)] transition-colors duration-200"
             />
           </div>
@@ -184,14 +184,14 @@ const ProjectForm = ({ project, categories = [], onSave, onClose }) => {
           {/* Deskripsi Lengkap (Full Description) */}
           <div>
             <label className="block text-xs font-semibold uppercase tracking-wider text-[var(--text-secondary)] mb-2">
-              Deskripsi Lengkap Proyek (Pop-up Modal)
+              Deskripsi Lengkap (Tampil di Kiri Bawah Gambar Pop-up Modal)
             </label>
             <textarea
               name="full_description"
               rows={4}
               value={formData.full_description}
               onChange={handleChange}
-              placeholder="Penjelasan mendalam proyek yang akan tampil di bagian Description pop-up modal..."
+              placeholder="Penjelasan mendalam proyek yang akan tampil di bagian Description di bawah gambar pop-up..."
               className="w-full px-4 py-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--text-primary)] transition-colors duration-200"
             />
           </div>
