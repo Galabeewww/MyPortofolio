@@ -5,89 +5,115 @@
   --font-display: "Outfit", system-ui, -apple-system, sans-serif;
 }
 
-/* Kustomisasi scrollbar modern */
+/* CSS Variables untuk Tema Hitam Putih (Dark & Light Mode) */
+:root {
+  --bg-primary: #09090b;
+  --bg-secondary: #141417;
+  --bg-card: #18181b;
+  --bg-card-hover: #27272a;
+  --border-color: #27272a;
+  --border-color-hover: #3f3f46;
+  --text-primary: #fafafa;
+  --text-secondary: #a1a1aa;
+  --text-muted: #71717a;
+  --accent-btn: #fafafa;
+  --accent-btn-text: #09090b;
+  --accent-btn-hover: #e4e4e7;
+  --badge-bg: #27272a;
+  --badge-text: #e4e4e7;
+  --badge-border: #3f3f46;
+  --shadow-color: rgba(0, 0, 0, 0.5);
+  --grid-line: rgba(255, 255, 255, 0.03);
+}
+
+[data-theme="light"] {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f4f4f5;
+  --bg-card: #ffffff;
+  --bg-card-hover: #fafafa;
+  --border-color: #e4e4e7;
+  --border-color-hover: #d4d4d8;
+  --text-primary: #09090b;
+  --text-secondary: #52525b;
+  --text-muted: #71717a;
+  --accent-btn: #09090b;
+  --accent-btn-text: #ffffff;
+  --accent-btn-hover: #27272a;
+  --badge-bg: #f4f4f5;
+  --badge-text: #27272a;
+  --badge-border: #e4e4e7;
+  --shadow-color: rgba(0, 0, 0, 0.06);
+  --grid-line: rgba(0, 0, 0, 0.04);
+}
+
+/* Scrollbar Modern Hitam Putih */
 ::-webkit-scrollbar {
   width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #0f172a;
+  background: var(--bg-primary);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #334155;
+  background: var(--border-color);
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #6366f1;
+  background: var(--text-muted);
 }
 
 html {
   scroll-behavior: smooth;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.25s ease, color 0.25s ease;
 }
 
 body {
   font-family: var(--font-sans);
-  background-color: #0f172a; /* Latar belakang gelap yang lebih cerah (slate-900) */
-  color: #e2e8f0;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
   overflow-x: hidden;
+  transition: background-color 0.25s ease, color 0.25s ease;
 }
 
-/* Desain Glassmorphism & kartu bercahaya */
+/* Minimalist Glass Panel & Card */
 .glass-panel {
-  background: rgba(30, 41, 59, 0.55); /* Lebih cerah menggunakan slate-800 */
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 .glow-card {
   position: relative;
-  background: rgba(30, 41, 59, 0.45); /* Lebih cerah */
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.glow-card::before {
-  content: "";
-  position: absolute;
-  inset: -1px;
-  background: linear-gradient(45deg, #6366f1, #a855f7, #06b6d4);
-  border-radius: inherit;
-  z-index: -1;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.glow-card:hover::before {
-  opacity: 0.15;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .glow-card:hover {
-  transform: translateY(-4px);
-  border-color: rgba(99, 102, 241, 0.3);
-  box-shadow: 0 20px 40px -15px rgba(99, 102, 241, 0.2);
+  border-color: var(--border-color-hover);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 24px -10px var(--shadow-color);
 }
 
-/* Background grid hiasan */
+/* Background grid minimalis */
 .bg-grid-pattern {
-  background-size: 40px 40px;
+  background-size: 36px 36px;
   background-image:
-    linear-gradient(to right, rgba(255, 255, 255, 0.015) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+    linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
 }
 
-/* Animasi mengapung lambat */
 @keyframes float {
-  0%,
-  100% {
+  0%, 100% {
     transform: translateY(0px);
   }
   50% {
-    transform: translateY(-10px);
+    transform: translateY(-8px);
   }
 }
 
@@ -98,7 +124,7 @@ body {
 @keyframes fadeInUp {
   0% {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(16px);
   }
   100% {
     opacity: 1;
@@ -107,9 +133,5 @@ body {
 }
 
 .animate-fadeInUp {
-  animation: fadeInUp 3s ease-out forwards;
-}
-
-.font-minecraft {
-  font-family: "Minecraftia", sans-serif;
+  animation: fadeInUp 0.5s ease-out forwards;
 }

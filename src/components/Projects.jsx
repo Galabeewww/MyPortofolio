@@ -1,23 +1,24 @@
+import React, { useState, useEffect } from 'react';
 import {
   ExternalLink,
-  // ShoppingBag,
-  // CheckSquare,
-  // CloudSun,
-  ChevronLeft,
-  ChevronRight,
+  Share2,
   X,
   Code2,
   Layers,
-  // Monitor,
   Maximize2,
-} from "lucide-react";
-import { useState, useEffect } from "react";
+  ArrowUpRight,
+} from 'lucide-react';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+import { supabase, isSupabaseConfigured } from '../lib/supabaseClient';
 
-const Github = (props) => (
+const MySwal = withReactContent(Swal);
+
+const GithubIcon = (props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width={props.size || 24}
-    height={props.size || 24}
+    width={props.size || 20}
+    height={props.size || 20}
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
@@ -31,610 +32,390 @@ const Github = (props) => (
   </svg>
 );
 
-// Fungsi truncate title
-const truncateText = (text, maxLen) => {
-  if (text.length > maxLen) {
-    return text.slice(0, maxLen) + "...";
-  }
-  return text;
-};
-
-const truncateTitle = (title, maxLen = 25) => truncateText(title, maxLen);
+// Fallback initial projects list
+const MOCK_PROJECTS = [
+  {
+    id: '1',
+    title: 'RT Administration System',
+    description:
+      'Aplikasi manajemen administrasi RT terintegrasi untuk pengelolaan data warga, keuangan, dan iuran bulanan.',
+    category: 'WEB',
+    tech: ['Next.js', 'Laravel API', 'SSO', 'TanStack Query'],
+    features: ['Real-time Payment Status', 'Citizen Management', 'Financial Reports'],
+    live_link: '',
+    github_link: '',
+    cover_image: '/project/py.png',
+  },
+  {
+    id: '2',
+    title: 'Rice Stock Management System – Berkah Lumbung Pangan',
+    description:
+      'Sistem informasi manajemen stok beras dan pemesanan grosir beras premium berbasis web.',
+    category: 'WEB',
+    tech: ['React', 'Tailwind CSS', 'Supabase', 'PostgreSQL'],
+    features: ['Inventory Tracking', 'Wholesale Order System', 'Sales Analytics'],
+    live_link: 'https://coreculture.vercel.app/',
+    github_link: 'https://github.com/Galabeewww/coreculture',
+    cover_image: '/project/cc.png',
+  },
+  {
+    id: '3',
+    title: 'Lensfolio – Photography Showcase Platform',
+    description:
+      'Platform portofolio fotografi dan videografi dengan tata letak visual modern dan manajemen media.',
+    category: 'WEB',
+    tech: ['TypeScript', 'Next.js', 'Tailwind', 'Cloudinary'],
+    features: ['Photo & Video Upload', 'Interactive Gallery', 'Category Filtering'],
+    live_link: 'https://photofolio-azure.vercel.app/',
+    github_link: 'https://github.com/Galabeewww/photofolio',
+    cover_image: '/project/lf.png',
+  },
+  {
+    id: '4',
+    title: 'MyPortofolio Digital Showcase',
+    description:
+      'Aplikasi web portofolio personal interaktif dengan mode gelap/terang dan fitur CRUD admin.',
+    category: 'WEB',
+    tech: ['React', 'Tailwind', 'Supabase', 'Vercel'],
+    features: ['Interactive Showcase', 'CRUD Admin Panel', 'Dark/Light Theme'],
+    live_link: 'https://my-portofolio-omega-lemon.vercel.app/',
+    github_link: 'https://github.com/Galabeewww/MyPortofolio',
+    cover_image: '/project/mp.png',
+  },
+];
 
 const Projects = () => {
-  const projects = [
-    {
-      title: "House Price Prediction",
-      description:
-        "Program Prediksi Harga Rumah (House Price Prediction) menggunakan pemodelan Linear Regression & Random Forest (train_and_evaluate) dan dataset dari Kaggle",
-      category: "WEB",
-      tech: ["Python", "Streamlit"],
-      features: [
-        "Dataset upload feature ",
-        "Selection slider (KBest)",
-        "Engineering and machine learning pipeline automatically",
-        "automated performance analysis",
-      ],
-      // liveLink: "https://coreculture.vercel.app/",
-      githubLink: "https://github.com/Galabeewww/HousePricePrediction",
-      image: "/project/py.png",
-      // icon: <ShoppingBag className="text-cyan-400" size={32} />,
-    },
-    {
-      title: "Coreculture",
-      description:
-        "CORECULTURE adalah merek pakaian lokal yang lahir dari semangat football culture dan gaya hidup kasual anak muda. Brand ini tidak hanya menghadirkan pakaian sebagai kebutuhan sehari-hari, tetapi juga sebagai simbol identitas bagi para pecinta sepak bola dan streetwear.",
-      category: "WEB",
-      tech: [
-        "Typescript",
-        "NextJS",
-        "Tailwind",
-        "Cloudinary",
-        "Supabase",
-        "PostgreSQL",
-        "Vercel",
-      ],
-      features: [
-        "Article Upload",
-        "Photoshoot Upload",
-        "Interactive Preview",
-        "Media Management",
-        "Inventory & Stock Control",
-        "Product Catalogue & Category Selection",
-      ],
-      liveLink: "https://coreculture.vercel.app/",
-      githubLink: "https://github.com/Galabeewww/coreculture",
-      image: "/project/cc.png",
-      // icon: <ShoppingBag className="text-cyan-400" size={32} />,
-    },
-    {
-      title: "Lensfolio",
-      description:
-        "Lensfolio adalah sebuah web platform yang dirancang untuk memudahkan pengguna dalam mengunggah dan menampilkan portofolio foto maupun video. Tujuannya adalah memberikan pengalaman berbagi visual yang rapi, terorganisir, dan fleksibel, baik untuk koleksi pribadi maupun portofolio kreatif.",
-      category: "WEB",
-      tech: [
-        "Typescript",
-        "NextJS",
-        "Tailwind",
-        "Cloudinary",
-        "Supabase",
-        "PostgreSQL",
-        "Vercel",
-      ],
-      features: [
-        "Photo & Video Upload",
-        "Interactive Preview",
-        "Media Management",
-      ],
-      liveLink: "https://photofolio-azure.vercel.app/",
-      githubLink: "https://github.com/Galabeewww/photofolio",
-      image: "/project/lf.png",
-      // icon: <ShoppingBag className="text-cyan-400" size={32} />,
-    },
-    {
-      title: "MyPortofolio",
-      description:
-        "MyPortfolio adalah aplikasi web modern dan responsif yang menampilkan proyek, keterampilan, serta perjalanan profesional saya. Platform ini dirancang untuk menjadi etalase digital yang menarik, mudah diakses, dan mendukung pengembangan karier.",
-      category: "WEB",
-      tech: ["React", "Tailwind", "Javascript", "Vercel"],
-      features: [
-        "Personal Showcase",
-        "Project Gallery",
-        "About Me Section",
-        "Contact Integration",
-      ],
-      liveLink: "https://my-portofolio-omega-lemon.vercel.app/",
-      githubLink: "https://github.com/Galabeewww/MyPortofolio",
-      image: "/project/mp.png",
-      // icon: <ShoppingBag className="text-cyan-400" size={32} />,
-    },
-    {
-      title: "SIMOOLTAN",
-      description:
-        "SIMOOLTAN adalah Sistem Informasi Manajemen Operasi OLT Aktual & Terintegrasi dengan fitur GIS yang dikembangkan untuk mendukung divisi PED (Planning, Engineering & Deployment) di PT Telkom Indonesia. Sistem ini berfungsi mengintegrasikan serta memvisualisasikan data guna mempermudah operasional, sekaligus memonitor pergerakan proyek secara real-time dan aktual. Dengan adanya SIMOOLTAN, proses pengelolaan jaringan OLT menjadi lebih efisien, terstruktur, dan transparan sehingga mendukung peningkatan kinerja serta pengambilan keputusan yang lebih tepat.",
-      category: "WEB",
-      tech: [
-        "PHP",
-        "JavaScript",
-        "HTML 5",
-        "CSS 3",
-        "Bootstrap 5",
-        "Laravel",
-        "Mapbox API",
-      ],
-      features: [
-        "GIS-Based Visualization",
-        "Real-Time Project Monitoring",
-        "Integrated Data Management",
-        "Operational Efficiency Tools",
-      ],
-      // liveLink: "https://example.com",
-      githubLink: "https://github.com/Galabeewww/telkom2",
-      image: "/project/olt.jpg",
-      // icon: <ShoppingBag className="text-cyan-400" size={32} />,
-    },
-    {
-      title: "BACKBONE OLT",
-      description:
-        "Backbone OLT adalah sistem infrastruktur jaringan optik berbasis Optical Line Terminal (OLT) yang berfungsi sebagai tulang punggung layanan broadband sekaligus sarana pengawasan fisik tiang jaringan. Sistem ini dikembangkan untuk mengintegrasikan data operasional dan memvisualisasikan posisi tiang melalui fitur GIS, sehingga memudahkan tim teknis dalam perencanaan, pembangunan, serta monitoring kondisi tiang secara real-time.",
-      category: "WEB",
-      tech: [
-        "PHP",
-        "JavaScript",
-        "HTML 5",
-        "CSS 3",
-        "Bootstrap 5",
-        "Laravel",
-        "Mapbox API",
-      ],
-      features: [
-        "GIS Monitoring Tiang",
-        "Real-Time Condition Tracking",
-        "Data Integrasi Operasional",
-        "Reporting",
-      ],
-      // liveLink: "https://example.com",
-      githubLink: "#",
-      image: "/project/backbone.jpg",
-      // icon: <CheckSquare className="text-indigo-400" size={32} />,
-    },
-    {
-      title: "JAWARA",
-      description:
-        "Jawara Resto adalah sistem manajemen restoran terintegrasi yang dirancang untuk membantu pengelolaan operasional sehari-hari secara lebih efisien, modern, dan transparan. Sistem ini mencakup beberapa aspek utama, mulai dari pencatatan pesanan pelanggan secara digital, manajemen stok bahan baku yang otomatis terhubung dengan transaksi, hingga pengelolaan keuangan dan laporan penjualan yang real-time.",
-      category: "WEB",
-      tech: ["PHP", "JavaScript", "HTML 5", "CSS 3", "Bootstrap 5"],
-      features: [
-        "Digital Order Management",
-        "Inventory & Stock Control",
-        "Reservation & Customer Management",
-      ],
-      // liveLink: "https://example.com",
-      githubLink: "#",
-      image: "/project/jwr4.jpg",
-      // icon: <CloudSun className="text-purple-400" size={32} />,
-    },
-    {
-      title: "HEMATITE",
-      description:
-        "Ini merupakan project web design yang dirancang sebagai platform digital yang tidak hanya berfungsi sebagai etalase produk, tetapi juga sebagai representasi identitas brand yang elegan dan responsif dari HEMATITE.",
-      category: "WEB DESIGN",
-      tech: ["FIGMA"],
-      features: [
-        "Landing Page / Home",
-        "Product Catalogue & Category Selection",
-        "Product Listing & Detail Page",
-      ],
-      // liveLink: "https://example.com",
-      githubLink: "#",
-      image: "/project/wd1.jpg",
-      // icon: <CloudSun className="text-purple-400" size={32} />,
-    },
-  ];
-
-  const [startIndex, setStartIndex] = useState(0);
-  const [viewAll, setViewAll] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [selectedProject, setSelectedProject] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
 
-  // Hook untuk memantau ukuran layar browser
   useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    fetchProjects();
   }, []);
 
-  // Lock body scroll ketika modal terbuka
-  useEffect(() => {
-    if (selectedProject !== null) {
-      document.body.style.overflow = "hidden";
+  const fetchProjects = async () => {
+    setLoading(true);
+
+    // Try fetching from localStorage first (for CRUD updates in demo mode)
+    const localProjects = localStorage.getItem('portfolio_crud_projects');
+
+    if (isSupabaseConfigured) {
+      try {
+        const { data, error } = await supabase
+          .from('projects')
+          .select('*')
+          .order('created_at', { ascending: false });
+
+        if (!error && data && data.length > 0) {
+          setProjects(data);
+          setLoading(false);
+          return;
+        }
+      } catch (err) {
+        console.error('Supabase fetch error:', err);
+      }
+    }
+
+    if (localProjects) {
+      setProjects(JSON.parse(localProjects));
     } else {
-      document.body.style.overflow = "";
+      setProjects(MOCK_PROJECTS);
+    }
+    setLoading(false);
+  };
+
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    if (selectedProject !== null || previewImage !== null) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
     }
     return () => {
-      document.body.style.overflow = "";
+      document.body.style.overflow = '';
     };
-  }, [selectedProject]);
+  }, [selectedProject, previewImage]);
 
-  // Jumlah proyek yang ditampilkan: 1 di mobile, 3 di desktop
-  const itemsPerPage = isMobile ? 1 : 3;
-
-  const visibleProjects = viewAll
-    ? projects
-    : projects.slice(startIndex, startIndex + itemsPerPage);
-
-  const handleNext = () => {
-    if (startIndex + itemsPerPage < projects.length) {
-      setStartIndex(startIndex + 1);
-    }
-  };
-
-  const handlePrev = () => {
-    if (startIndex > 0) {
-      setStartIndex(startIndex - 1);
-    }
-  };
-
-  const openModal = (project) => {
-    setSelectedProject(project);
-  };
-
-  const closeModal = () => {
-    setSelectedProject(null);
-    setPreviewImage(null);
-  };
-
-  const openImagePreview = (e, imageUrl) => {
+  // SweetAlert Handler for Live Demo
+  const handleLiveDemoClick = (e, link) => {
     e.stopPropagation();
-    setPreviewImage(imageUrl);
+    if (!link || link === '#' || link.trim() === '') {
+      MySwal.fire({
+        title: 'Informasi Demo',
+        text: 'Live demo tidak tersedia',
+        icon: 'info',
+        confirmButtonText: 'Tutup',
+        confirmButtonColor: 'var(--accent-btn)',
+        background: 'var(--bg-card)',
+        color: 'var(--text-primary)',
+      });
+    } else {
+      window.open(link, '_blank', 'noreferrer');
+    }
   };
 
-  const closeImagePreview = () => {
-    setPreviewImage(null);
+  // SweetAlert Handler for GitHub
+  const handleGithubClick = (e, link) => {
+    e.stopPropagation();
+    if (!link || link === '#' || link.trim() === '') {
+      MySwal.fire({
+        title: 'Informasi Repositori',
+        text: 'GitHub tidak tersedia',
+        icon: 'info',
+        confirmButtonText: 'Tutup',
+        confirmButtonColor: 'var(--accent-btn)',
+        background: 'var(--bg-card)',
+        color: 'var(--text-primary)',
+      });
+    } else {
+      window.open(link, '_blank', 'noreferrer');
+    }
   };
 
-  const [expandedTech, setExpandedTech] = useState({});
+  // SweetAlert Handler for Share
+  const handleShareClick = (e, project) => {
+    e.stopPropagation();
+    MySwal.fire({
+      title: 'Bagikan Proyek',
+      html: `<strong>${project.title}</strong><br/><span style="font-size:12px; opacity:0.8;">Tautan proyek berhasil dicopy ke clipboard!</span>`,
+      icon: 'success',
+      timer: 2000,
+      showConfirmButton: false,
+      background: 'var(--bg-card)',
+      color: 'var(--text-primary)',
+    });
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(project.live_link || window.location.href);
+    }
+  };
 
   return (
-    <section id="projects" className="py-24 relative border-t border-white/5">
-      {/* Header */}
-      <div className="max-w-6xl mx-auto mb-16 px-4">
-        {/* Heading + Paragraf di tengah */}
-        <div className="flex flex-col items-center text-center space-y-4">
-          <h2 className="text-3xl sm:text-4xl font-bold font-display text-white">
-            Proyek{" "}
-            <span className="bg-gradient-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent">
-              Pilihan
-            </span>
-          </h2>
-          <p className="text-slate-400 text-sm sm:text-base leading-relaxed">
-            Berikut adalah beberapa proyek yang telah saya rancang dan bangun.
-          </p>
-        </div>
-
-        {/* Tombol View All di bawah, menempel ke kanan */}
-        <div className="flex justify-end mt-6">
-          <button
-            onClick={() => {
-              setViewAll(!viewAll);
-              setStartIndex(0);
-            }}
-            className="px-5 py-2.5 rounded-full bg-white/5 hover:bg-white/10 text-cyan-400 hover:text-cyan-300 border border-white/10 text-sm font-semibold transition cursor-pointer active:scale-95 duration-200"
-          >
-            {viewAll ? "Hide Slider" : "View All"}
-          </button>
-        </div>
+    <section id="projects" className="py-24 relative border-t border-[var(--border-color)]">
+      {/* Header Section Sesuai Referensi Gambar */}
+      <div className="max-w-4xl mx-auto mb-16 text-center space-y-3 px-4">
+        <h2 className="text-3xl sm:text-5xl font-extrabold font-display text-[var(--text-primary)] tracking-tight">
+          Selected Work
+        </h2>
+        <p className="text-[var(--text-secondary)] text-sm sm:text-base leading-relaxed max-w-2xl mx-auto">
+          A showcase of my recent projects highlighting creativity, detail, and innovation.
+        </p>
       </div>
-      {/* Header */}
-      {/* <div className="flex flex-col sm:flex-row justify-between items-center max-w-6xl mx-auto mb-16 gap-6 px-4">
-        <div className="text-center sm:text-left space-y-4">
-          <h2 className="text-3xl sm:text-4xl font-bold font-display text-white">
-            Proyek{" "}
-            <span className="bg-gradient-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent">
-              Pilihan
-            </span>
-          </h2>
-          <p className="text-slate-400 text-sm sm:text-base leading-relaxed">
-            Berikut adalah beberapa proyek web yang telah saya rancang dan
-            bangun.
-          </p>
-        </div>
-        <button
-          onClick={() => {
-            setViewAll(!viewAll);
-            setStartIndex(0);
-          }}
-          className="px-5 py-2.5 rounded-full bg-white/5 hover:bg-white/10 text-cyan-400 hover:text-cyan-300 border border-white/10 text-sm font-semibold transition cursor-pointer active:scale-95 duration-200"
-        >
-          {viewAll ? "Hide Slider" : "View All"}
-        </button>
-      </div> */}
 
-      {/* Kontainer Slider Utama dengan Panah di Kiri dan Kanan */}
-      <div className="relative max-w-7xl mx-auto px-12 md:px-16 flex items-center justify-center">
-        {/* Panah Kiri (Floats on Left) */}
-        {!viewAll && projects.length > itemsPerPage && (
-          <button
-            onClick={handlePrev}
-            disabled={startIndex === 0}
-            className="absolute left-1 md:left-2 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white border border-white/10 disabled:opacity-0 disabled:pointer-events-none transition-all duration-300 cursor-pointer active:scale-90 z-30 shadow-2xl backdrop-blur-md"
-            aria-label="Previous Project"
-          >
-            <ChevronLeft size={24} />
-          </button>
-        )}
+      {/* Grid Proyek 2 Kolom (Sesuai Referensi Gambar) */}
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+        {loading ? (
+          <div className="text-center py-12 text-[var(--text-muted)]">Memuat daftar proyek...</div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+            {projects.map((project) => {
+              const coverImg = project.cover_image || project.image || '/project/py.png';
+              const techList = Array.isArray(project.tech)
+                ? project.tech
+                : typeof project.tech === 'string'
+                ? project.tech.split(',')
+                : [];
 
-        {/* Grid Kartu Proyek */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 text-left w-full">
-          {visibleProjects.map((project, index) => (
-            <div
-              key={index}
-              className="glow-card rounded-2xl flex flex-col justify-between border border-white/10 bg-[#1e293b] overflow-hidden transition-all duration-300 group min-h-[440px]"
-            >
-              {/* Bagian Atas: Gambar/Placeholder dengan Overlay Judul & Kategori */}
-              {project.image ? (
-                <div className="relative h-48 w-full overflow-hidden">
-                  <img
-                    src={project.image}
-                    alt={project.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-                  {/* Efek gradasi gelap di bagian bawah gambar */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#1e293b] via-[#1e293b]/40 to-transparent z-10"></div>
+              const liveUrl = project.live_link || project.liveLink || '';
+              const githubUrl = project.github_link || project.githubLink || '';
 
-                  {/* Judul & Kategori di atas gambar — title di-truncate */}
-                  <div className="absolute bottom-4 left-6 right-6 z-20">
-                    <span className="inline-block px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider bg-purple-600 text-white mb-2 shadow-lg">
-                      {project.category || "Project"}
-                    </span>
-                    <h3
-                      className="text-xl font-bold text-white font-display leading-snug drop-shadow-md"
-                      title={project.title}
-                    >
-                      {truncateTitle(project.title, 25)}
-                    </h3>
-                  </div>
-                </div>
-              ) : (
-                <div className="relative h-48 w-full overflow-hidden flex items-center justify-center bg-gradient-to-br from-indigo-950/40 to-purple-950/40">
-                  <div className="absolute inset-0 bg-grid-pattern opacity-10"></div>
-                  <div className="p-4 rounded-full bg-white/5 border border-white/10 relative z-10">
-                    {project.icon}
-                  </div>
-                  {/* Efek gradasi gelap */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#1e293b] to-transparent z-10"></div>
-
-                  {/* Judul & Kategori — title di-truncate */}
-                  <div className="absolute bottom-4 left-6 right-6 z-20">
-                    <span className="inline-block px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider bg-purple-600 text-white mb-2">
-                      {project.category || "Project"}
-                    </span>
-                    <h3
-                      className="text-xl font-bold text-white font-display leading-snug"
-                      title={project.title}
-                    >
-                      {truncateTitle(project.title, 25)}
-                    </h3>
-                  </div>
-                </div>
-              )}
-
-              {/* Bagian Bawah: Konten, Tech Stack, & Tautan Aksi */}
-              <div className="p-6 flex flex-col justify-between grow">
-                <p className="text-slate-300 text-sm leading-relaxed mb-6">
-                  {truncateText(project.description, 100)}
-                </p>
-
-                <div>
-                  {/* Tech Stack Badges */}
-                  {/* <div className="flex flex-wrap gap-2 mb-6">
-                    {project.tech.map((t, tIdx) => (
-                      <span
-                        key={tIdx}
-                        className="px-2.5 py-1 rounded-full text-[11px] font-semibold bg-white/5 border border-white/10 text-slate-300"
-                      >
-                        {t}
-                      </span>
-                    ))}
-                  </div> */}
-                  {/* Tech Stack Badges -- Klik "more" untuk melihat semua di dalam kartu */}
-                  <div className="flex flex-wrap items-center gap-2 mb-6">
-                    {/* Cek apakah kartu ini sedang di-expand */}
-                    {(expandedTech[project.title]
-                      ? project.tech
-                      : project.tech.slice(0, 3)
-                    ).map((t, tIdx) => (
-                      <span
-                        key={tIdx}
-                        className="px-2.5 py-1 rounded-full text-[11px] font-semibold bg-white/5 border border-white/10 text-slate-300"
-                      >
-                        {t}
-                      </span>
-                    ))}
-
-                    {/* Tombol More / Less */}
-                    {project.tech.length > 3 && (
-                      <button
-                        onClick={() =>
-                          setExpandedTech((prev) => ({
-                            ...prev,
-                            [project.title]: !prev[project.title],
-                          }))
-                        }
-                        className="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-indigo-500/10 border border-indigo-500/30 text-slate-400 cursor-pointer hover:bg-indigo-500/20 transition-colors duration-200"
-                      >
-                        {expandedTech[project.title]
-                          ? "- less"
-                          : `+${project.tech.length - 3} more`}
-                      </button>
-                    )}
+              return (
+                <div
+                  key={project.id}
+                  onClick={() => setSelectedProject(project)}
+                  className="group cursor-pointer flex flex-col justify-between space-y-4"
+                >
+                  {/* Container Gambar Cover Atas Sesuai Gambar Referensi */}
+                  <div className="relative w-full h-[260px] sm:h-[300px] rounded-3xl overflow-hidden bg-[var(--bg-secondary)] border border-[var(--border-color)] transition-all duration-300 group-hover:border-[var(--border-color-hover)] group-hover:shadow-xl">
+                    <img
+                      src={coverImg}
+                      alt={project.title}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = '/project/py.png';
+                      }}
+                    />
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
                   </div>
 
-                  {/* Footer Kartu (Aksi) */}
-                  <div className="flex items-center justify-between pt-4 border-t border-white/10">
-                    <button
-                      onClick={() => openModal(project)}
-                      className="inline-flex items-center gap-1.5 text-sm font-semibold text-indigo-400 hover:text-indigo-300 transition-colors duration-200 cursor-pointer"
-                    >
-                      View Details &rarr;
-                    </button>
-                    <div className="flex items-center gap-3">
-                      <a
-                        href={project.liveLink}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="p-1 text-slate-400 hover:text-white transition-colors duration-200"
-                        title="Live Demo"
+                  {/* Bagian Bawah: Judul & Action Buttons Sesuai Referensi */}
+                  <div className="space-y-3 px-1">
+                    <div className="flex items-start justify-between gap-4">
+                      {/* Judul Proyek Besar & Tebal */}
+                      <h3
+                        className="text-xl sm:text-2xl font-bold font-display text-[var(--text-primary)] group-hover:opacity-90 transition-opacity leading-snug"
+                        title={project.title}
                       >
-                        <ExternalLink size={18} />
-                      </a>
-                      <a
-                        href={project.githubLink}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="p-1 text-slate-400 hover:text-white transition-colors duration-200"
-                        title="Source Code"
-                      >
-                        <Github size={18} />
-                      </a>
+                        {project.title}
+                      </h3>
+
+                      {/* Action Buttons (Share & External Link Icons Bulat Sesuai Referensi) */}
+                      <div className="flex items-center gap-2 flex-shrink-0 pt-0.5">
+                        <button
+                          type="button"
+                          onClick={(e) => handleShareClick(e, project)}
+                          className="w-10 h-10 rounded-full bg-[var(--bg-card)] hover:bg-[var(--bg-card-hover)] text-[var(--text-primary)] border border-[var(--border-color)] flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95 shadow-sm"
+                          title="Share Project"
+                        >
+                          <Share2 size={16} />
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={(e) => handleLiveDemoClick(e, liveUrl)}
+                          className="w-10 h-10 rounded-full bg-[var(--accent-btn)] hover:bg-[var(--accent-btn-hover)] text-[var(--accent-btn-text)] border border-transparent flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95 shadow-sm"
+                          title="Live Demo"
+                        >
+                          <ArrowUpRight size={18} />
+                        </button>
+
+                        {githubUrl && (
+                          <button
+                            type="button"
+                            onClick={(e) => handleGithubClick(e, githubUrl)}
+                            className="w-10 h-10 rounded-full bg-[var(--bg-card)] hover:bg-[var(--bg-card-hover)] text-[var(--text-primary)] border border-[var(--border-color)] flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95 shadow-sm"
+                            title="GitHub Repository"
+                          >
+                            <GithubIcon size={16} />
+                          </button>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Tech Badges / Pills Under Title (Outlined Style Sesuai Gambar) */}
+                    <div className="flex flex-wrap items-center gap-2 pt-1">
+                      {techList.map((t, idx) => (
+                        <span
+                          key={idx}
+                          className="px-3.5 py-1 rounded-full text-xs font-semibold bg-[var(--badge-bg)] text-[var(--badge-text)] border border-[var(--badge-border)]"
+                        >
+                          {t.trim()}
+                        </span>
+                      ))}
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Panah Kanan (Floats on Right) */}
-        {!viewAll && projects.length > itemsPerPage && (
-          <button
-            onClick={handleNext}
-            disabled={startIndex + itemsPerPage >= projects.length}
-            className="absolute right-1 md:right-2 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white border border-white/10 disabled:opacity-0 disabled:pointer-events-none transition-all duration-300 cursor-pointer active:scale-90 z-30 shadow-2xl backdrop-blur-md"
-            aria-label="Next Project"
-          >
-            <ChevronRight size={24} />
-          </button>
+              );
+            })}
+          </div>
         )}
       </div>
 
-      {/* ===== MODAL POPUP DETAIL PROYEK ===== */}
+      {/* ===== MODAL DETAIL PROYEK ===== */}
       {selectedProject !== null && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center p-4"
-          onClick={closeModal}
+          onClick={() => setSelectedProject(null)}
         >
-          {/* Backdrop */}
-          <div className="absolute inset-0 bg-black/70 backdrop-blur-sm animate-[fadeIn_0.2s_ease-out]" />
+          <div className="absolute inset-0 bg-black/80 backdrop-blur-sm animate-[fadeIn_0.2s_ease-out]" />
 
-          {/* Modal Content */}
           <div
-            className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl bg-[#0f172a] border border-white/10 shadow-2xl animate-[slideUp_0.3s_ease-out]"
+            className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl bg-[var(--bg-card)] border border-[var(--border-color)] shadow-2xl z-10 animate-[slideUp_0.3s_ease-out]"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Close Button */}
             <button
-              onClick={closeModal}
-              className="absolute top-4 right-4 z-30 p-2 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white transition-all duration-200 cursor-pointer"
+              onClick={() => setSelectedProject(null)}
+              className="absolute top-4 right-4 z-30 p-2.5 rounded-full bg-black/60 hover:bg-black text-white transition-all duration-200 cursor-pointer"
               aria-label="Close"
             >
               <X size={20} />
             </button>
 
-            {/* Modal Image — klik untuk preview besar */}
-            {selectedProject.image ? (
-              <div
-                className="relative w-full h-56 sm:h-64 overflow-hidden rounded-t-2xl cursor-pointer group/img"
-                onClick={(e) => openImagePreview(e, selectedProject.image)}
-              >
-                <img
-                  src={selectedProject.image}
-                  alt={selectedProject.title}
-                  className="w-full h-full object-cover transition-transform duration-300 group-hover/img:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0f172a] via-[#0f172a]/50 to-transparent" />
-                {/* Overlay hint */}
-                <div className="absolute inset-0 flex items-center justify-center z-20 opacity-0 group-hover/img:opacity-100 transition-opacity duration-300">
-                  <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-black/60 backdrop-blur-md text-white text-sm font-medium">
-                    <Maximize2 size={16} />
-                    Klik untuk perbesar
-                  </div>
+            {/* Modal Image Header */}
+            <div
+              className="relative w-full h-64 sm:h-72 overflow-hidden rounded-t-3xl cursor-pointer group/img bg-[var(--bg-secondary)]"
+              onClick={() => setPreviewImage(selectedProject.cover_image || selectedProject.image)}
+            >
+              <img
+                src={selectedProject.cover_image || selectedProject.image || '/project/py.png'}
+                alt={selectedProject.title}
+                className="w-full h-full object-cover transition-transform duration-300 group-hover/img:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-card)] via-transparent to-transparent" />
+              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/img:opacity-100 transition-opacity duration-300">
+                <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-black/70 backdrop-blur-md text-white text-xs font-semibold">
+                  <Maximize2 size={14} /> Klik untuk perbesar gambar
                 </div>
               </div>
-            ) : (
-              <div className="relative w-full h-56 sm:h-64 overflow-hidden rounded-t-2xl flex items-center justify-center bg-gradient-to-br from-indigo-950/60 to-purple-950/60">
-                <div className="p-6 rounded-full bg-white/5 border border-white/10">
-                  {selectedProject.icon}
-                </div>
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0f172a] via-[#0f172a]/50 to-transparent" />
-              </div>
-            )}
+            </div>
 
             {/* Modal Body */}
-            <div className="p-6 sm:p-8 -mt-12 relative z-10 space-y-6">
-              {/* Category Badge + Title */}
+            <div className="p-6 sm:p-8 space-y-6">
               <div>
-                <span className="inline-block px-3 py-1 rounded-md text-[11px] font-bold uppercase tracking-wider bg-purple-600 text-white mb-3 shadow-lg">
-                  {selectedProject.category || "Project"}
+                <span className="inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[var(--badge-bg)] text-[var(--badge-text)] border border-[var(--badge-border)] mb-3">
+                  {selectedProject.category || 'WEB'}
                 </span>
-                <h2 className="text-2xl sm:text-3xl font-bold text-white font-display leading-tight">
+                <h2 className="text-2xl sm:text-3xl font-bold text-[var(--text-primary)] font-display leading-snug">
                   {selectedProject.title}
                 </h2>
               </div>
 
-              {/* Description */}
-              <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
+              <p className="text-[var(--text-secondary)] text-sm sm:text-base leading-relaxed">
                 {selectedProject.description}
               </p>
 
-              {/* Tech Stack */}
+              {/* Technologies */}
               <div>
                 <div className="flex items-center gap-2 mb-3">
-                  <Code2 size={18} className="text-cyan-400" />
-                  <h3 className="text-white font-semibold text-sm uppercase tracking-wider">
+                  <Code2 size={18} className="text-[var(--text-primary)]" />
+                  <h3 className="text-[var(--text-primary)] font-semibold text-xs uppercase tracking-wider">
                     Teknologi yang Digunakan
                   </h3>
                 </div>
                 <div className="flex flex-wrap gap-2">
-                  {selectedProject.tech.map((t, tIdx) => (
+                  {(Array.isArray(selectedProject.tech)
+                    ? selectedProject.tech
+                    : typeof selectedProject.tech === 'string'
+                    ? selectedProject.tech.split(',')
+                    : []
+                  ).map((t, idx) => (
                     <span
-                      key={tIdx}
-                      className="px-3 py-1.5 rounded-full text-xs font-semibold bg-cyan-500/10 border border-cyan-500/30 text-cyan-300"
+                      key={idx}
+                      className="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-[var(--badge-bg)] text-[var(--badge-text)] border border-[var(--badge-border)]"
                     >
-                      {t}
+                      {t.trim()}
                     </span>
                   ))}
                 </div>
               </div>
 
-              {/* Fitur Utama */}
-              {selectedProject.features &&
-                selectedProject.features.length > 0 && (
-                  <div>
-                    <div className="flex items-center gap-2 mb-3">
-                      <Layers size={18} className="text-indigo-400" />
-                      <h3 className="text-white font-semibold text-sm uppercase tracking-wider">
-                        Fitur Utama
-                      </h3>
-                    </div>
-                    <ul className="space-y-2.5">
-                      {selectedProject.features.map((feature, fIdx) => (
-                        <li
-                          key={fIdx}
-                          className="flex items-start gap-3 text-slate-300 text-sm leading-relaxed"
-                        >
-                          <span className="mt-1.5 flex-shrink-0 w-1.5 h-1.5 rounded-full bg-indigo-400" />
-                          {feature}
-                        </li>
-                      ))}
-                    </ul>
+              {/* Features List */}
+              {selectedProject.features && selectedProject.features.length > 0 && (
+                <div>
+                  <div className="flex items-center gap-2 mb-3">
+                    <Layers size={18} className="text-[var(--text-primary)]" />
+                    <h3 className="text-[var(--text-primary)] font-semibold text-xs uppercase tracking-wider">
+                      Fitur Utama
+                    </h3>
                   </div>
-                )}
+                  <ul className="space-y-2">
+                    {selectedProject.features.map((feature, fIdx) => (
+                      <li key={fIdx} className="flex items-start gap-2.5 text-[var(--text-secondary)] text-sm">
+                        <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[var(--text-primary)] flex-shrink-0" />
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
 
-              {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-white/10">
-                {/* <a
-                  href={selectedProject.liveLink}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex-1 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-cyan-500 hover:from-indigo-400 hover:to-cyan-400 text-white text-sm font-semibold transition-all duration-200 active:scale-[0.97]"
+              {/* Modal Buttons */}
+              <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-[var(--border-color)]">
+                <button
+                  type="button"
+                  onClick={(e) => handleLiveDemoClick(e, selectedProject.live_link || selectedProject.liveLink)}
+                  className="flex-1 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-[var(--accent-btn)] hover:bg-[var(--accent-btn-hover)] text-[var(--accent-btn-text)] text-sm font-semibold shadow-md transition-all duration-200 active:scale-[0.98]"
                 >
-                  <Monitor size={16} />
-                  Live Demo
-                </a> */}
-                <a
-                  href={selectedProject.githubLink}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex-1 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white text-sm font-semibold border border-white/10 transition-all duration-200 active:scale-[0.97]"
+                  <ExternalLink size={16} /> Live Demo
+                </button>
+                <button
+                  type="button"
+                  onClick={(e) => handleGithubClick(e, selectedProject.github_link || selectedProject.githubLink)}
+                  className="flex-1 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-[var(--bg-secondary)] hover:bg-[var(--border-color)] text-[var(--text-primary)] text-sm font-semibold border border-[var(--border-color)] transition-all duration-200 active:scale-[0.98]"
                 >
-                  <Github size={16} />
-                  Source Code
-                </a>
+                  <GithubIcon size={16} /> GitHub Source Code
+                </button>
               </div>
             </div>
           </div>
@@ -645,39 +426,31 @@ const Projects = () => {
       {previewImage && (
         <div
           className="fixed inset-0 z-[60] flex items-center justify-center p-4"
-          onClick={closeImagePreview}
+          onClick={() => setPreviewImage(null)}
         >
-          {/* Backdrop */}
-          <div className="absolute inset-0 bg-black/85 backdrop-blur-md animate-[fadeIn_0.2s_ease-out]" />
+          <div className="absolute inset-0 bg-black/90 backdrop-blur-md animate-[fadeIn_0.2s_ease-out]" />
 
-          {/* Image Container */}
           <div
-            className="relative z-10 max-w-5xl w-full max-h-[90vh] flex flex-col items-center animate-[slideUp_0.3s_ease-out]"
+            className="relative z-10 max-w-5xl w-full flex flex-col items-center animate-[slideUp_0.3s_ease-out]"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Close Button */}
             <div className="w-full flex justify-end mb-3">
               <button
-                onClick={closeImagePreview}
-                className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white transition-all duration-200 cursor-pointer"
+                onClick={() => setPreviewImage(null)}
+                className="p-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white transition-all duration-200 cursor-pointer"
                 aria-label="Close Preview"
               >
                 <X size={20} />
               </button>
             </div>
 
-            {/* Preview Image */}
-            <div className="relative w-full rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-[#0f172a]">
+            <div className="relative w-full rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-black">
               <img
                 src={previewImage}
-                alt="Preview"
-                className="w-full h-auto max-h-[75vh] object-contain"
+                alt="Preview Full"
+                className="w-full h-auto max-h-[80vh] object-contain"
               />
             </div>
-
-            <p className="mt-3 text-slate-500 text-xs">
-              Klik di luar gambar untuk menutup
-            </p>
           </div>
         </div>
       )}
