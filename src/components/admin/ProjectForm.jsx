@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { X, Save, Plus, Trash2 } from 'lucide-react';
 import ImageUploader from './ImageUploader';
 
-const ProjectForm = ({ project, onSave, onClose }) => {
+const ProjectForm = ({ project, categories = [], onSave, onClose }) => {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -13,6 +13,13 @@ const ProjectForm = ({ project, onSave, onClose }) => {
     github_link: '',
     images: [],
   });
+
+  const defaultCategories = categories.length > 0 ? categories : [
+    { id: 'c1', name: 'WEB' },
+    { id: 'c2', name: 'MOBILE' },
+    { id: 'c3', name: 'WEB DESIGN' },
+    { id: 'c4', name: 'UI/UX' },
+  ];
 
   useEffect(() => {
     if (project) {
@@ -125,13 +132,13 @@ const ProjectForm = ({ project, onSave, onClose }) => {
                 name="category"
                 value={formData.category}
                 onChange={handleChange}
-                className="w-full px-4 py-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--text-primary)] transition-colors duration-200"
+                className="w-full px-4 py-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--text-primary)] transition-colors duration-200 uppercase font-bold"
               >
-                <option value="WEB">WEB</option>
-                <option value="MOBILE">MOBILE</option>
-                <option value="WEB DESIGN">WEB DESIGN</option>
-                <option value="UI/UX">UI/UX</option>
-                <option value="OTHER">OTHER</option>
+                {defaultCategories.map((cat) => (
+                  <option key={cat.id || cat.name} value={cat.name}>
+                    {cat.name}
+                  </option>
+                ))}
               </select>
             </div>
           </div>

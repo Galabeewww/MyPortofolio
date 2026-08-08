@@ -182,3 +182,33 @@ body {
 .marquee-container:hover .animate-marquee-reverse {
   animation-play-state: paused;
 }
+
+/* Animasi Air Tumpah (Liquid Theme Spill Effect) */
+.liquid-theme-spill {
+  position: fixed;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%) scale(0);
+  animation: liquidSpill 0.65s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  box-shadow: 0 0 80px rgba(0, 0, 0, 0.2);
+  width: 100px;
+  height: 100px;
+}
+
+@keyframes liquidSpill {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0.95;
+    border-radius: 50%;
+  }
+  50% {
+    border-radius: 42% 58% 45% 55% / 55% 45% 55% 45%;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(40);
+    opacity: 1;
+    border-radius: 50%;
+  }
+}
+

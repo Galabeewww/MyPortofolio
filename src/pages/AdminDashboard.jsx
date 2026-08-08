@@ -11,6 +11,7 @@ import {
   ExternalLink,
   Database,
   CheckCircle2,
+  Tag,
 } from 'lucide-react';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
@@ -18,6 +19,7 @@ import { useAuth } from '../context/AuthContext';
 import { supabase, isSupabaseConfigured } from '../lib/supabaseClient';
 import ProjectForm from '../components/admin/ProjectForm';
 import SkillForm from '../components/admin/SkillForm';
+import CategoryForm from '../components/admin/CategoryForm';
 
 const MySwal = withReactContent(Swal);
 
@@ -39,7 +41,6 @@ const GithubIcon = (props) => (
   </svg>
 );
 
-// Default mock projects for initial fallback
 const INITIAL_PROJECTS = [
   {
     id: 'p1',
@@ -75,14 +76,22 @@ const INITIAL_SKILLS = [
   { id: 's5', name: 'VS Code', logo_url: '/icon/vsc.png', category: 'Tools' },
 ];
 
+const INITIAL_CATEGORIES = [
+  { id: 'c1', name: 'WEB' },
+  { id: 'c2', name: 'MOBILE' },
+  { id: 'c3', name: 'WEB DESIGN' },
+  { id: 'c4', name: 'UI/UX' },
+];
+
 const AdminDashboard = () => {
   const { logout } = useAuth();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('projects'); // 'projects' | 'skills'
+  const [activeTab, setActiveTab] = useState('projects'); // 'projects' | 'skills' | 'categories'
 
   // Data states
   const [projects, setProjects] = useState([]);
   const [skills, setSkills] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
 
   // Modal states
@@ -90,6 +99,8 @@ const AdminDashboard = () => {
   const [isProjectFormOpen, setIsProjectFormOpen] = useState(false);
   const [editingSkill, setEditingSkill] = useState(null);
   const [isSkillFormOpen, setIsSkillFormOpen] = useState(false);
+  const [editingCategory, setEditingCategory] = useState(null);
+  const [isCategoryFormOpen, setIsCategoryFormOpen] = useState(false);
 
   // Fetch initial data
   useEffect(() => {
@@ -100,44 +111,47 @@ const AdminDashboard = () => {
     setLoading(true);
     if (isSupabaseConfigured) {
       try {
-        const { data: dbProjects, error: prjErr } = await supabase
+        const { data: dbProjects } = await supabase
           .from('projects')
           .select('*')
           .order('created_at', { ascending: false });
 
-        const { data: dbSkills, error: sklErr } = await supabase
+        const { data: dbSkills } = await supabase
           .from('skills')
           .select('*')
           .order('created_at', { ascending: false });
 
-        if (!prjErr && dbProjects && dbProjects.length > 0) {
-          setProjects(dbProjects);
-        } else {
-          loadLocalProjects();
-        }
+        const { data: dbCategories } = await supabase
+          .from('categories')
+          .select('*')
+          .order('name', { ascending: true });
 
-        if (!sklErr && dbSkills && dbSkills.length > 0) {
-          setSkills(dbSkills);
-        } else {
-          loadLocalSkills();
-        }
+        if (dbProjects && dbProjects.length > 0) setProjects(dbProjects);
+        else loadLocalProjects();
+
+        if (dbSkills && dbSkills.length > 0) setSkills(dbSkills);
+        else loadLocalSkills();
+
+        if (dbCategories && dbCategories.length > 0) setCategories(dbCategories);
+        else loadLocalCategories();
       } catch (err) {
         console.error(err);
         loadLocalProjects();
         loadLocalSkills();
+        loadLocalCategories();
       }
     } else {
       loadLocalProjects();
       loadLocalSkills();
+      loadLocalCategories();
     }
     setLoading(false);
   };
 
   const loadLocalProjects = () => {
     const saved = localStorage.getItem('portfolio_crud_projects');
-    if (saved) {
-      setProjects(JSON.parse(saved));
-    } else {
+    if (saved) setProjects(JSON.parse(saved));
+    else {
       setProjects(INITIAL_PROJECTS);
       localStorage.setItem('portfolio_crud_projects', JSON.stringify(INITIAL_PROJECTS));
     }
@@ -145,11 +159,19 @@ const AdminDashboard = () => {
 
   const loadLocalSkills = () => {
     const saved = localStorage.getItem('portfolio_crud_skills');
-    if (saved) {
-      setSkills(JSON.parse(saved));
-    } else {
+    if (saved) setSkills(JSON.parse(saved));
+    else {
       setSkills(INITIAL_SKILLS);
       localStorage.setItem('portfolio_crud_skills', JSON.stringify(INITIAL_SKILLS));
+    }
+  };
+
+  const loadLocalCategories = () => {
+    const saved = localStorage.getItem('portfolio_crud_categories');
+    if (saved) setCategories(JSON.parse(saved));
+    else {
+      setCategories(INITIAL_CATEGORIES);
+      localStorage.setItem('portfolio_crud_categories', JSON.stringify(INITIAL_CATEGORIES));
     }
   };
 
@@ -161,6 +183,11 @@ const AdminDashboard = () => {
   const saveSkillsToStorage = (updated) => {
     setSkills(updated);
     localStorage.setItem('portfolio_crud_skills', JSON.stringify(updated));
+  };
+
+  const saveCategoriesToStorage = (updated) => {
+    setCategories(updated);
+    localStorage.setItem('portfolio_crud_categories', JSON.stringify(updated));
   };
 
   // ===== PROJECT CRUD ACTIONS =====
@@ -207,7 +234,6 @@ const AdminDashboard = () => {
         fetchData();
       } catch (err) {
         console.error(err);
-        // Fallback local
         updateLocalProject(projectData, isEdit);
       }
     } else {
@@ -387,6 +413,88 @@ const AdminDashboard = () => {
     });
   };
 
+  // ===== CATEGORY CRUD ACTIONS =====
+
+  const handleSaveCategory = async (catData) => {
+    const isEdit = Boolean(catData.id);
+
+    if (isSupabaseConfigured) {
+      try {
+        if (isEdit) {
+          await supabase.from('categories').update({ name: catData.name }).eq('id', catData.id);
+        } else {
+          await supabase.from('categories').insert([{ name: catData.name }]);
+        }
+        fetchData();
+      } catch (err) {
+        console.error(err);
+        updateLocalCategory(catData, isEdit);
+      }
+    } else {
+      updateLocalCategory(catData, isEdit);
+    }
+
+    setIsCategoryFormOpen(false);
+    setEditingCategory(null);
+
+    MySwal.fire({
+      icon: 'success',
+      title: isEdit ? 'Kategori Diperbarui!' : 'Kategori Ditambahkan!',
+      text: `Kategori "${catData.name}" berhasil disimpan.`,
+      timer: 1800,
+      showConfirmButton: false,
+      background: 'var(--bg-card)',
+      color: 'var(--text-primary)',
+    });
+  };
+
+  const updateLocalCategory = (catData, isEdit) => {
+    if (isEdit) {
+      const updated = categories.map((c) => (c.id === catData.id ? catData : c));
+      saveCategoriesToStorage(updated);
+    } else {
+      const newCat = { ...catData, id: `c_${Date.now()}` };
+      saveCategoriesToStorage([...categories, newCat]);
+    }
+  };
+
+  const handleDeleteCategory = (cat) => {
+    MySwal.fire({
+      title: 'Hapus Kategori?',
+      text: `Hapus kategori "${cat.name}"?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#ef4444',
+      cancelButtonColor: '#3f3f46',
+      confirmButtonText: 'Ya, Hapus!',
+      background: 'var(--bg-card)',
+      color: 'var(--text-primary)',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        if (isSupabaseConfigured) {
+          try {
+            await supabase.from('categories').delete().eq('id', cat.id);
+            fetchData();
+          } catch (err) {
+            console.error(err);
+            saveCategoriesToStorage(categories.filter((c) => c.id !== cat.id));
+          }
+        } else {
+          saveCategoriesToStorage(categories.filter((c) => c.id !== cat.id));
+        }
+
+        MySwal.fire({
+          icon: 'success',
+          title: 'Terhapus!',
+          timer: 1500,
+          showConfirmButton: false,
+          background: 'var(--bg-card)',
+          color: 'var(--text-primary)',
+        });
+      }
+    });
+  };
+
   const handleLogout = () => {
     logout();
     navigate('/admin/login');
@@ -436,7 +544,7 @@ const AdminDashboard = () => {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
         {/* Navigation Tabs */}
         <div className="flex items-center justify-between border-b border-[var(--border-color)] pb-4 flex-wrap gap-4">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <button
               onClick={() => setActiveTab('projects')}
               className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm transition-all duration-200 cursor-pointer ${
@@ -445,8 +553,9 @@ const AdminDashboard = () => {
                   : 'border border-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-secondary)]'
               }`}
             >
-              <FolderGit2 size={18} /> Kelola Proyek ({projects.length})
+              <FolderGit2 size={18} /> Proyek ({projects.length})
             </button>
+
             <button
               onClick={() => setActiveTab('skills')}
               className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm transition-all duration-200 cursor-pointer ${
@@ -455,12 +564,23 @@ const AdminDashboard = () => {
                   : 'border border-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-secondary)]'
               }`}
             >
-              <Wrench size={18} /> Kelola Skills ({skills.length})
+              <Wrench size={18} /> Skills ({skills.length})
+            </button>
+
+            <button
+              onClick={() => setActiveTab('categories')}
+              className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm transition-all duration-200 cursor-pointer ${
+                activeTab === 'categories'
+                  ? 'bg-[var(--accent-btn)] text-[var(--accent-btn-text)] shadow-md'
+                  : 'border border-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-secondary)]'
+              }`}
+            >
+              <Tag size={18} /> Kategori ({categories.length})
             </button>
           </div>
 
           <div>
-            {activeTab === 'projects' ? (
+            {activeTab === 'projects' && (
               <button
                 onClick={() => {
                   setEditingProject(null);
@@ -470,7 +590,9 @@ const AdminDashboard = () => {
               >
                 <Plus size={18} /> Tambah Proyek Baru
               </button>
-            ) : (
+            )}
+
+            {activeTab === 'skills' && (
               <button
                 onClick={() => {
                   setEditingSkill(null);
@@ -479,6 +601,18 @@ const AdminDashboard = () => {
                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[var(--accent-btn)] hover:bg-[var(--accent-btn-hover)] text-[var(--accent-btn-text)] font-semibold text-sm shadow-md transition-all duration-200 cursor-pointer"
               >
                 <Plus size={18} /> Tambah Skill Baru
+              </button>
+            )}
+
+            {activeTab === 'categories' && (
+              <button
+                onClick={() => {
+                  setEditingCategory(null);
+                  setIsCategoryFormOpen(true);
+                }}
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[var(--accent-btn)] hover:bg-[var(--accent-btn-hover)] text-[var(--accent-btn-text)] font-semibold text-sm shadow-md transition-all duration-200 cursor-pointer"
+              >
+                <Plus size={18} /> Tambah Kategori
               </button>
             )}
           </div>
@@ -503,7 +637,6 @@ const AdminDashboard = () => {
                     className="glow-card rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card)] overflow-hidden flex flex-col justify-between"
                   >
                     <div>
-                      {/* Image Preview */}
                       <div className="relative h-44 w-full bg-[var(--bg-secondary)] overflow-hidden">
                         <img
                           src={project.cover_image || project.image || '/project/py.png'}
@@ -515,7 +648,6 @@ const AdminDashboard = () => {
                         </span>
                       </div>
 
-                      {/* Content */}
                       <div className="p-5 space-y-3">
                         <h3 className="font-bold text-lg text-[var(--text-primary)] font-display line-clamp-1">
                           {project.title}
@@ -524,7 +656,6 @@ const AdminDashboard = () => {
                           {project.description}
                         </p>
 
-                        {/* Tech Badges */}
                         <div className="flex flex-wrap gap-1.5 pt-1">
                           {(Array.isArray(project.tech) ? project.tech : []).slice(0, 3).map((t, idx) => (
                             <span
@@ -538,7 +669,6 @@ const AdminDashboard = () => {
                       </div>
                     </div>
 
-                    {/* Card Footer Actions */}
                     <div className="p-4 border-t border-[var(--border-color)] flex items-center justify-between bg-[var(--bg-secondary)]/50">
                       <div className="flex items-center gap-2">
                         {project.live_link && (
@@ -647,12 +777,52 @@ const AdminDashboard = () => {
             )}
           </div>
         )}
+
+        {/* TAB 3: KELOLA KATEGORI */}
+        {activeTab === 'categories' && (
+          <div className="space-y-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {categories.map((cat) => (
+                <div
+                  key={cat.id}
+                  className="glow-card rounded-2xl p-5 border border-[var(--border-color)] bg-[var(--bg-card)] flex items-center justify-between"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="p-2.5 rounded-xl bg-[var(--badge-bg)] border border-[var(--badge-border)] text-[var(--text-primary)]">
+                      <Tag size={18} />
+                    </div>
+                    <span className="font-bold text-base font-display tracking-wide">{cat.name}</span>
+                  </div>
+
+                  <div className="flex items-center gap-1">
+                    <button
+                      onClick={() => {
+                        setEditingCategory(cat);
+                        setIsCategoryFormOpen(true);
+                      }}
+                      className="p-1.5 rounded-lg hover:bg-[var(--bg-secondary)] text-[var(--text-muted)] hover:text-[var(--text-primary)] cursor-pointer"
+                    >
+                      <Edit size={14} />
+                    </button>
+                    <button
+                      onClick={() => handleDeleteCategory(cat)}
+                      className="p-1.5 rounded-lg hover:bg-rose-500/10 text-rose-500 cursor-pointer"
+                    >
+                      <Trash2 size={14} />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </main>
 
       {/* PROJECT MODAL FORM */}
       {isProjectFormOpen && (
         <ProjectForm
           project={editingProject}
+          categories={categories}
           onSave={handleSaveProject}
           onClose={() => {
             setIsProjectFormOpen(false);
@@ -669,6 +839,18 @@ const AdminDashboard = () => {
           onClose={() => {
             setIsSkillFormOpen(false);
             setEditingSkill(null);
+          }}
+        />
+      )}
+
+      {/* CATEGORY MODAL FORM */}
+      {isCategoryFormOpen && (
+        <CategoryForm
+          category={editingCategory}
+          onSave={handleSaveCategory}
+          onClose={() => {
+            setIsCategoryFormOpen(false);
+            setEditingCategory(null);
           }}
         />
       )}

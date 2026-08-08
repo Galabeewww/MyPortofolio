@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { X, Save } from 'lucide-react';
+import { X, Save, Upload, Image as ImageIcon } from 'lucide-react';
+import { supabase, isSupabaseConfigured } from '../../lib/supabaseClient';
 
 const SkillForm = ({ skill, onSave, onClose }) => {
   const [formData, setFormData] = useState({
@@ -7,6 +8,7 @@ const SkillForm = ({ skill, onSave, onClose }) => {
     logo_url: '',
     category: 'Skills',
   });
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     if (skill) {
@@ -21,6 +23,52 @@ const SkillForm = ({ skill, onSave, onClose }) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleFileUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setUploading(true);
+    let imageUrl = '';
+
+    if (isSupabaseConfigured) {
+      try {
+        const fileExt = file.name.split('.').pop();
+        const fileName = `skills/${Date.now()}_${Math.random().toString(36).substring(2)}.${fileExt}`;
+
+        const { error: uploadError } = await supabase.storage
+          .from('portfolio-images')
+          .upload(fileName, file);
+
+        if (uploadError) {
+          console.error(uploadError);
+          imageUrl = await readFileAsDataURL(file);
+        } else {
+          const { data } = supabase.storage
+            .from('portfolio-images')
+            .getPublicUrl(fileName);
+          imageUrl = data.publicUrl;
+        }
+      } catch (err) {
+        console.error(err);
+        imageUrl = await readFileAsDataURL(file);
+      }
+    } else {
+      imageUrl = await readFileAsDataURL(file);
+    }
+
+    setFormData((prev) => ({ ...prev, logo_url: imageUrl }));
+    setUploading(false);
+    e.target.value = '';
+  };
+
+  const readFileAsDataURL = (file) => {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.readAsDataURL(file);
+    });
   };
 
   const handleSubmit = (e) => {
@@ -45,7 +93,7 @@ const SkillForm = ({ skill, onSave, onClose }) => {
           </h3>
           <button
             onClick={onClose}
-            className="p-2 rounded-full hover:bg-[var(--bg-secondary)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors duration-200"
+            className="p-2 rounded-full hover:bg-[var(--bg-secondary)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors duration-200 cursor-pointer"
           >
             <X size={20} />
           </button>
@@ -82,10 +130,30 @@ const SkillForm = ({ skill, onSave, onClose }) => {
             </select>
           </div>
 
+          {/* Upload Logo Gambar Input (File Upload + URL Input) */}
           <div>
             <label className="block text-xs font-semibold uppercase tracking-wider text-[var(--text-secondary)] mb-2">
-              Logo URL / Path Gambar *
+              Upload Logo Gambar *
             </label>
+
+            <label className="flex flex-col items-center justify-center p-4 border-2 border-dashed border-[var(--border-color)] hover:border-[var(--text-secondary)] rounded-xl cursor-pointer bg-[var(--bg-secondary)] transition-colors duration-200 mb-3">
+              <Upload className="w-6 h-6 text-[var(--text-muted)] mb-1" />
+              <span className="text-xs font-semibold text-[var(--text-primary)]">
+                {uploading ? 'Mengunggah logo...' : 'Klik untuk pilih file gambar logo'}
+              </span>
+              <span className="text-[10px] text-[var(--text-muted)]">PNG, SVG, JPG, WEBP</span>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleFileUpload}
+                disabled={uploading}
+                className="hidden"
+              />
+            </label>
+
+            <span className="block text-[11px] text-[var(--text-muted)] mb-1">
+              Atau masukkan Path / URL Gambar:
+            </span>
             <input
               type="text"
               name="logo_url"
@@ -93,24 +161,25 @@ const SkillForm = ({ skill, onSave, onClose }) => {
               value={formData.logo_url}
               onChange={handleChange}
               placeholder="/icon/react.png atau https://..."
-              className="w-full px-4 py-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--text-primary)] transition-colors duration-200"
+              className="w-full px-4 py-2.5 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] text-sm focus:outline-none focus:border-[var(--text-primary)] transition-colors duration-200"
             />
           </div>
 
+          {/* Thumbnail Preview */}
           {formData.logo_url && (
             <div className="flex items-center gap-3 p-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)]">
               <span className="text-xs text-[var(--text-muted)]">Preview:</span>
               <img
                 src={formData.logo_url}
                 alt="Preview"
-                className="w-8 h-8 object-contain"
+                className="w-10 h-10 object-contain"
                 onError={(e) => {
                   e.target.onerror = null;
                   e.target.src = '/icon/react.png';
                 }}
               />
               <span className="text-sm font-semibold text-[var(--text-primary)]">
-                {formData.name || 'Skill'}
+                {formData.name || 'Logo Skill'}
               </span>
             </div>
           )}
@@ -119,13 +188,13 @@ const SkillForm = ({ skill, onSave, onClose }) => {
             <button
               type="button"
               onClick={onClose}
-              className="px-5 py-2.5 rounded-xl border border-[var(--border-color)] hover:bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-sm font-semibold transition-colors duration-200"
+              className="px-5 py-2.5 rounded-xl border border-[var(--border-color)] hover:bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-sm font-semibold transition-colors duration-200 cursor-pointer"
             >
               Batal
             </button>
             <button
               type="submit"
-              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[var(--accent-btn)] hover:bg-[var(--accent-btn-hover)] text-[var(--accent-btn-text)] text-sm font-semibold shadow-md transition-all duration-200"
+              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[var(--accent-btn)] hover:bg-[var(--accent-btn-hover)] text-[var(--accent-btn-text)] text-sm font-semibold shadow-md transition-all duration-200 cursor-pointer"
             >
               <Save size={16} />
               Simpan

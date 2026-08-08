@@ -1,21 +1,42 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Menu, X, Sun, Moon, Lock, Code2 } from 'lucide-react';
+import {
+  Home,
+  User,
+  Zap,
+  Folder,
+  Mail,
+  Sun,
+  Moon,
+  Lock,
+  Globe,
+  Menu,
+  X,
+} from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import { useAuth } from '../context/AuthContext';
 
 const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState('home');
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
   const { isAuthenticated } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 20) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
+      const sections = ['home', 'about', 'projects', 'contact'];
+      const scrollPosition = window.scrollY + 200;
+
+      for (const section of sections) {
+        const el = document.getElementById(section);
+        if (el) {
+          const top = el.offsetTop;
+          const height = el.offsetHeight;
+          if (scrollPosition >= top && scrollPosition < top + height) {
+            setActiveSection(section);
+            break;
+          }
+        }
       }
     };
 
@@ -23,125 +44,114 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const navLinks = [
-    { name: 'Home', href: '#home' },
-    { name: 'About', href: '#about' },
-    { name: 'Projects', href: '#projects' },
-    { name: 'Contact', href: '#contact' },
+  const navItems = [
+    { id: 'home', label: 'Home', icon: Home, href: '#home' },
+    { id: 'about', label: 'About', icon: User, href: '#about' },
+    { id: 'skills', label: 'Skills', icon: Zap, href: '#about' },
+    { id: 'projects', label: 'Projects', icon: Folder, href: '#projects' },
+    { id: 'contact', label: 'Contact', icon: Mail, href: '#contact' },
   ];
 
   return (
-    <nav
-      className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
-        isScrolled
-          ? 'bg-[var(--bg-card)]/90 backdrop-blur-md border-b border-[var(--border-color)] shadow-sm py-3.5'
-          : 'bg-transparent py-5'
-      }`}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between">
-          {/* Logo Brand */}
-          <a
-            href="#home"
-            className="flex items-center gap-2.5 group cursor-pointer"
+    <nav className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[94%] max-w-5xl">
+      <div className="rounded-full bg-white/90 dark:bg-zinc-900/90 backdrop-blur-xl border border-slate-200/90 dark:border-zinc-800 shadow-xl px-3 py-2 sm:px-4 flex items-center justify-between gap-1 sm:gap-2 transition-all duration-300">
+        {/* Brand / Logo Sesuai Gambar Referensi */}
+        <a
+          href="#home"
+          className="flex items-center gap-1.5 sm:gap-2 pl-2 pr-1 py-1 cursor-pointer group"
+        >
+          <span className="font-extrabold text-base sm:text-lg text-sky-500 font-display tracking-tight group-hover:scale-105 transition-transform">
+            EB.
+          </span>
+          <div className="h-4 sm:h-5 w-[1px] bg-slate-300 dark:bg-zinc-700" />
+        </a>
+
+        {/* Desktop Nav Items Sesuai Gambar Referensi */}
+        <div className="hidden lg:flex items-center gap-1">
+          {navItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = activeSection === item.id;
+
+            return (
+              <a
+                key={item.id}
+                href={item.href}
+                onClick={() => setActiveSection(item.id)}
+                className={`px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-semibold flex items-center gap-2 transition-all duration-200 cursor-pointer ${
+                  isActive
+                    ? 'bg-sky-500 text-white shadow-md shadow-sky-500/25 scale-[1.02]'
+                    : 'text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-zinc-800/60'
+                }`}
+              >
+                <Icon size={15} />
+                <span>{item.label}</span>
+              </a>
+            );
+          })}
+        </div>
+
+        {/* Right Section: Theme Toggle & Admin / EN Pill */}
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          {/* Dark / Light Mode Toggle Button dengan Animasi Air Tumpah */}
+          <button
+            onClick={(e) => toggleTheme(e)}
+            className="p-2 sm:p-2.5 rounded-full hover:bg-slate-100 dark:hover:bg-zinc-800 text-slate-700 dark:text-zinc-300 transition-colors duration-200 cursor-pointer"
+            title={theme === 'dark' ? 'Ubah ke Mode Terang' : 'Ubah ke Mode Gelap'}
+            aria-label="Toggle Theme"
           >
-            <div className="w-9 h-9 rounded-xl bg-[var(--accent-btn)] text-[var(--accent-btn-text)] flex items-center justify-center font-bold text-lg font-display shadow-md transition-transform duration-300 group-hover:scale-105">
-              A
-            </div>
-            <span className="font-bold text-lg font-display text-[var(--text-primary)] tracking-tight">
-              Abi <span className="text-[var(--text-muted)] font-normal text-sm">/ Dev</span>
-            </span>
-          </a>
+            {theme === 'dark' ? (
+              <Sun size={18} className="text-amber-400 animate-spin-slow" />
+            ) : (
+              <Moon size={18} className="text-slate-700" />
+            )}
+          </button>
 
-          {/* Desktop Nav Items */}
-          <div className="hidden md:flex items-center gap-8">
-            <div className="flex items-center gap-6">
-              {navLinks.map((link) => (
-                <a
-                  key={link.name}
-                  href={link.href}
-                  className="text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors duration-200"
-                >
-                  {link.name}
-                </a>
-              ))}
-            </div>
+          {/* Admin / EN Pill Button Sesuai Gambar Referensi */}
+          <Link
+            to={isAuthenticated ? '/admin' : '/admin/login'}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full border border-slate-300 dark:border-zinc-700 hover:border-slate-400 dark:hover:border-zinc-500 text-slate-700 dark:text-zinc-200 hover:bg-slate-100 dark:hover:bg-zinc-800 text-xs font-bold transition-all duration-200 shadow-sm"
+          >
+            <Globe size={14} className="text-slate-500 dark:text-zinc-400" />
+            <span>{isAuthenticated ? 'Admin' : 'EN'}</span>
+          </Link>
 
-            <div className="h-4 w-[1px] bg-[var(--border-color)]" />
-
-            <div className="flex items-center gap-3">
-              {/* Dark / Light Mode Toggle Button */}
-              <button
-                onClick={toggleTheme}
-                className="p-2.5 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] hover:border-[var(--border-color-hover)] transition-all duration-200 cursor-pointer"
-                title={theme === 'dark' ? 'Ubah ke Mode Terang' : 'Ubah ke Mode Gelap'}
-                aria-label="Toggle Dark/Light Mode"
-              >
-                {theme === 'dark' ? (
-                  <Sun size={18} className="text-amber-400" />
-                ) : (
-                  <Moon size={18} className="text-slate-700" />
-                )}
-              </button>
-
-              {/* Admin Button */}
-              <Link
-                to={isAuthenticated ? '/admin' : '/admin/login'}
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[var(--accent-btn)] hover:bg-[var(--accent-btn-hover)] text-[var(--accent-btn-text)] text-xs font-semibold shadow-sm transition-all duration-200"
-              >
-                <Lock size={13} />
-                {isAuthenticated ? 'Admin Dashboard' : 'Admin'}
-              </Link>
-            </div>
-          </div>
-
-          {/* Mobile Menu Button */}
-          <div className="flex items-center gap-3 md:hidden">
-            <button
-              onClick={toggleTheme}
-              className="p-2 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)]"
-              aria-label="Toggle Dark/Light Mode"
-            >
-              {theme === 'dark' ? <Sun size={18} className="text-amber-400" /> : <Moon size={18} />}
-            </button>
-
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="p-2 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] cursor-pointer"
-              aria-label="Toggle Navigation Menu"
-            >
-              {isOpen ? <X size={20} /> : <Menu size={20} />}
-            </button>
-          </div>
+          {/* Mobile Menu Toggle Button */}
+          <button
+            onClick={() => setIsMobileOpen(!isMobileOpen)}
+            className="p-2 rounded-full lg:hidden hover:bg-slate-100 dark:hover:bg-zinc-800 text-slate-700 dark:text-zinc-300 cursor-pointer ml-1"
+            aria-label="Toggle Mobile Menu"
+          >
+            {isMobileOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
         </div>
       </div>
 
-      {/* Mobile Menu Drawer */}
-      {isOpen && (
-        <div className="md:hidden border-b border-[var(--border-color)] bg-[var(--bg-card)] px-4 pt-3 pb-6 space-y-4 shadow-xl">
-          <div className="flex flex-col space-y-3">
-            {navLinks.map((link) => (
-              <a
-                key={link.name}
-                href={link.href}
-                onClick={() => setIsOpen(false)}
-                className="px-3 py-2 rounded-lg text-sm font-semibold text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-secondary)] transition-colors duration-200"
-              >
-                {link.name}
-              </a>
-            ))}
-          </div>
+      {/* Mobile Navigation Dropdown */}
+      {isMobileOpen && (
+        <div className="lg:hidden mt-2 p-3 rounded-3xl bg-white/95 dark:bg-zinc-900/95 backdrop-blur-xl border border-slate-200 dark:border-zinc-800 shadow-2xl space-y-1 animate-[fadeIn_0.2s_ease-out]">
+          {navItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = activeSection === item.id;
 
-          <div className="pt-3 border-t border-[var(--border-color)] flex items-center justify-between">
-            <Link
-              to={isAuthenticated ? '/admin' : '/admin/login'}
-              onClick={() => setIsOpen(false)}
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[var(--accent-btn)] text-[var(--accent-btn-text)] text-xs font-semibold w-full justify-center"
-            >
-              <Lock size={14} />
-              {isAuthenticated ? 'Admin Dashboard' : 'Admin Login'}
-            </Link>
-          </div>
+            return (
+              <a
+                key={item.id}
+                href={item.href}
+                onClick={() => {
+                  setActiveSection(item.id);
+                  setIsMobileOpen(false);
+                }}
+                className={`px-4 py-2.5 rounded-2xl text-sm font-semibold flex items-center gap-3 transition-colors duration-200 cursor-pointer ${
+                  isActive
+                    ? 'bg-sky-500 text-white'
+                    : 'text-slate-600 dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-zinc-800'
+                }`}
+              >
+                <Icon size={18} />
+                <span>{item.label}</span>
+              </a>
+            );
+          })}
         </div>
       )}
     </nav>
