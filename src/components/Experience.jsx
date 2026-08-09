@@ -92,11 +92,17 @@ const Experience = () => {
                 const isEven = index % 2 === 0;
                 const techArray = Array.isArray(exp.tech)
                   ? exp.tech
-                  : (exp.tech || "").split(",").map((item) => item.trim()).filter(Boolean);
+                  : (exp.tech || "")
+                      .split(",")
+                      .map((item) => item.trim())
+                      .filter(Boolean);
 
                 const respArray = Array.isArray(exp.responsibilities)
                   ? exp.responsibilities
-                  : (exp.responsibilities || "").split("\n").map((item) => item.trim()).filter(Boolean);
+                  : (exp.responsibilities || "")
+                      .split("\n")
+                      .map((item) => item.trim())
+                      .filter(Boolean);
 
                 return (
                   <div
@@ -124,7 +130,8 @@ const Experience = () => {
                             <span>{exp.period || "2025 - Present"}</span>
                           </div>
 
-                          {(exp.is_present || exp.period?.toLowerCase().includes("present")) && (
+                          {(exp.is_present ||
+                            exp.period?.toLowerCase().includes("present")) && (
                             <span className="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[10px] font-black uppercase tracking-wider animate-pulse">
                               {t.experience.present || "PRESENT"}
                             </span>
@@ -140,7 +147,7 @@ const Experience = () => {
                             <span>{exp.company}</span>
                             {exp.location && (
                               <div className="flex items-center gap-1 text-[var(--text-muted)]">
-                                <span>•</span>
+                                {/* <span>•</span> */}
                                 <MapPin size={13} />
                                 <span>{exp.location}</span>
                               </div>
