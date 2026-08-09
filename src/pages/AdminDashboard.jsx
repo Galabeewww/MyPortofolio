@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import {
   Plus,
   Edit,
@@ -13,15 +13,15 @@ import {
   CheckCircle2,
   Tag,
   Briefcase,
-} from 'lucide-react';
-import Swal from 'sweetalert2';
-import withReactContent from 'sweetalert2-react-content';
-import { useAuth } from '../context/AuthContext';
-import { supabase, isSupabaseConfigured } from '../lib/supabaseClient';
-import ProjectForm from '../components/admin/ProjectForm';
-import SkillForm from '../components/admin/SkillForm';
-import CategoryForm from '../components/admin/CategoryForm';
-import ExperienceForm from '../components/admin/ExperienceForm';
+} from "lucide-react";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import { useAuth } from "../context/AuthContext";
+import { supabase, isSupabaseConfigured } from "../lib/supabaseClient";
+import ProjectForm from "../components/admin/ProjectForm";
+import SkillForm from "../components/admin/SkillForm";
+import CategoryForm from "../components/admin/CategoryForm";
+import ExperienceForm from "../components/admin/ExperienceForm";
 
 const MySwal = withReactContent(Swal);
 
@@ -52,7 +52,7 @@ const INITIAL_CATEGORIES = [];
 const AdminDashboard = () => {
   const { logout } = useAuth();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('projects');
+  const [activeTab, setActiveTab] = useState("projects");
 
   const [projects, setProjects] = useState([]);
   const [skills, setSkills] = useState([]);
@@ -78,24 +78,24 @@ const AdminDashboard = () => {
     if (isSupabaseConfigured) {
       try {
         const { data: dbProjects } = await supabase
-          .from('projects')
-          .select('*')
-          .order('created_at', { ascending: false });
+          .from("projects")
+          .select("*")
+          .order("created_at", { ascending: false });
 
         const { data: dbSkills } = await supabase
-          .from('skills')
-          .select('*')
-          .order('created_at', { ascending: false });
+          .from("skills")
+          .select("*")
+          .order("created_at", { ascending: false });
 
         const { data: dbCategories } = await supabase
-          .from('categories')
-          .select('*')
-          .order('name', { ascending: true });
+          .from("categories")
+          .select("*")
+          .order("name", { ascending: true });
 
         const { data: dbExperiences } = await supabase
-          .from('experiences')
-          .select('*')
-          .order('created_at', { ascending: false });
+          .from("experiences")
+          .select("*")
+          .order("created_at", { ascending: false });
 
         if (dbProjects && dbProjects.length > 0) setProjects(dbProjects);
         else loadLocalProjects();
@@ -103,10 +103,12 @@ const AdminDashboard = () => {
         if (dbSkills && dbSkills.length > 0) setSkills(dbSkills);
         else loadLocalSkills();
 
-        if (dbCategories && dbCategories.length > 0) setCategories(dbCategories);
+        if (dbCategories && dbCategories.length > 0)
+          setCategories(dbCategories);
         else loadLocalCategories();
 
-        if (dbExperiences && dbExperiences.length > 0) setExperiences(dbExperiences);
+        if (dbExperiences && dbExperiences.length > 0)
+          setExperiences(dbExperiences);
         else loadLocalExperiences();
       } catch (err) {
         console.error(err);
@@ -125,35 +127,55 @@ const AdminDashboard = () => {
   };
 
   const loadLocalProjects = () => {
-    const saved = localStorage.getItem('portfolio_crud_projects');
+    const saved = localStorage.getItem("portfolio_crud_projects");
     if (saved) setProjects(JSON.parse(saved));
     else {
       setProjects(INITIAL_PROJECTS);
-      localStorage.setItem('portfolio_crud_projects', JSON.stringify(INITIAL_PROJECTS));
+      localStorage.setItem(
+        "portfolio_crud_projects",
+        JSON.stringify(INITIAL_PROJECTS),
+      );
     }
   };
 
   const loadLocalSkills = () => {
-    const saved = localStorage.getItem('portfolio_crud_skills');
+    const saved = localStorage.getItem("portfolio_crud_skills");
     if (saved) setSkills(JSON.parse(saved));
     else {
       setSkills(INITIAL_SKILLS);
-      localStorage.setItem('portfolio_crud_skills', JSON.stringify(INITIAL_SKILLS));
+      localStorage.setItem(
+        "portfolio_crud_skills",
+        JSON.stringify(INITIAL_SKILLS),
+      );
     }
   };
 
   const loadLocalCategories = () => {
-    const saved = localStorage.getItem('portfolio_crud_categories');
+    const saved = localStorage.getItem("portfolio_crud_categories");
     if (saved) setCategories(JSON.parse(saved));
     else {
       setCategories(INITIAL_CATEGORIES);
-      localStorage.setItem('portfolio_crud_categories', JSON.stringify(INITIAL_CATEGORIES));
+      localStorage.setItem(
+        "portfolio_crud_categories",
+        JSON.stringify(INITIAL_CATEGORIES),
+      );
     }
+  };
+
+  const sortExperiences = (list) => {
+    return [...list].sort((a, b) => {
+      if (a.is_present && !b.is_present) return -1;
+      if (!a.is_present && b.is_present) return 1;
+
+      const dateA = a.start_date || a.created_at || a.period || "";
+      const dateB = b.start_date || b.created_at || b.period || "";
+      return dateB.localeCompare(dateA);
+    });
   };
 
   const loadLocalExperiences = () => {
     const saved = localStorage.getItem('portfolio_crud_experiences');
-    if (saved) setExperiences(JSON.parse(saved));
+    if (saved) setExperiences(sortExperiences(JSON.parse(saved)));
     else setExperiences([]);
   };
 
@@ -173,8 +195,9 @@ const AdminDashboard = () => {
   };
 
   const saveExperiencesToStorage = (updated) => {
-    setExperiences(updated);
-    localStorage.setItem('portfolio_crud_experiences', JSON.stringify(updated));
+    const sorted = sortExperiences(updated);
+    setExperiences(sorted);
+    localStorage.setItem('portfolio_crud_experiences', JSON.stringify(sorted));
   };
 
   // ===== PROJECT CRUD ACTIONS =====
@@ -193,27 +216,55 @@ const AdminDashboard = () => {
     if (isEdit) {
       const original = projects.find((p) => p.id === formattedProject.id);
       if (original) {
-        const fieldsToCompare = ['title', 'description', 'full_description', 'category', 'live_link', 'github_link', 'cover_image'];
+        const fieldsToCompare = [
+          "title",
+          "description",
+          "full_description",
+          "category",
+          "live_link",
+          "github_link",
+          "cover_image",
+        ];
         const noFieldChanges = fieldsToCompare.every(
-          (key) => (original[key] || '') === (formattedProject[key] || '')
+          (key) => (original[key] || "") === (formattedProject[key] || ""),
         );
-        const origTech = JSON.stringify(Array.isArray(original.tech) ? original.tech : []);
-        const newTech = JSON.stringify(Array.isArray(formattedProject.tech) ? formattedProject.tech : []);
-        const origFeatures = JSON.stringify(Array.isArray(original.features) ? original.features : []);
-        const newFeatures = JSON.stringify(Array.isArray(formattedProject.features) ? formattedProject.features : []);
+        const origTech = JSON.stringify(
+          Array.isArray(original.tech) ? original.tech : [],
+        );
+        const newTech = JSON.stringify(
+          Array.isArray(formattedProject.tech) ? formattedProject.tech : [],
+        );
+        const origFeatures = JSON.stringify(
+          Array.isArray(original.features) ? original.features : [],
+        );
+        const newFeatures = JSON.stringify(
+          Array.isArray(formattedProject.features)
+            ? formattedProject.features
+            : [],
+        );
         const origImages = JSON.stringify(original.images || []);
         const newImages = JSON.stringify(formattedProject.images || []);
-        const origCreatedAt = original.created_at ? new Date(original.created_at).toISOString().substring(0, 7) : '';
-        const newCreatedAt = formattedProject.created_at ? new Date(formattedProject.created_at).toISOString().substring(0, 7) : '';
+        const origCreatedAt = original.created_at
+          ? new Date(original.created_at).toISOString().substring(0, 7)
+          : "";
+        const newCreatedAt = formattedProject.created_at
+          ? new Date(formattedProject.created_at).toISOString().substring(0, 7)
+          : "";
 
-        if (noFieldChanges && origTech === newTech && origFeatures === newFeatures && origImages === newImages && origCreatedAt === newCreatedAt) {
+        if (
+          noFieldChanges &&
+          origTech === newTech &&
+          origFeatures === newFeatures &&
+          origImages === newImages &&
+          origCreatedAt === newCreatedAt
+        ) {
           MySwal.fire({
-            icon: 'info',
-            title: 'No Changes Detected',
-            text: 'No data has been modified. Please make changes before saving.',
-            confirmButtonColor: '#0284c7',
-            background: 'var(--bg-card)',
-            color: 'var(--text-primary)',
+            icon: "info",
+            title: "No Changes Detected",
+            text: "No data has been modified. Please make changes before saving.",
+            confirmButtonColor: "#0284c7",
+            background: "var(--bg-card)",
+            color: "var(--text-primary)",
           });
           return;
         }
@@ -224,7 +275,7 @@ const AdminDashboard = () => {
       try {
         if (isEdit) {
           await supabase
-            .from('projects')
+            .from("projects")
             .update({
               title: formattedProject.title,
               description: formattedProject.description,
@@ -238,9 +289,9 @@ const AdminDashboard = () => {
               images: formattedProject.images,
               updated_at: new Date().toISOString(),
             })
-            .eq('id', formattedProject.id);
+            .eq("id", formattedProject.id);
         } else {
-          await supabase.from('projects').insert([
+          await supabase.from("projects").insert([
             {
               title: formattedProject.title,
               description: formattedProject.description,
@@ -262,7 +313,9 @@ const AdminDashboard = () => {
 
     // Always update React State & LocalStorage for immediate persistence
     if (isEdit) {
-      const updatedList = projects.map((p) => (p.id === formattedProject.id ? formattedProject : p));
+      const updatedList = projects.map((p) =>
+        p.id === formattedProject.id ? formattedProject : p,
+      );
       saveProjectsToStorage(updatedList);
     } else {
       const updatedList = [formattedProject, ...projects];
@@ -275,35 +328,35 @@ const AdminDashboard = () => {
 
     // SweetAlert notification
     MySwal.fire({
-      icon: 'success',
-      title: isEdit ? 'Project Updated!' : 'Project Added!',
+      icon: "success",
+      title: isEdit ? "Project Updated!" : "Project Added!",
       text: isEdit
         ? `Project "${formattedProject.title}" has been successfully updated.`
         : `Project "${formattedProject.title}" has been saved permanently.`,
       timer: 2000,
       showConfirmButton: false,
-      background: 'var(--bg-card)',
-      color: 'var(--text-primary)',
+      background: "var(--bg-card)",
+      color: "var(--text-primary)",
     });
   };
 
   const handleDeleteProject = (project) => {
     MySwal.fire({
-      title: 'Hapus Proyek?',
+      title: "Hapus Proyek?",
       text: `Apakah Anda yakin ingin menghapus proyek "${project.title}"?`,
-      icon: 'warning',
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: '#ef4444',
-      cancelButtonColor: '#3f3f46',
-      confirmButtonText: 'Ya, Hapus!',
-      cancelButtonText: 'Batal',
-      background: 'var(--bg-card)',
-      color: 'var(--text-primary)',
+      confirmButtonColor: "#ef4444",
+      cancelButtonColor: "#3f3f46",
+      confirmButtonText: "Ya, Hapus!",
+      cancelButtonText: "Batal",
+      background: "var(--bg-card)",
+      color: "var(--text-primary)",
     }).then(async (result) => {
       if (result.isConfirmed) {
         if (isSupabaseConfigured) {
           try {
-            await supabase.from('projects').delete().eq('id', project.id);
+            await supabase.from("projects").delete().eq("id", project.id);
           } catch (err) {
             console.error(err);
           }
@@ -312,13 +365,13 @@ const AdminDashboard = () => {
         saveProjectsToStorage(updated);
 
         MySwal.fire({
-          icon: 'success',
-          title: 'Terhapus!',
+          icon: "success",
+          title: "Terhapus!",
           text: `Proyek "${project.title}" telah terhapus.`,
           timer: 1500,
           showConfirmButton: false,
-          background: 'var(--bg-card)',
-          color: 'var(--text-primary)',
+          background: "var(--bg-card)",
+          color: "var(--text-primary)",
         });
       }
     });
@@ -338,17 +391,17 @@ const AdminDashboard = () => {
       const original = skills.find((s) => s.id === formattedSkill.id);
       if (original) {
         const noChanges =
-          (original.name || '') === (formattedSkill.name || '') &&
-          (original.logo_url || '') === (formattedSkill.logo_url || '') &&
-          (original.category || '') === (formattedSkill.category || '');
+          (original.name || "") === (formattedSkill.name || "") &&
+          (original.logo_url || "") === (formattedSkill.logo_url || "") &&
+          (original.category || "") === (formattedSkill.category || "");
         if (noChanges) {
           MySwal.fire({
-            icon: 'info',
-            title: 'No Changes Detected',
-            text: 'No data has been modified. Please make changes before saving.',
-            confirmButtonColor: '#0284c7',
-            background: 'var(--bg-card)',
-            color: 'var(--text-primary)',
+            icon: "info",
+            title: "No Changes Detected",
+            text: "No data has been modified. Please make changes before saving.",
+            confirmButtonColor: "#0284c7",
+            background: "var(--bg-card)",
+            color: "var(--text-primary)",
           });
           return;
         }
@@ -359,15 +412,15 @@ const AdminDashboard = () => {
       try {
         if (isEdit) {
           await supabase
-            .from('skills')
+            .from("skills")
             .update({
               name: formattedSkill.name,
               logo_url: formattedSkill.logo_url,
               category: formattedSkill.category,
             })
-            .eq('id', formattedSkill.id);
+            .eq("id", formattedSkill.id);
         } else {
-          await supabase.from('skills').insert([
+          await supabase.from("skills").insert([
             {
               name: formattedSkill.name,
               logo_url: formattedSkill.logo_url,
@@ -381,7 +434,9 @@ const AdminDashboard = () => {
     }
 
     if (isEdit) {
-      const updated = skills.map((s) => (s.id === formattedSkill.id ? formattedSkill : s));
+      const updated = skills.map((s) =>
+        s.id === formattedSkill.id ? formattedSkill : s,
+      );
       saveSkillsToStorage(updated);
     } else {
       saveSkillsToStorage([...skills, formattedSkill]);
@@ -391,33 +446,33 @@ const AdminDashboard = () => {
     setEditingSkill(null);
 
     MySwal.fire({
-      icon: 'success',
-      title: isEdit ? 'Skill Updated!' : 'Skill Added!',
+      icon: "success",
+      title: isEdit ? "Skill Updated!" : "Skill Added!",
       text: `Skill "${formattedSkill.name}" has been saved successfully.`,
       timer: 2000,
       showConfirmButton: false,
-      background: 'var(--bg-card)',
-      color: 'var(--text-primary)',
+      background: "var(--bg-card)",
+      color: "var(--text-primary)",
     });
   };
 
   const handleDeleteSkill = (skill) => {
     MySwal.fire({
-      title: 'Hapus Skill?',
+      title: "Hapus Skill?",
       text: `Apakah Anda yakin ingin menghapus skill "${skill.name}"?`,
-      icon: 'warning',
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: '#ef4444',
-      cancelButtonColor: '#3f3f46',
-      confirmButtonText: 'Ya, Hapus!',
-      cancelButtonText: 'Batal',
-      background: 'var(--bg-card)',
-      color: 'var(--text-primary)',
+      confirmButtonColor: "#ef4444",
+      cancelButtonColor: "#3f3f46",
+      confirmButtonText: "Ya, Hapus!",
+      cancelButtonText: "Batal",
+      background: "var(--bg-card)",
+      color: "var(--text-primary)",
     }).then(async (result) => {
       if (result.isConfirmed) {
         if (isSupabaseConfigured) {
           try {
-            await supabase.from('skills').delete().eq('id', skill.id);
+            await supabase.from("skills").delete().eq("id", skill.id);
           } catch (err) {
             console.error(err);
           }
@@ -426,13 +481,13 @@ const AdminDashboard = () => {
         saveSkillsToStorage(updated);
 
         MySwal.fire({
-          icon: 'success',
-          title: 'Terhapus!',
+          icon: "success",
+          title: "Terhapus!",
           text: `Skill "${skill.name}" telah terhapus.`,
           timer: 1500,
           showConfirmButton: false,
-          background: 'var(--bg-card)',
-          color: 'var(--text-primary)',
+          background: "var(--bg-card)",
+          color: "var(--text-primary)",
         });
       }
     });
@@ -450,14 +505,14 @@ const AdminDashboard = () => {
     // ===== Detect "No Changes" on Update =====
     if (isEdit) {
       const original = categories.find((c) => c.id === formattedCat.id);
-      if (original && (original.name || '') === (formattedCat.name || '')) {
+      if (original && (original.name || "") === (formattedCat.name || "")) {
         MySwal.fire({
-          icon: 'info',
-          title: 'No Changes Detected',
-          text: 'No data has been modified. Please make changes before saving.',
-          confirmButtonColor: '#0284c7',
-          background: 'var(--bg-card)',
-          color: 'var(--text-primary)',
+          icon: "info",
+          title: "No Changes Detected",
+          text: "No data has been modified. Please make changes before saving.",
+          confirmButtonColor: "#0284c7",
+          background: "var(--bg-card)",
+          color: "var(--text-primary)",
         });
         return;
       }
@@ -466,9 +521,14 @@ const AdminDashboard = () => {
     if (isSupabaseConfigured) {
       try {
         if (isEdit) {
-          await supabase.from('categories').update({ name: formattedCat.name }).eq('id', formattedCat.id);
+          await supabase
+            .from("categories")
+            .update({ name: formattedCat.name })
+            .eq("id", formattedCat.id);
         } else {
-          await supabase.from('categories').insert([{ name: formattedCat.name }]);
+          await supabase
+            .from("categories")
+            .insert([{ name: formattedCat.name }]);
         }
       } catch (err) {
         console.error(err);
@@ -476,7 +536,9 @@ const AdminDashboard = () => {
     }
 
     if (isEdit) {
-      const updated = categories.map((c) => (c.id === formattedCat.id ? formattedCat : c));
+      const updated = categories.map((c) =>
+        c.id === formattedCat.id ? formattedCat : c,
+      );
       saveCategoriesToStorage(updated);
     } else {
       saveCategoriesToStorage([...categories, formattedCat]);
@@ -486,32 +548,32 @@ const AdminDashboard = () => {
     setEditingCategory(null);
 
     MySwal.fire({
-      icon: 'success',
-      title: isEdit ? 'Category Updated!' : 'Category Added!',
+      icon: "success",
+      title: isEdit ? "Category Updated!" : "Category Added!",
       text: `Category "${formattedCat.name}" has been saved successfully.`,
       timer: 1800,
       showConfirmButton: false,
-      background: 'var(--bg-card)',
-      color: 'var(--text-primary)',
+      background: "var(--bg-card)",
+      color: "var(--text-primary)",
     });
   };
 
   const handleDeleteCategory = (cat) => {
     MySwal.fire({
-      title: 'Hapus Kategori?',
+      title: "Hapus Kategori?",
       text: `Hapus kategori "${cat.name}"?`,
-      icon: 'warning',
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: '#ef4444',
-      cancelButtonColor: '#3f3f46',
-      confirmButtonText: 'Ya, Hapus!',
-      background: 'var(--bg-card)',
-      color: 'var(--text-primary)',
+      confirmButtonColor: "#ef4444",
+      cancelButtonColor: "#3f3f46",
+      confirmButtonText: "Ya, Hapus!",
+      background: "var(--bg-card)",
+      color: "var(--text-primary)",
     }).then(async (result) => {
       if (result.isConfirmed) {
         if (isSupabaseConfigured) {
           try {
-            await supabase.from('categories').delete().eq('id', cat.id);
+            await supabase.from("categories").delete().eq("id", cat.id);
           } catch (err) {
             console.error(err);
           }
@@ -519,12 +581,12 @@ const AdminDashboard = () => {
         saveCategoriesToStorage(categories.filter((c) => c.id !== cat.id));
 
         MySwal.fire({
-          icon: 'success',
-          title: 'Terhapus!',
+          icon: "success",
+          title: "Terhapus!",
           timer: 1500,
           showConfirmButton: false,
-          background: 'var(--bg-card)',
-          color: 'var(--text-primary)',
+          background: "var(--bg-card)",
+          color: "var(--text-primary)",
         });
       }
     });
@@ -544,24 +606,26 @@ const AdminDashboard = () => {
       const original = experiences.find((e) => e.id === formattedExp.id);
       if (original) {
         const noChanges =
-          (original.title || '') === (formattedExp.title || '') &&
-          (original.company || '') === (formattedExp.company || '') &&
-          (original.location || '') === (formattedExp.location || '') &&
-          (original.period || '') === (formattedExp.period || '') &&
-          (original.start_date || '') === (formattedExp.start_date || '') &&
-          (original.end_date || '') === (formattedExp.end_date || '') &&
+          (original.title || "") === (formattedExp.title || "") &&
+          (original.company || "") === (formattedExp.company || "") &&
+          (original.location || "") === (formattedExp.location || "") &&
+          (original.period || "") === (formattedExp.period || "") &&
+          (original.start_date || "") === (formattedExp.start_date || "") &&
+          (original.end_date || "") === (formattedExp.end_date || "") &&
           Boolean(original.is_present) === Boolean(formattedExp.is_present) &&
-          JSON.stringify(original.responsibilities || []) === JSON.stringify(formattedExp.responsibilities || []) &&
-          JSON.stringify(original.tech || []) === JSON.stringify(formattedExp.tech || []);
+          JSON.stringify(original.responsibilities || []) ===
+            JSON.stringify(formattedExp.responsibilities || []) &&
+          JSON.stringify(original.tech || []) ===
+            JSON.stringify(formattedExp.tech || []);
 
         if (noChanges) {
           MySwal.fire({
-            icon: 'info',
-            title: 'No Changes Detected',
-            text: 'No data has been modified. Please make changes before saving.',
-            confirmButtonColor: '#0284c7',
-            background: 'var(--bg-card)',
-            color: 'var(--text-primary)',
+            icon: "info",
+            title: "No Changes Detected",
+            text: "No data has been modified. Please make changes before saving.",
+            confirmButtonColor: "#0284c7",
+            background: "var(--bg-card)",
+            color: "var(--text-primary)",
           });
           return;
         }
@@ -571,9 +635,12 @@ const AdminDashboard = () => {
     if (isSupabaseConfigured) {
       try {
         if (isEdit) {
-          await supabase.from('experiences').update(formattedExp).eq('id', formattedExp.id);
+          await supabase
+            .from("experiences")
+            .update(formattedExp)
+            .eq("id", formattedExp.id);
         } else {
-          await supabase.from('experiences').insert([formattedExp]);
+          await supabase.from("experiences").insert([formattedExp]);
         }
       } catch (err) {
         console.error(err);
@@ -581,7 +648,9 @@ const AdminDashboard = () => {
     }
 
     if (isEdit) {
-      const updated = experiences.map((e) => (e.id === formattedExp.id ? formattedExp : e));
+      const updated = experiences.map((e) =>
+        e.id === formattedExp.id ? formattedExp : e,
+      );
       saveExperiencesToStorage(updated);
     } else {
       saveExperiencesToStorage([formattedExp, ...experiences]);
@@ -591,33 +660,33 @@ const AdminDashboard = () => {
     setEditingExperience(null);
 
     MySwal.fire({
-      icon: 'success',
-      title: isEdit ? 'Experience Updated!' : 'Experience Added!',
+      icon: "success",
+      title: isEdit ? "Experience Updated!" : "Experience Added!",
       text: `Experience "${formattedExp.title}" has been saved successfully.`,
       timer: 2000,
       showConfirmButton: false,
-      background: 'var(--bg-card)',
-      color: 'var(--text-primary)',
+      background: "var(--bg-card)",
+      color: "var(--text-primary)",
     });
   };
 
   const handleDeleteExperience = (exp) => {
     MySwal.fire({
-      title: 'Hapus Pengalaman Kerja?',
+      title: "Hapus Pengalaman Kerja?",
       text: `Hapus "${exp.title} - ${exp.company}"?`,
-      icon: 'warning',
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: '#ef4444',
-      cancelButtonColor: '#3f3f46',
-      confirmButtonText: 'Ya, Hapus!',
-      cancelButtonText: 'Batal',
-      background: 'var(--bg-card)',
-      color: 'var(--text-primary)',
+      confirmButtonColor: "#ef4444",
+      cancelButtonColor: "#3f3f46",
+      confirmButtonText: "Ya, Hapus!",
+      cancelButtonText: "Batal",
+      background: "var(--bg-card)",
+      color: "var(--text-primary)",
     }).then(async (result) => {
       if (result.isConfirmed) {
         if (isSupabaseConfigured) {
           try {
-            await supabase.from('experiences').delete().eq('id', exp.id);
+            await supabase.from("experiences").delete().eq("id", exp.id);
           } catch (err) {
             console.error(err);
           }
@@ -625,8 +694,37 @@ const AdminDashboard = () => {
         saveExperiencesToStorage(experiences.filter((e) => e.id !== exp.id));
 
         MySwal.fire({
+          icon: "success",
+          title: "Terhapus!",
+          timer: 1500,
+          showConfirmButton: false,
+          background: "var(--bg-card)",
+          color: "var(--text-primary)",
+        });
+      }
+    });
+  };
+
+  const handleLogout = () => {
+    MySwal.fire({
+      title: 'Konfirmasi Logout',
+      text: 'Apakah Anda yakin ingin keluar dari dashboard admin?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#ef4444',
+      cancelButtonColor: '#3f3f46',
+      confirmButtonText: 'Ya, Keluar',
+      cancelButtonText: 'Batal',
+      background: 'var(--bg-card)',
+      color: 'var(--text-primary)',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        logout();
+        navigate('/admin/login');
+        MySwal.fire({
           icon: 'success',
-          title: 'Terhapus!',
+          title: 'Logged Out',
+          text: 'Anda telah berhasil keluar dari akun admin.',
           timer: 1500,
           showConfirmButton: false,
           background: 'var(--bg-card)',
@@ -634,11 +732,6 @@ const AdminDashboard = () => {
         });
       }
     });
-  };
-
-  const handleLogout = () => {
-    logout();
-    navigate('/admin/login');
   };
 
   return (
@@ -655,12 +748,15 @@ const AdminDashboard = () => {
               <ArrowLeft size={18} />
             </Link>
             <h1 className="text-lg font-bold font-display text-[var(--text-primary)] flex items-center gap-2">
-              Dashboard Admin <span className="text-xs px-2 py-0.5 rounded bg-[var(--badge-bg)] border border-[var(--badge-border)] text-[var(--badge-text)]">CRUD</span>
+              Dashboard Admin{" "}
+              <span className="text-xs px-2 py-0.5 rounded bg-[var(--badge-bg)] border border-[var(--badge-border)] text-[var(--badge-text)]">
+                CRUD
+              </span>
             </h1>
           </div>
 
           <div className="flex items-center gap-4">
-            <span className="hidden sm:inline-flex items-center gap-1.5 text-xs text-[var(--text-muted)]">
+            {/* <span className="hidden sm:inline-flex items-center gap-1.5 text-xs text-[var(--text-muted)]">
               <Database size={14} />
               {isSupabaseConfigured ? (
                 <span className="text-emerald-500 font-semibold flex items-center gap-1">
@@ -669,7 +765,7 @@ const AdminDashboard = () => {
               ) : (
                 <span className="text-amber-500 font-semibold">Local Storage Mode</span>
               )}
-            </span>
+            </span> */}
 
             <button
               onClick={handleLogout}
@@ -687,44 +783,44 @@ const AdminDashboard = () => {
         <div className="flex items-center justify-between border-b border-[var(--border-color)] pb-4 flex-wrap gap-4">
           <div className="flex items-center gap-2 flex-wrap">
             <button
-              onClick={() => setActiveTab('projects')}
+              onClick={() => setActiveTab("projects")}
               className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm transition-all duration-200 cursor-pointer ${
-                activeTab === 'projects'
-                  ? 'bg-[var(--accent-btn)] text-[var(--accent-btn-text)] shadow-md'
-                  : 'border border-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-secondary)]'
+                activeTab === "projects"
+                  ? "bg-[var(--accent-btn)] text-[var(--accent-btn-text)] shadow-md"
+                  : "border border-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-secondary)]"
               }`}
             >
               <FolderGit2 size={18} /> Proyek ({projects.length})
             </button>
 
             <button
-              onClick={() => setActiveTab('skills')}
+              onClick={() => setActiveTab("skills")}
               className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm transition-all duration-200 cursor-pointer ${
-                activeTab === 'skills'
-                  ? 'bg-[var(--accent-btn)] text-[var(--accent-btn-text)] shadow-md'
-                  : 'border border-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-secondary)]'
+                activeTab === "skills"
+                  ? "bg-[var(--accent-btn)] text-[var(--accent-btn-text)] shadow-md"
+                  : "border border-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-secondary)]"
               }`}
             >
               <Wrench size={18} /> Skills ({skills.length})
             </button>
 
             <button
-              onClick={() => setActiveTab('categories')}
+              onClick={() => setActiveTab("categories")}
               className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm transition-all duration-200 cursor-pointer ${
-                activeTab === 'categories'
-                  ? 'bg-[var(--accent-btn)] text-[var(--accent-btn-text)] shadow-md'
-                  : 'border border-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-secondary)]'
+                activeTab === "categories"
+                  ? "bg-[var(--accent-btn)] text-[var(--accent-btn-text)] shadow-md"
+                  : "border border-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-secondary)]"
               }`}
             >
               <Tag size={18} /> Kategori ({categories.length})
             </button>
 
             <button
-              onClick={() => setActiveTab('experiences')}
+              onClick={() => setActiveTab("experiences")}
               className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm transition-all duration-200 cursor-pointer ${
-                activeTab === 'experiences'
-                  ? 'bg-[var(--accent-btn)] text-[var(--accent-btn-text)] shadow-md'
-                  : 'border border-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-secondary)]'
+                activeTab === "experiences"
+                  ? "bg-[var(--accent-btn)] text-[var(--accent-btn-text)] shadow-md"
+                  : "border border-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-secondary)]"
               }`}
             >
               <Briefcase size={18} /> Pengalaman ({experiences.length})
@@ -732,7 +828,7 @@ const AdminDashboard = () => {
           </div>
 
           <div>
-            {activeTab === 'projects' && (
+            {activeTab === "projects" && (
               <button
                 onClick={() => {
                   setEditingProject(null);
@@ -744,7 +840,7 @@ const AdminDashboard = () => {
               </button>
             )}
 
-            {activeTab === 'skills' && (
+            {activeTab === "skills" && (
               <button
                 onClick={() => {
                   setEditingSkill(null);
@@ -756,7 +852,7 @@ const AdminDashboard = () => {
               </button>
             )}
 
-            {activeTab === 'categories' && (
+            {activeTab === "categories" && (
               <button
                 onClick={() => {
                   setEditingCategory(null);
@@ -768,7 +864,7 @@ const AdminDashboard = () => {
               </button>
             )}
 
-            {activeTab === 'experiences' && (
+            {activeTab === "experiences" && (
               <button
                 onClick={() => {
                   setEditingExperience(null);
@@ -783,15 +879,20 @@ const AdminDashboard = () => {
         </div>
 
         {/* TAB 1: KELOLA PROYEK */}
-        {activeTab === 'projects' && (
+        {activeTab === "projects" && (
           <div className="space-y-6">
             {loading ? (
-              <div className="text-center py-12 text-[var(--text-muted)]">Memuat data proyek...</div>
+              <div className="text-center py-12 text-[var(--text-muted)]">
+                Memuat data proyek...
+              </div>
             ) : projects.length === 0 ? (
               <div className="text-center py-16 p-8 rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card)] space-y-3">
                 <FolderGit2 className="w-12 h-12 text-[var(--text-muted)] mx-auto" />
                 <h3 className="text-lg font-bold">Belum Ada Proyek</h3>
-                <p className="text-sm text-[var(--text-muted)]">Klik tombol "Tambah Proyek Baru" untuk memasukkan proyek pertama Anda.</p>
+                <p className="text-sm text-[var(--text-muted)]">
+                  Klik tombol "Tambah Proyek Baru" untuk memasukkan proyek
+                  pertama Anda.
+                </p>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -803,12 +904,16 @@ const AdminDashboard = () => {
                     <div>
                       <div className="relative h-44 w-full bg-[var(--bg-secondary)] overflow-hidden">
                         <img
-                          src={project.cover_image || project.image || '/project/py.png'}
+                          src={
+                            project.cover_image ||
+                            project.image ||
+                            "/project/py.png"
+                          }
                           alt={project.title}
                           className="w-full h-full object-cover"
                         />
                         <span className="absolute top-3 left-3 px-2.5 py-1 rounded text-[10px] font-bold bg-black/70 text-white uppercase tracking-wider backdrop-blur-md">
-                          {project.category || 'WEB'}
+                          {project.category || "WEB"}
                         </span>
                       </div>
 
@@ -821,14 +926,16 @@ const AdminDashboard = () => {
                         </p>
 
                         <div className="flex flex-wrap gap-1.5 pt-1">
-                          {(Array.isArray(project.tech) ? project.tech : []).slice(0, 3).map((t, idx) => (
-                            <span
-                              key={idx}
-                              className="px-2 py-0.5 rounded text-[10px] font-medium bg-[var(--badge-bg)] border border-[var(--badge-border)] text-[var(--badge-text)]"
-                            >
-                              {t}
-                            </span>
-                          ))}
+                          {(Array.isArray(project.tech) ? project.tech : [])
+                            .slice(0, 3)
+                            .map((t, idx) => (
+                              <span
+                                key={idx}
+                                className="px-2 py-0.5 rounded text-[10px] font-medium bg-[var(--badge-bg)] border border-[var(--badge-border)] text-[var(--badge-text)]"
+                              >
+                                {t}
+                              </span>
+                            ))}
                         </div>
                       </div>
                     </div>
@@ -885,15 +992,19 @@ const AdminDashboard = () => {
         )}
 
         {/* TAB 2: KELOLA SKILLS */}
-        {activeTab === 'skills' && (
+        {activeTab === "skills" && (
           <div className="space-y-6">
             {loading ? (
-              <div className="text-center py-12 text-[var(--text-muted)]">Memuat data skill...</div>
+              <div className="text-center py-12 text-[var(--text-muted)]">
+                Memuat data skill...
+              </div>
             ) : skills.length === 0 ? (
               <div className="text-center py-16 p-8 rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card)] space-y-3">
                 <Wrench className="w-12 h-12 text-[var(--text-muted)] mx-auto" />
                 <h3 className="text-lg font-bold">Belum Ada Skill</h3>
-                <p className="text-sm text-[var(--text-muted)]">Klik tombol "Tambah Skill Baru" untuk memasukkan skill.</p>
+                <p className="text-sm text-[var(--text-muted)]">
+                  Klik tombol "Tambah Skill Baru" untuk memasukkan skill.
+                </p>
               </div>
             ) : (
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
@@ -908,12 +1019,16 @@ const AdminDashboard = () => {
                       className="w-12 h-12 object-contain group-hover:scale-110 transition-transform duration-200"
                       onError={(e) => {
                         e.target.onerror = null;
-                        e.target.src = '/icon/react.png';
+                        e.target.src = "/icon/react.png";
                       }}
                     />
                     <div>
-                      <h4 className="font-bold text-sm text-[var(--text-primary)]">{skill.name}</h4>
-                      <span className="text-[10px] text-[var(--text-muted)] uppercase tracking-wider">{skill.category || 'Skills'}</span>
+                      <h4 className="font-bold text-sm text-[var(--text-primary)]">
+                        {skill.name}
+                      </h4>
+                      <span className="text-[10px] text-[var(--text-muted)] uppercase tracking-wider">
+                        {skill.category || "Skills"}
+                      </span>
                     </div>
 
                     <div className="flex items-center gap-1.5 pt-2 border-t border-[var(--border-color)] w-full justify-center">
@@ -943,7 +1058,7 @@ const AdminDashboard = () => {
         )}
 
         {/* TAB 3: KELOLA KATEGORI */}
-        {activeTab === 'categories' && (
+        {activeTab === "categories" && (
           <div className="space-y-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {categories.map((cat) => (
@@ -955,7 +1070,9 @@ const AdminDashboard = () => {
                     <div className="p-2.5 rounded-xl bg-[var(--badge-bg)] border border-[var(--badge-border)] text-[var(--text-primary)]">
                       <Tag size={18} />
                     </div>
-                    <span className="font-bold text-base font-display tracking-wide">{cat.name}</span>
+                    <span className="font-bold text-base font-display tracking-wide">
+                      {cat.name}
+                    </span>
                   </div>
 
                   <div className="flex items-center gap-1">
@@ -982,15 +1099,22 @@ const AdminDashboard = () => {
         )}
 
         {/* TAB 4: KELOLA PENGALAMAN KERJA */}
-        {activeTab === 'experiences' && (
+        {activeTab === "experiences" && (
           <div className="space-y-6">
             {loading ? (
-              <div className="text-center py-12 text-[var(--text-muted)]">Memuat data pengalaman...</div>
+              <div className="text-center py-12 text-[var(--text-muted)]">
+                Memuat data pengalaman...
+              </div>
             ) : experiences.length === 0 ? (
               <div className="text-center py-16 p-8 rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card)] space-y-3">
                 <Briefcase className="w-12 h-12 text-[var(--text-muted)] mx-auto" />
-                <h3 className="text-lg font-bold">Belum Ada Pengalaman Kerja</h3>
-                <p className="text-sm text-[var(--text-muted)]">Klik tombol "Tambah Pengalaman Baru" untuk memasukkan data pengalaman kerja pertama Anda.</p>
+                <h3 className="text-lg font-bold">
+                  Belum Ada Pengalaman Kerja
+                </h3>
+                <p className="text-sm text-[var(--text-muted)]">
+                  Klik tombol "Tambah Pengalaman Baru" untuk memasukkan data
+                  pengalaman kerja pertama Anda.
+                </p>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -1002,7 +1126,7 @@ const AdminDashboard = () => {
                     <div className="space-y-3">
                       <div className="flex items-center justify-between gap-2 flex-wrap">
                         <span className="px-3 py-1 rounded-full text-xs font-bold bg-[var(--badge-bg)] text-sky-500 border border-[var(--badge-border)]">
-                          {exp.period || '2025 - Present'}
+                          {exp.period || "2025 - Present"}
                         </span>
                         {exp.is_present && (
                           <span className="px-2.5 py-0.5 rounded text-[10px] font-black bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 uppercase">
@@ -1016,20 +1140,25 @@ const AdminDashboard = () => {
                           {exp.title}
                         </h4>
                         <p className="text-xs font-semibold text-[var(--text-secondary)]">
-                          {exp.company} {exp.location ? `• ${exp.location}` : ''}
+                          {exp.company}{" "}
+                          {exp.location ? `• ${exp.location}` : ""}
                         </p>
                       </div>
 
-                      {Array.isArray(exp.responsibilities) && exp.responsibilities.length > 0 && (
-                        <ul className="space-y-1 text-xs text-[var(--text-muted)] pt-1">
-                          {exp.responsibilities.map((resp, idx) => (
-                            <li key={idx} className="flex items-start gap-1.5">
-                              <span className="text-sky-500 mt-0.5">•</span>
-                              <span className="line-clamp-2">{resp}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      )}
+                      {Array.isArray(exp.responsibilities) &&
+                        exp.responsibilities.length > 0 && (
+                          <ul className="space-y-1 text-xs text-[var(--text-muted)] pt-1">
+                            {exp.responsibilities.map((resp, idx) => (
+                              <li
+                                key={idx}
+                                className="flex items-start gap-1.5"
+                              >
+                                <span className="text-sky-500 mt-0.5">•</span>
+                                <span className="line-clamp-2">{resp}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
                     </div>
 
                     <div className="flex items-center justify-end gap-2 pt-3 border-t border-[var(--border-color)]">

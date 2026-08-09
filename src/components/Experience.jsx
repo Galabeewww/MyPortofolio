@@ -12,6 +12,18 @@ const Experience = () => {
     fetchExperiences();
   }, []);
 
+  // Sort experiences: PRESENT items first, then newest start_date / date descending
+  const sortExperiences = (list) => {
+    return [...list].sort((a, b) => {
+      if (a.is_present && !b.is_present) return -1;
+      if (!a.is_present && b.is_present) return 1;
+
+      const dateA = a.start_date || a.created_at || a.period || "";
+      const dateB = b.start_date || b.created_at || b.period || "";
+      return dateB.localeCompare(dateA);
+    });
+  };
+
   const fetchExperiences = async () => {
     setLoading(true);
     const local = localStorage.getItem("portfolio_crud_experiences");
@@ -24,7 +36,7 @@ const Experience = () => {
           .order("created_at", { ascending: false });
 
         if (!error && data && data.length > 0) {
-          setExperiences(data);
+          setExperiences(sortExperiences(data));
           setLoading(false);
           return;
         }
@@ -34,7 +46,7 @@ const Experience = () => {
     }
 
     if (local) {
-      setExperiences(JSON.parse(local));
+      setExperiences(sortExperiences(JSON.parse(local)));
     }
     setLoading(false);
   };
@@ -89,17 +101,21 @@ const Experience = () => {
                 return (
                   <div
                     key={exp.id || index}
-                    className={`relative flex flex-col md:flex-row items-center ${
-                      isEven ? "md:flex-row-reverse" : ""
-                    }`}
+                    className="relative flex flex-col md:flex-row items-center w-full"
                   >
                     {/* Glowing Center Node Circle */}
                     <div className="absolute left-4 md:left-1/2 -translate-x-1/2 w-6 h-6 rounded-full bg-[var(--bg-primary)] border-4 border-sky-500 shadow-[0_0_15px_rgba(14,165,233,0.6)] z-20 flex items-center justify-center">
                       <div className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
                     </div>
 
-                    {/* Timeline Card Container */}
-                    <div className="w-full md:w-1/2 pl-12 md:pl-0 md:px-8">
+                    {/* Timeline Card Container dengan Jarak Simetris di Kiri & Kanan */}
+                    <div
+                      className={`w-full md:w-1/2 ${
+                        isEven
+                          ? "md:mr-auto pl-12 md:pl-0 md:pr-10"
+                          : "md:ml-auto pl-12 md:pl-10"
+                      }`}
+                    >
                       <div className="glow-card p-6 sm:p-8 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-color)] shadow-xl space-y-6 text-left hover:border-sky-500/40 transition-all duration-300">
                         {/* Period & Present Badge */}
                         <div className="flex flex-wrap items-center gap-3">

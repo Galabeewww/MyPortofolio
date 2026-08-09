@@ -1,36 +1,45 @@
-import React, { useState, useEffect } from 'react';
-import { X, Save, Plus, Trash2 } from 'lucide-react';
-import ImageUploader from './ImageUploader';
+import React, { useState, useEffect } from "react";
+import { X, Save, Plus, Trash2 } from "lucide-react";
+import ImageUploader from "./ImageUploader";
 
 const ProjectForm = ({ project, categories = [], onSave, onClose }) => {
   const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    full_description: '',
-    category: 'WEB',
+    title: "",
+    description: "",
+    full_description: "",
+    category: "WEB",
     created_at: new Date().toISOString().substring(0, 7), // YYYY-MM
-    tech: '',
-    features: [''],
-    live_link: '',
-    github_link: '',
+    tech: "",
+    features: [""],
+    live_link: "",
+    github_link: "",
     images: [],
   });
 
   useEffect(() => {
     if (project) {
       setFormData({
-        title: project.title || '',
-        description: project.description || '',
-        full_description: project.full_description || project.description || '',
-        category: project.category || 'WEB',
+        title: project.title || "",
+        description: project.description || "",
+        full_description: project.full_description || project.description || "",
+        category: project.category || "WEB",
         created_at: project.created_at
           ? new Date(project.created_at).toISOString().substring(0, 7)
           : new Date().toISOString().substring(0, 7),
-        tech: Array.isArray(project.tech) ? project.tech.join(', ') : project.tech || '',
-        features: Array.isArray(project.features) && project.features.length > 0 ? project.features : [''],
-        live_link: project.live_link || project.liveLink || '',
-        github_link: project.github_link || project.githubLink || '',
-        images: project.images || (project.image ? [{ id: '1', url: project.image, is_cover: true }] : []),
+        tech: Array.isArray(project.tech)
+          ? project.tech.join(", ")
+          : project.tech || "",
+        features:
+          Array.isArray(project.features) && project.features.length > 0
+            ? project.features
+            : [""],
+        live_link: project.live_link || project.liveLink || "",
+        github_link: project.github_link || project.githubLink || "",
+        images:
+          project.images ||
+          (project.image
+            ? [{ id: "1", url: project.image, is_cover: true }]
+            : []),
       });
     }
   }, [project]);
@@ -47,12 +56,15 @@ const ProjectForm = ({ project, categories = [], onSave, onClose }) => {
   };
 
   const addFeatureInput = () => {
-    setFormData((prev) => ({ ...prev, features: [...prev.features, ''] }));
+    setFormData((prev) => ({ ...prev, features: [...prev.features, ""] }));
   };
 
   const removeFeatureInput = (index) => {
     const updated = formData.features.filter((_, idx) => idx !== index);
-    setFormData((prev) => ({ ...prev, features: updated.length ? updated : [''] }));
+    setFormData((prev) => ({
+      ...prev,
+      features: updated.length ? updated : [""],
+    }));
   };
 
   const handleSubmit = (e) => {
@@ -60,7 +72,7 @@ const ProjectForm = ({ project, categories = [], onSave, onClose }) => {
 
     // Process tech string into array
     const techArray = formData.tech
-      .split(',')
+      .split(",")
       .map((t) => t.trim())
       .filter((t) => t.length > 0);
 
@@ -70,8 +82,9 @@ const ProjectForm = ({ project, categories = [], onSave, onClose }) => {
       .filter((f) => f.length > 0);
 
     // Get cover image
-    const coverImageObj = formData.images.find((img) => img.is_cover) || formData.images[0];
-    const cover_image = coverImageObj ? coverImageObj.url : '';
+    const coverImageObj =
+      formData.images.find((img) => img.is_cover) || formData.images[0];
+    const cover_image = coverImageObj ? coverImageObj.url : "";
 
     const payload = {
       ...formData,
@@ -81,7 +94,9 @@ const ProjectForm = ({ project, categories = [], onSave, onClose }) => {
       cover_image: cover_image,
       image: cover_image,
       images: formData.images,
-      created_at: formData.created_at ? `${formData.created_at}-01T00:00:00Z` : new Date().toISOString(),
+      created_at: formData.created_at
+        ? `${formData.created_at}-01T00:00:00Z`
+        : new Date().toISOString(),
     };
 
     onSave(payload);
@@ -89,7 +104,10 @@ const ProjectForm = ({ project, categories = [], onSave, onClose }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/75 backdrop-blur-sm" onClick={onClose} />
+      <div
+        className="absolute inset-0 bg-black/75 backdrop-blur-sm"
+        onClick={onClose}
+      />
 
       <div
         className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-2xl bg-[var(--bg-card)] border border-[var(--border-color)] p-6 sm:p-8 shadow-2xl z-10"
@@ -97,7 +115,7 @@ const ProjectForm = ({ project, categories = [], onSave, onClose }) => {
       >
         <div className="flex items-center justify-between pb-4 border-b border-[var(--border-color)] mb-6">
           <h3 className="text-xl font-bold font-display text-[var(--text-primary)]">
-            {project ? 'Edit Proyek' : 'Tambah Proyek Baru'}
+            {project ? "Edit Proyek" : "Tambah Proyek Baru"}
           </h3>
           <button
             onClick={onClose}
@@ -142,7 +160,7 @@ const ProjectForm = ({ project, categories = [], onSave, onClose }) => {
                     </option>
                   ))
                 ) : (
-                  <option value="">-- Tidak Ada Kategori --</option>
+                  <option value="">-Tidak Ada Kategori-</option>
                 )}
               </select>
               {categories.length === 0 && (
