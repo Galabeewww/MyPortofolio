@@ -295,6 +295,7 @@ const AdminDashboard = () => {
         } else {
           const { error } = await supabase.from("projects").insert([
             {
+              id: formattedProject.id,
               title: formattedProject.title,
               description: formattedProject.description,
               full_description: formattedProject.full_description,
@@ -305,6 +306,7 @@ const AdminDashboard = () => {
               github_link: formattedProject.github_link,
               cover_image: formattedProject.cover_image,
               images: formattedProject.images,
+              created_at: formattedProject.created_at,
             },
           ]);
           resError = error;
@@ -449,6 +451,7 @@ const AdminDashboard = () => {
         } else {
           const { error } = await supabase.from("skills").insert([
             {
+              id: formattedSkill.id,
               name: formattedSkill.name,
               logo_url: formattedSkill.logo_url,
               category: formattedSkill.category,
@@ -468,7 +471,7 @@ const AdminDashboard = () => {
           });
           return;
         }
-      } catch (err) {
+      } catch (err: any) {
         MySwal.fire({
           icon: "error",
           title: "Terjadi Kesalahan",
@@ -578,7 +581,7 @@ const AdminDashboard = () => {
         } else {
           const { error } = await supabase
             .from("categories")
-            .insert([{ name: formattedCat.name }]);
+            .insert([{ id: formattedCat.id, name: formattedCat.name }]);
           resError = error;
         }
 
