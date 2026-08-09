@@ -12,6 +12,7 @@ import {
   Database,
   CheckCircle2,
   Tag,
+  Briefcase,
 } from 'lucide-react';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
@@ -20,6 +21,7 @@ import { supabase, isSupabaseConfigured } from '../lib/supabaseClient';
 import ProjectForm from '../components/admin/ProjectForm';
 import SkillForm from '../components/admin/SkillForm';
 import CategoryForm from '../components/admin/CategoryForm';
+import ExperienceForm from '../components/admin/ExperienceForm';
 
 const MySwal = withReactContent(Swal);
 
@@ -55,6 +57,7 @@ const AdminDashboard = () => {
   const [projects, setProjects] = useState([]);
   const [skills, setSkills] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [experiences, setExperiences] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const [editingProject, setEditingProject] = useState(null);
@@ -63,6 +66,8 @@ const AdminDashboard = () => {
   const [isSkillFormOpen, setIsSkillFormOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState(null);
   const [isCategoryFormOpen, setIsCategoryFormOpen] = useState(false);
+  const [editingExperience, setEditingExperience] = useState(null);
+  const [isExperienceFormOpen, setIsExperienceFormOpen] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -87,6 +92,11 @@ const AdminDashboard = () => {
           .select('*')
           .order('name', { ascending: true });
 
+        const { data: dbExperiences } = await supabase
+          .from('experiences')
+          .select('*')
+          .order('created_at', { ascending: false });
+
         if (dbProjects && dbProjects.length > 0) setProjects(dbProjects);
         else loadLocalProjects();
 
@@ -95,16 +105,21 @@ const AdminDashboard = () => {
 
         if (dbCategories && dbCategories.length > 0) setCategories(dbCategories);
         else loadLocalCategories();
+
+        if (dbExperiences && dbExperiences.length > 0) setExperiences(dbExperiences);
+        else loadLocalExperiences();
       } catch (err) {
         console.error(err);
         loadLocalProjects();
         loadLocalSkills();
         loadLocalCategories();
+        loadLocalExperiences();
       }
     } else {
       loadLocalProjects();
       loadLocalSkills();
       loadLocalCategories();
+      loadLocalExperiences();
     }
     setLoading(false);
   };
@@ -136,6 +151,12 @@ const AdminDashboard = () => {
     }
   };
 
+  const loadLocalExperiences = () => {
+    const saved = localStorage.getItem('portfolio_crud_experiences');
+    if (saved) setExperiences(JSON.parse(saved));
+    else setExperiences([]);
+  };
+
   const saveProjectsToStorage = (updated) => {
     setProjects(updated);
     localStorage.setItem('portfolio_crud_projects', JSON.stringify(updated));
@@ -149,6 +170,11 @@ const AdminDashboard = () => {
   const saveCategoriesToStorage = (updated) => {
     setCategories(updated);
     localStorage.setItem('portfolio_crud_categories', JSON.stringify(updated));
+  };
+
+  const saveExperiencesToStorage = (updated) => {
+    setExperiences(updated);
+    localStorage.setItem('portfolio_crud_experiences', JSON.stringify(updated));
   };
 
   // ===== PROJECT CRUD ACTIONS =====
@@ -504,6 +530,110 @@ const AdminDashboard = () => {
     });
   };
 
+  // ===== EXPERIENCE CRUD ACTIONS =====
+
+  const handleSaveExperience = async (expData) => {
+    const isEdit = Boolean(expData.id);
+    const formattedExp = {
+      ...expData,
+      id: expData.id || `exp_${Date.now()}`,
+    };
+
+    // ===== Detect "No Changes" on Update =====
+    if (isEdit) {
+      const original = experiences.find((e) => e.id === formattedExp.id);
+      if (original) {
+        const noChanges =
+          (original.title || '') === (formattedExp.title || '') &&
+          (original.company || '') === (formattedExp.company || '') &&
+          (original.location || '') === (formattedExp.location || '') &&
+          (original.period || '') === (formattedExp.period || '') &&
+          Boolean(original.is_present) === Boolean(formattedExp.is_present) &&
+          JSON.stringify(original.responsibilities || []) === JSON.stringify(formattedExp.responsibilities || []) &&
+          JSON.stringify(original.tech || []) === JSON.stringify(formattedExp.tech || []);
+
+        if (noChanges) {
+          MySwal.fire({
+            icon: 'info',
+            title: 'No Changes Detected',
+            text: 'No data has been modified. Please make changes before saving.',
+            confirmButtonColor: '#0284c7',
+            background: 'var(--bg-card)',
+            color: 'var(--text-primary)',
+          });
+          return;
+        }
+      }
+    }
+
+    if (isSupabaseConfigured) {
+      try {
+        if (isEdit) {
+          await supabase.from('experiences').update(formattedExp).eq('id', formattedExp.id);
+        } else {
+          await supabase.from('experiences').insert([formattedExp]);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    if (isEdit) {
+      const updated = experiences.map((e) => (e.id === formattedExp.id ? formattedExp : e));
+      saveExperiencesToStorage(updated);
+    } else {
+      saveExperiencesToStorage([formattedExp, ...experiences]);
+    }
+
+    setIsExperienceFormOpen(false);
+    setEditingExperience(null);
+
+    MySwal.fire({
+      icon: 'success',
+      title: isEdit ? 'Experience Updated!' : 'Experience Added!',
+      text: `Experience "${formattedExp.title}" has been saved successfully.`,
+      timer: 2000,
+      showConfirmButton: false,
+      background: 'var(--bg-card)',
+      color: 'var(--text-primary)',
+    });
+  };
+
+  const handleDeleteExperience = (exp) => {
+    MySwal.fire({
+      title: 'Hapus Pengalaman Kerja?',
+      text: `Hapus "${exp.title} - ${exp.company}"?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#ef4444',
+      cancelButtonColor: '#3f3f46',
+      confirmButtonText: 'Ya, Hapus!',
+      cancelButtonText: 'Batal',
+      background: 'var(--bg-card)',
+      color: 'var(--text-primary)',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        if (isSupabaseConfigured) {
+          try {
+            await supabase.from('experiences').delete().eq('id', exp.id);
+          } catch (err) {
+            console.error(err);
+          }
+        }
+        saveExperiencesToStorage(experiences.filter((e) => e.id !== exp.id));
+
+        MySwal.fire({
+          icon: 'success',
+          title: 'Terhapus!',
+          timer: 1500,
+          showConfirmButton: false,
+          background: 'var(--bg-card)',
+          color: 'var(--text-primary)',
+        });
+      }
+    });
+  };
+
   const handleLogout = () => {
     logout();
     navigate('/admin/login');
@@ -586,6 +716,17 @@ const AdminDashboard = () => {
             >
               <Tag size={18} /> Kategori ({categories.length})
             </button>
+
+            <button
+              onClick={() => setActiveTab('experiences')}
+              className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm transition-all duration-200 cursor-pointer ${
+                activeTab === 'experiences'
+                  ? 'bg-[var(--accent-btn)] text-[var(--accent-btn-text)] shadow-md'
+                  : 'border border-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-secondary)]'
+              }`}
+            >
+              <Briefcase size={18} /> Pengalaman ({experiences.length})
+            </button>
           </div>
 
           <div>
@@ -622,6 +763,18 @@ const AdminDashboard = () => {
                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[var(--accent-btn)] hover:bg-[var(--accent-btn-hover)] text-[var(--accent-btn-text)] font-semibold text-sm shadow-md transition-all duration-200 cursor-pointer"
               >
                 <Plus size={18} /> Tambah Kategori
+              </button>
+            )}
+
+            {activeTab === 'experiences' && (
+              <button
+                onClick={() => {
+                  setEditingExperience(null);
+                  setIsExperienceFormOpen(true);
+                }}
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-semibold text-sm shadow-md transition-all duration-200 cursor-pointer"
+              >
+                <Plus size={18} /> Tambah Pengalaman Baru
               </button>
             )}
           </div>
@@ -825,6 +978,81 @@ const AdminDashboard = () => {
             </div>
           </div>
         )}
+
+        {/* TAB 4: KELOLA PENGALAMAN KERJA */}
+        {activeTab === 'experiences' && (
+          <div className="space-y-6">
+            {loading ? (
+              <div className="text-center py-12 text-[var(--text-muted)]">Memuat data pengalaman...</div>
+            ) : experiences.length === 0 ? (
+              <div className="text-center py-16 p-8 rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card)] space-y-3">
+                <Briefcase className="w-12 h-12 text-[var(--text-muted)] mx-auto" />
+                <h3 className="text-lg font-bold">Belum Ada Pengalaman Kerja</h3>
+                <p className="text-sm text-[var(--text-muted)]">Klik tombol "Tambah Pengalaman Baru" untuk memasukkan data pengalaman kerja pertama Anda.</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {experiences.map((exp) => (
+                  <div
+                    key={exp.id}
+                    className="glow-card rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card)] p-6 flex flex-col justify-between space-y-4 text-left"
+                  >
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between gap-2 flex-wrap">
+                        <span className="px-3 py-1 rounded-full text-xs font-bold bg-[var(--badge-bg)] text-sky-500 border border-[var(--badge-border)]">
+                          {exp.period || '2025 - Present'}
+                        </span>
+                        {exp.is_present && (
+                          <span className="px-2.5 py-0.5 rounded text-[10px] font-black bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 uppercase">
+                            PRESENT
+                          </span>
+                        )}
+                      </div>
+
+                      <div>
+                        <h4 className="font-extrabold text-lg text-[var(--text-primary)] font-display">
+                          {exp.title}
+                        </h4>
+                        <p className="text-xs font-semibold text-[var(--text-secondary)]">
+                          {exp.company} {exp.location ? `• ${exp.location}` : ''}
+                        </p>
+                      </div>
+
+                      {Array.isArray(exp.responsibilities) && exp.responsibilities.length > 0 && (
+                        <ul className="space-y-1 text-xs text-[var(--text-muted)] pt-1">
+                          {exp.responsibilities.map((resp, idx) => (
+                            <li key={idx} className="flex items-start gap-1.5">
+                              <span className="text-sky-500 mt-0.5">•</span>
+                              <span className="line-clamp-2">{resp}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+
+                    <div className="flex items-center justify-end gap-2 pt-3 border-t border-[var(--border-color)]">
+                      <button
+                        onClick={() => {
+                          setEditingExperience(exp);
+                          setIsExperienceFormOpen(true);
+                        }}
+                        className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[var(--bg-secondary)] hover:bg-[var(--border-color)] text-xs font-semibold border border-[var(--border-color)] transition-colors duration-200 cursor-pointer"
+                      >
+                        <Edit size={14} /> Edit
+                      </button>
+                      <button
+                        onClick={() => handleDeleteExperience(exp)}
+                        className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-500 text-xs font-semibold border border-rose-500/20 transition-colors duration-200 cursor-pointer"
+                      >
+                        <Trash2 size={14} /> Hapus
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
       </main>
 
       {/* Modal Forms */}
@@ -858,6 +1086,17 @@ const AdminDashboard = () => {
           onClose={() => {
             setIsCategoryFormOpen(false);
             setEditingCategory(null);
+          }}
+        />
+      )}
+
+      {isExperienceFormOpen && (
+        <ExperienceForm
+          experience={editingExperience}
+          onSave={handleSaveExperience}
+          onClose={() => {
+            setIsExperienceFormOpen(false);
+            setEditingExperience(null);
           }}
         />
       )}

@@ -16,13 +16,6 @@ const ProjectForm = ({ project, categories = [], onSave, onClose }) => {
     images: [],
   });
 
-  const defaultCategories = categories.length > 0 ? categories : [
-    { id: 'c1', name: 'WEB' },
-    { id: 'c2', name: 'MOBILE' },
-    { id: 'c3', name: 'WEB DESIGN' },
-    { id: 'c4', name: 'UI/UX' },
-  ];
-
   useEffect(() => {
     if (project) {
       setFormData({
@@ -142,12 +135,21 @@ const ProjectForm = ({ project, categories = [], onSave, onClose }) => {
                 onChange={handleChange}
                 className="w-full px-4 py-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--text-primary)] transition-colors duration-200 uppercase font-bold"
               >
-                {defaultCategories.map((cat) => (
-                  <option key={cat.id || cat.name} value={cat.name}>
-                    {cat.name}
-                  </option>
-                ))}
+                {categories.length > 0 ? (
+                  categories.map((cat) => (
+                    <option key={cat.id || cat.name} value={cat.name}>
+                      {cat.name}
+                    </option>
+                  ))
+                ) : (
+                  <option value="">-- Tidak Ada Kategori --</option>
+                )}
               </select>
+              {categories.length === 0 && (
+                <p className="text-[10px] text-amber-500 font-semibold mt-1">
+                  * Belum ada kategori. Silakan buat di tab Kategori.
+                </p>
+              )}
             </div>
 
             <div>

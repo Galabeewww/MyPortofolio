@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Code2, CheckCircle2, Sparkles, MapPin, Briefcase } from "lucide-react";
+import { Code2, CheckCircle2, Sparkles, MapPin, Briefcase, Download } from "lucide-react";
+import Swal from "sweetalert2";
 import { supabase, isSupabaseConfigured } from "../lib/supabaseClient";
 import { useLanguage } from "../context/LanguageContext";
 
@@ -8,6 +9,26 @@ const INITIAL_SKILLS = [];
 const About = () => {
   const [skillsList, setSkillsList] = useState(INITIAL_SKILLS);
   const { t } = useLanguage();
+
+  const handleDownloadCV = () => {
+    // Attempt download of /cv.pdf from public directory
+    const link = document.createElement("a");
+    link.href = "/cv.pdf";
+    link.download = "Muhammad_Abi_Rafdi_Pratama_CV.pdf";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    Swal.fire({
+      icon: "success",
+      title: "Downloading CV...",
+      text: "Curriculum Vitae download has been initiated.",
+      timer: 2500,
+      showConfirmButton: false,
+      background: "var(--bg-card)",
+      color: "var(--text-primary)",
+    });
+  };
 
   useEffect(() => {
     fetchSkills();
@@ -105,6 +126,17 @@ const About = () => {
                 </div>
                 <span>{t.about.role}</span>
               </div>
+            </div>
+
+            {/* Tombol Fitur Download CV */}
+            <div className="pt-3">
+              <button
+                onClick={handleDownloadCV}
+                className="inline-flex items-center gap-2.5 px-6 py-3 rounded-2xl bg-sky-500 hover:bg-sky-600 text-white font-extrabold text-xs sm:text-sm tracking-wider uppercase shadow-lg shadow-sky-500/20 hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer group"
+              >
+                <Download size={17} className="group-hover:translate-y-0.5 transition-transform" />
+                <span>{t.about.downloadCV || "DOWNLOAD CV"}</span>
+              </button>
             </div>
           </div>
 

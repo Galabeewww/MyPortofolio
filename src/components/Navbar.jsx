@@ -4,6 +4,7 @@ import {
   Home,
   User,
   Zap,
+  Briefcase,
   Folder,
   Mail,
   Shield,
@@ -26,26 +27,27 @@ const Navbar = () => {
   const navigate = useNavigate();
   const dropdownRef = useRef(null);
 
-  // Scroll Spy untuk mendeteksi section aktif (Home, About, Skills, Projects, Contact)
+  // Scroll Spy untuk mendeteksi section aktif (Home, About, Skills, Experience, Projects, Contact)
   useEffect(() => {
     const handleScroll = () => {
-      const sections = ["home", "about", "skills", "projects", "contact"];
-      const scrollPosition = window.scrollY + 200;
+      const sections = ["home", "about", "skills", "experience", "projects", "contact"];
+      const scrollPosition = window.scrollY + 220;
 
+      let current = "home";
       for (const section of sections) {
         const el = document.getElementById(section);
         if (el) {
           const top = el.offsetTop;
-          const height = el.offsetHeight;
-          if (scrollPosition >= top && scrollPosition < top + height) {
-            setActiveSection(section);
-            break;
+          if (scrollPosition >= top) {
+            current = section;
           }
         }
       }
+      setActiveSection(current);
     };
 
     window.addEventListener("scroll", handleScroll);
+    handleScroll(); // Trigger initial position check
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -108,6 +110,7 @@ const Navbar = () => {
     { id: "home", label: t.nav.home, icon: Home, href: "#home" },
     { id: "about", label: t.nav.about, icon: User, href: "#about" },
     { id: "skills", label: t.nav.skills, icon: Zap, href: "#skills" },
+    { id: "experience", label: t.nav.experience, icon: Briefcase, href: "#experience" },
     { id: "projects", label: t.nav.projects, icon: Folder, href: "#projects" },
     { id: "contact", label: t.nav.contact, icon: Mail, href: "#contact" },
   ];
