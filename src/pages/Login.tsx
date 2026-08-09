@@ -10,35 +10,50 @@ const MySwal = withReactContent(Swal);
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
 
-    const res = login(username, password);
+    try {
+      const res = await login(username, password);
 
-    if (res.success) {
-      MySwal.fire({
-        icon: "success",
-        title: "Login Berhasil!",
-        text: "Selamat datang di Panel Admin Dashboard.",
-        timer: 1500,
-        showConfirmButton: false,
-        background: "var(--bg-card)",
-        color: "var(--text-primary)",
-      }).then(() => {
-        navigate("/admin");
-      });
-    } else {
+      if (res.success) {
+        MySwal.fire({
+          icon: "success",
+          title: "Login Berhasil!",
+          text: "Selamat datang di Panel Admin Dashboard.",
+          timer: 1500,
+          showConfirmButton: false,
+          background: "var(--bg-card)",
+          color: "var(--text-primary)",
+        }).then(() => {
+          navigate("/admin");
+        });
+      } else {
+        MySwal.fire({
+          icon: "error",
+          title: "Login Gagal",
+          text: res.message,
+          confirmButtonColor: "#09090b",
+          background: "var(--bg-card)",
+          color: "var(--text-primary)",
+        });
+      }
+    } catch (err) {
       MySwal.fire({
         icon: "error",
-        title: "Login Gagal",
-        text: res.message,
+        title: "Terjadi Kesalahan",
+        text: "Gagal terhubung ke database. Silakan coba lagi.",
         confirmButtonColor: "#09090b",
         background: "var(--bg-card)",
         color: "var(--text-primary)",
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -114,9 +129,10 @@ const Login = () => {
 
           <button
             type="submit"
-            className="w-full inline-flex items-center justify-center gap-2 py-3.5 rounded-xl bg-[var(--accent-btn)] hover:bg-[var(--accent-btn-hover)] text-[var(--accent-btn-text)] font-semibold text-sm shadow-lg transition-all duration-200 active:scale-[0.98]"
+            disabled={isSubmitting}
+            className="w-full inline-flex items-center justify-center gap-2 py-3.5 rounded-xl bg-[var(--accent-btn)] hover:bg-[var(--accent-btn-hover)] text-[var(--accent-btn-text)] font-semibold text-sm shadow-lg transition-all duration-200 active:scale-[0.98] disabled:opacity-50 cursor-pointer"
           >
-            <LogIn size={18} /> Login ke Dashboard
+            <LogIn size={18} /> {isSubmitting ? "Memproses..." : "Login ke Dashboard"}
           </button>
         </form>
       </div>

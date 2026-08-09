@@ -67,39 +67,46 @@ const ProjectForm = ({ project, categories = [], onSave, onClose }) => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
 
-    // Process tech string into array
-    const techArray = formData.tech
-      .split(",")
-      .map((t) => t.trim())
-      .filter((t) => t.length > 0);
+    try {
+      // Process tech string into array
+      const techArray = formData.tech
+        .split(",")
+        .map((t) => t.trim())
+        .filter((t) => t.length > 0);
 
-    // Filter empty features
-    const featuresArray = formData.features
-      .map((f) => f.trim())
-      .filter((f) => f.length > 0);
+      // Filter empty features
+      const featuresArray = formData.features
+        .map((f) => f.trim())
+        .filter((f) => f.length > 0);
 
-    // Get cover image
-    const coverImageObj =
-      formData.images.find((img) => img.is_cover) || formData.images[0];
-    const cover_image = coverImageObj ? coverImageObj.url : "";
+      // Get cover image
+      const coverImageObj =
+        formData.images.find((img) => img.is_cover) || formData.images[0];
+      const cover_image = coverImageObj ? coverImageObj.url : "";
 
-    const payload = {
-      ...formData,
-      id: project ? project.id : undefined,
-      tech: techArray,
-      features: featuresArray,
-      cover_image: cover_image,
-      image: cover_image,
-      images: formData.images,
-      created_at: formData.created_at
-        ? `${formData.created_at}-01T00:00:00Z`
-        : new Date().toISOString(),
-    };
+      const payload = {
+        ...formData,
+        id: project ? project.id : undefined,
+        tech: techArray,
+        features: featuresArray,
+        cover_image: cover_image,
+        image: cover_image,
+        images: formData.images,
+        created_at: formData.created_at
+          ? `${formData.created_at}-01T00:00:00Z`
+          : new Date().toISOString(),
+      };
 
-    onSave(payload);
+      await onSave(payload);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -151,7 +158,7 @@ const ProjectForm = ({ project, categories = [], onSave, onClose }) => {
                 name="category"
                 value={formData.category}
                 onChange={handleChange}
-                className="w-full px-4 py-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--text-primary)] transition-colors duration-200 uppercase font-bold"
+                className="w-full px-4 py-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--text-primary)] transition-colors duration-200 uppercase "
               >
                 {categories.length > 0 ? (
                   categories.map((cat) => (
@@ -318,10 +325,11 @@ const ProjectForm = ({ project, categories = [], onSave, onClose }) => {
             </button>
             <button
               type="submit"
-              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[var(--accent-btn)] hover:bg-[var(--accent-btn-hover)] text-[var(--accent-btn-text)] text-sm font-semibold shadow-md transition-all duration-200"
+              disabled={isSubmitting}
+              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[var(--accent-btn)] hover:bg-[var(--accent-btn-hover)] text-[var(--accent-btn-text)] text-sm font-semibold shadow-md transition-all duration-200 disabled:opacity-50 cursor-pointer"
             >
               <Save size={16} />
-              Simpan Proyek
+              {isSubmitting ? "Menyimpan..." : "Simpan Proyek"}
             </button>
           </div>
         </form>

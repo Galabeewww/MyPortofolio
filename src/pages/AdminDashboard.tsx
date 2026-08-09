@@ -273,8 +273,9 @@ const AdminDashboard = () => {
 
     if (isSupabaseConfigured) {
       try {
+        let resError = null;
         if (isEdit) {
-          await supabase
+          const { error } = await supabase
             .from("projects")
             .update({
               title: formattedProject.title,
@@ -290,8 +291,9 @@ const AdminDashboard = () => {
               updated_at: new Date().toISOString(),
             })
             .eq("id", formattedProject.id);
+          resError = error;
         } else {
-          await supabase.from("projects").insert([
+          const { error } = await supabase.from("projects").insert([
             {
               title: formattedProject.title,
               description: formattedProject.description,
@@ -305,9 +307,32 @@ const AdminDashboard = () => {
               images: formattedProject.images,
             },
           ]);
+          resError = error;
+        }
+
+        if (resError) {
+          console.error("Supabase project save error:", resError);
+          MySwal.fire({
+            icon: "error",
+            title: "Gagal Menyimpan ke Supabase",
+            text: `Terjadi kesalahan database: ${resError.message}. Pastikan tabel 'projects' sudah dibuat menggunakan schema.sql.`,
+            confirmButtonColor: "#0284c7",
+            background: "var(--bg-card)",
+            color: "var(--text-primary)",
+          });
+          return;
         }
       } catch (err) {
-        console.error("Supabase project save error:", err);
+        console.error("Supabase project save catch error:", err);
+        MySwal.fire({
+          icon: "error",
+          title: "Terjadi Kesalahan Database",
+          text: err.message || "Gagal menghubungkan ke Supabase.",
+          confirmButtonColor: "#0284c7",
+          background: "var(--bg-card)",
+          color: "var(--text-primary)",
+        });
+        return;
       }
     }
 
@@ -410,8 +435,9 @@ const AdminDashboard = () => {
 
     if (isSupabaseConfigured) {
       try {
+        let resError = null;
         if (isEdit) {
-          await supabase
+          const { error } = await supabase
             .from("skills")
             .update({
               name: formattedSkill.name,
@@ -419,17 +445,39 @@ const AdminDashboard = () => {
               category: formattedSkill.category,
             })
             .eq("id", formattedSkill.id);
+          resError = error;
         } else {
-          await supabase.from("skills").insert([
+          const { error } = await supabase.from("skills").insert([
             {
               name: formattedSkill.name,
               logo_url: formattedSkill.logo_url,
               category: formattedSkill.category,
             },
           ]);
+          resError = error;
+        }
+
+        if (resError) {
+          MySwal.fire({
+            icon: "error",
+            title: "Gagal Menyimpan Skill",
+            text: `Terjadi kesalahan database: ${resError.message}`,
+            confirmButtonColor: "#0284c7",
+            background: "var(--bg-card)",
+            color: "var(--text-primary)",
+          });
+          return;
         }
       } catch (err) {
-        console.error(err);
+        MySwal.fire({
+          icon: "error",
+          title: "Terjadi Kesalahan",
+          text: err.message || "Gagal menghubungkan ke Supabase.",
+          confirmButtonColor: "#0284c7",
+          background: "var(--bg-card)",
+          color: "var(--text-primary)",
+        });
+        return;
       }
     }
 
@@ -520,18 +568,41 @@ const AdminDashboard = () => {
 
     if (isSupabaseConfigured) {
       try {
+        let resError = null;
         if (isEdit) {
-          await supabase
+          const { error } = await supabase
             .from("categories")
             .update({ name: formattedCat.name })
             .eq("id", formattedCat.id);
+          resError = error;
         } else {
-          await supabase
+          const { error } = await supabase
             .from("categories")
             .insert([{ name: formattedCat.name }]);
+          resError = error;
+        }
+
+        if (resError) {
+          MySwal.fire({
+            icon: "error",
+            title: "Gagal Menyimpan Kategori",
+            text: `Terjadi kesalahan database: ${resError.message}`,
+            confirmButtonColor: "#0284c7",
+            background: "var(--bg-card)",
+            color: "var(--text-primary)",
+          });
+          return;
         }
       } catch (err) {
-        console.error(err);
+        MySwal.fire({
+          icon: "error",
+          title: "Terjadi Kesalahan",
+          text: err.message || "Gagal menghubungkan ke Supabase.",
+          confirmButtonColor: "#0284c7",
+          background: "var(--bg-card)",
+          color: "var(--text-primary)",
+        });
+        return;
       }
     }
 
@@ -634,16 +705,39 @@ const AdminDashboard = () => {
 
     if (isSupabaseConfigured) {
       try {
+        let resError = null;
         if (isEdit) {
-          await supabase
+          const { error } = await supabase
             .from("experiences")
             .update(formattedExp)
             .eq("id", formattedExp.id);
+          resError = error;
         } else {
-          await supabase.from("experiences").insert([formattedExp]);
+          const { error } = await supabase.from("experiences").insert([formattedExp]);
+          resError = error;
+        }
+
+        if (resError) {
+          MySwal.fire({
+            icon: "error",
+            title: "Gagal Menyimpan Experience",
+            text: `Terjadi kesalahan database: ${resError.message}`,
+            confirmButtonColor: "#0284c7",
+            background: "var(--bg-card)",
+            color: "var(--text-primary)",
+          });
+          return;
         }
       } catch (err) {
-        console.error(err);
+        MySwal.fire({
+          icon: "error",
+          title: "Terjadi Kesalahan",
+          text: err.message || "Gagal menghubungkan ke Supabase.",
+          confirmButtonColor: "#0284c7",
+          background: "var(--bg-card)",
+          color: "var(--text-primary)",
+        });
+        return;
       }
     }
 
