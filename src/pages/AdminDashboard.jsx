@@ -548,6 +548,8 @@ const AdminDashboard = () => {
           (original.company || '') === (formattedExp.company || '') &&
           (original.location || '') === (formattedExp.location || '') &&
           (original.period || '') === (formattedExp.period || '') &&
+          (original.start_date || '') === (formattedExp.start_date || '') &&
+          (original.end_date || '') === (formattedExp.end_date || '') &&
           Boolean(original.is_present) === Boolean(formattedExp.is_present) &&
           JSON.stringify(original.responsibilities || []) === JSON.stringify(formattedExp.responsibilities || []) &&
           JSON.stringify(original.tech || []) === JSON.stringify(formattedExp.tech || []);

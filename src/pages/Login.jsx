@@ -99,7 +99,7 @@ const Login = () => {
             </div>
           </div>
 
-          <div className="p-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-xs text-[var(--text-muted)]">
+          {/* <div className="p-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-xs text-[var(--text-muted)]">
             <span className="font-semibold text-[var(--text-secondary)]">
               Tips:
             </span>{" "}
@@ -110,7 +110,7 @@ const Login = () => {
             </code>{" "}
             | Password:{" "}
             <code className="text-[var(--text-primary)] font-bold">admin</code>
-          </div>
+          </div> */}
 
           <button
             type="submit"

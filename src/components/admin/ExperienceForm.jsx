@@ -1,12 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { X, Save, Plus, Trash2 } from 'lucide-react';
+import { X, Save, Plus, Trash2, Calendar } from 'lucide-react';
+
+const formatMonthYear = (yyyyMM) => {
+  if (!yyyyMM) return '';
+  try {
+    const [year, month] = yyyyMM.split('-');
+    if (!year || !month) return yyyyMM;
+    const date = new Date(parseInt(year, 10), parseInt(month, 10) - 1, 1);
+    return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+  } catch {
+    return yyyyMM;
+  }
+};
 
 const ExperienceForm = ({ experience, onSave, onClose }) => {
   const [formData, setFormData] = useState({
     title: '',
     company: '',
     location: '',
-    period: '',
+    start_date: '',
+    end_date: '',
     is_present: false,
     responsibilities: [''],
     tech: '',
@@ -24,7 +37,8 @@ const ExperienceForm = ({ experience, onSave, onClose }) => {
         title: experience.title || '',
         company: experience.company || '',
         location: experience.location || '',
-        period: experience.period || '',
+        start_date: experience.start_date || '',
+        end_date: experience.end_date || '',
         is_present: Boolean(experience.is_present),
         responsibilities: resp.length > 0 ? resp : [''],
         tech: Array.isArray(experience.tech) ? experience.tech.join(', ') : experience.tech || '',
@@ -34,10 +48,18 @@ const ExperienceForm = ({ experience, onSave, onClose }) => {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value,
-    }));
+    if (name === 'is_present' && checked) {
+      setFormData((prev) => ({
+        ...prev,
+        is_present: true,
+        end_date: '',
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: type === 'checkbox' ? checked : value,
+      }));
+    }
   };
 
   const handleRespChange = (index, value) => {
@@ -70,8 +92,23 @@ const ExperienceForm = ({ experience, onSave, onClose }) => {
       .map((r) => r.trim())
       .filter((r) => r.length > 0);
 
+    // Build formatted period string
+    const startText = formatMonthYear(formData.start_date) || '2025';
+    let endText = 'Present';
+
+    if (formData.is_present) {
+      endText = 'Present';
+    } else if (formData.end_date) {
+      endText = formatMonthYear(formData.end_date);
+    } else {
+      endText = 'Present';
+    }
+
+    const formattedPeriod = `${startText} – ${endText}`;
+
     const payload = {
       ...formData,
+      period: formattedPeriod,
       id: experience ? experience.id : undefined,
       responsibilities: respArray,
       tech: techArray,
@@ -135,51 +172,73 @@ const ExperienceForm = ({ experience, onSave, onClose }) => {
             </div>
           </div>
 
-          {/* Lokasi & Periode */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-[var(--text-secondary)] mb-2">
-                Lokasi / Tipe
-              </label>
-              <input
-                type="text"
-                name="location"
-                value={formData.location}
-                onChange={handleChange}
-                placeholder="Contoh: Remote / Rangkasbitung"
-                className="w-full px-4 py-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--text-primary)] transition-colors duration-200"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-[var(--text-secondary)] mb-2">
-                Periode *
-              </label>
-              <input
-                type="text"
-                name="period"
-                required
-                value={formData.period}
-                onChange={handleChange}
-                placeholder="Contoh: Apr 2025 – Present"
-                className="w-full px-4 py-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--text-primary)] transition-colors duration-200"
-              />
-            </div>
+          {/* Lokasi */}
+          <div>
+            <label className="block text-xs font-semibold uppercase tracking-wider text-[var(--text-secondary)] mb-2">
+              Lokasi / Tipe Kerja
+            </label>
+            <input
+              type="text"
+              name="location"
+              value={formData.location}
+              onChange={handleChange}
+              placeholder="Contoh: Remote / Rangkasbitung"
+              className="w-full px-4 py-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--text-primary)] transition-colors duration-200"
+            />
           </div>
 
-          {/* Checkbox Present */}
-          <div className="flex items-center gap-3">
-            <input
-              type="checkbox"
-              id="is_present"
-              name="is_present"
-              checked={formData.is_present}
-              onChange={handleChange}
-              className="w-4 h-4 accent-sky-500 rounded cursor-pointer"
-            />
-            <label htmlFor="is_present" className="text-xs font-semibold text-[var(--text-primary)] cursor-pointer">
-              Posisi Sekarang / Aktif (Tampilkan badge PRESENT)
+          {/* Format Tanggal Periode: Mulai & Selesai */}
+          <div className="space-y-3 p-4 rounded-2xl bg-[var(--bg-secondary)]/50 border border-[var(--border-color)]">
+            <label className="block text-xs font-extrabold uppercase tracking-wider text-[var(--text-primary)] flex items-center gap-2">
+              <Calendar size={14} className="text-sky-500" />
+              <span>Periode Pengalaman Kerja</span>
             </label>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-[11px] font-semibold text-[var(--text-secondary)] mb-1">
+                  Tanggal Mulai *
+                </label>
+                <input
+                  type="month"
+                  name="start_date"
+                  required
+                  value={formData.start_date}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2.5 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:border-sky-500 transition-colors duration-200 text-sm"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-semibold text-[var(--text-secondary)] mb-1">
+                  Tanggal Selesai
+                </label>
+                <input
+                  type="month"
+                  name="end_date"
+                  disabled={formData.is_present}
+                  value={formData.end_date}
+                  onChange={handleChange}
+                  placeholder="Kosongkan jika masih bekerja"
+                  className="w-full px-4 py-2.5 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:border-sky-500 transition-colors duration-200 text-sm disabled:opacity-40 disabled:cursor-not-allowed"
+                />
+              </div>
+            </div>
+
+            {/* Checkbox Masih Bekerja (Present) */}
+            <div className="flex items-center gap-3 pt-1">
+              <input
+                type="checkbox"
+                id="is_present"
+                name="is_present"
+                checked={formData.is_present}
+                onChange={handleChange}
+                className="w-4 h-4 accent-sky-500 rounded cursor-pointer"
+              />
+              <label htmlFor="is_present" className="text-xs font-bold text-sky-500 cursor-pointer select-none">
+                Masih Bekerja Di Sini (Belum Selesai / Status Present)
+              </label>
+            </div>
           </div>
 
           {/* Tanggung Jawab / Pencapaian */}
