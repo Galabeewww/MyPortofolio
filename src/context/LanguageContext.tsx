@@ -41,35 +41,44 @@ const translations = {
     about: {
       titlePrefix: "About ",
       titleSuffix: "Me.",
-      subtitle: "A dedicated Junior Web Developer & Quality Assurance Specialist based in Indonesia.",
+      subtitle:
+        "A dedicated Junior Web Developer & Quality Assurance Specialist based in Indonesia.",
       badge: "Web Dev & QA Tester",
       greeting: "Hello, I'm Muhammad Abi Rafdi Pratama",
-      para1: "I am a passionate Junior Web Developer dedicated to building modern, responsive, and user-friendly web applications. I love exploring technologies like React, Next.js, and Tailwind CSS to create visually appealing interfaces.",
-      para2: "Beyond web development, I am deeply interested in Quality Assurance (QA) & Software Testing to ensure every software product built is performant, secure, responsive, and bug-free.",
-      location: "Indonesia",
+      para1:
+        "I am a passionate Junior Web Developer dedicated to building modern, responsive, and user-friendly web applications. I love exploring technologies like React, Next.js, and Tailwind CSS to create visually appealing interfaces.",
+      para2:
+        "Beyond web development, I am deeply interested in Quality Assurance (QA) & Software Testing to ensure every software product built is performant, secure, responsive, and bug-free.",
+      location: "Bandung, Indonesia",
       role: "Web Dev & QA Tester",
       pillar1Title: "Web Development",
-      pillar1Desc: "Building modern web interfaces with React, Next.js, and Tailwind CSS.",
+      pillar1Desc:
+        "Building modern web interfaces with React, Next.js, and Tailwind CSS.",
       pillar2Title: "Quality Assurance (QA)",
-      pillar2Desc: "Software testing, bug identification, and test scenario creation.",
+      pillar2Desc:
+        "Software testing, bug identification, and test scenario creation.",
       pillar3Title: "Continuous Learning",
-      pillar3Desc: "Constantly learning and adapting to modern software engineering trends.",
+      pillar3Desc:
+        "Constantly learning and adapting to modern software engineering trends.",
       skillsTitlePrefix: "Technical ",
       skillsTitleSuffix: "Skills.",
-      skillsSubtitle: "A breakdown of my software engineering capabilities and technologies I use daily.",
+      skillsSubtitle:
+        "A breakdown of my software engineering capabilities and technologies I use daily.",
       downloadCV: "DOWNLOAD CV",
     },
     experience: {
       titlePrefix: "Work ",
       titleSuffix: "Experience.",
-      subtitle: "My professional journey and track record in web development & software quality engineering.",
+      subtitle:
+        "My professional journey and track record in web development & software quality engineering.",
       present: "PRESENT",
       noExperience: "No work experience entries added yet.",
     },
     projects: {
       titlePrefix: "Featured ",
       titleSuffix: "Projects.",
-      subtitle: "Explore a curated showcase of web applications and quality assurance projects I've built.",
+      subtitle:
+        "Explore a curated showcase of web applications and quality assurance projects I've built.",
       allCategories: "All Projects",
       share: "Share",
       liveDemo: "Live Demo",
@@ -85,11 +94,12 @@ const translations = {
     contact: {
       titlePrefix: "Get In ",
       titleSuffix: "Touch.",
-      subtitle: "Have a project in mind or want to collaborate? Feel free to send a message!",
+      subtitle:
+        "Have a project in mind or want to collaborate? Feel free to send a message!",
       nameLabel: "Your Name",
-      namePlaceholder: "John Doe",
+      namePlaceholder: "Steve Alakay",
       emailLabel: "Your Email",
-      emailPlaceholder: "john@example.com",
+      emailPlaceholder: "Steve@example.com",
       messageLabel: "Your Message",
       messagePlaceholder: "Hi Abi, I'd like to talk about...",
       sendBtn: "Send Message",
@@ -99,7 +109,8 @@ const translations = {
       errorTitle: "Error",
       errorText: "Failed to send message. Please try again later.",
       infoTitle: "Contact Information",
-      infoDesc: "Feel free to reach out directly through email or social media.",
+      infoDesc:
+        "Feel free to reach out directly through email or social media.",
       emailTitle: "Email Address",
       locationTitle: "Location",
       statusTitle: "Work Status",
@@ -154,35 +165,44 @@ const translations = {
     about: {
       titlePrefix: "Tentang ",
       titleSuffix: "Saya.",
-      subtitle: "Junior Web Developer & Quality Assurance Specialist yang berdedikasi berbasis di Indonesia.",
+      subtitle:
+        "Junior Web Developer & Quality Assurance Specialist yang berdedikasi berbasis di Indonesia.",
       badge: "Web Dev & QA Tester",
       greeting: "Halo, Saya Muhammad Abi Rafdi Pratama",
-      para1: "Saya seorang Junior Web Developer yang bersemangat dalam menciptakan website modern, responsif, dan mudah digunakan. Saya menyukai eksplorasi teknologi baru seperti React, Next.js, dan Tailwind CSS untuk memberikan antarmuka visual yang memukau.",
-      para2: "Selain pengembangan web, saya juga sangat tertarik dengan bidang Quality Assurance (QA) & Software Testing untuk memastikan seluruh aplikasi yang dikembangkan memiliki performa tinggi, keamanan teruji, dan bebas dari kendala.",
+      para1:
+        "Saya seorang Junior Web Developer yang bersemangat dalam menciptakan website modern, responsif, dan mudah digunakan. Saya menyukai eksplorasi teknologi baru seperti React, Next.js, dan Tailwind CSS untuk memberikan antarmuka visual yang memukau.",
+      para2:
+        "Selain pengembangan web, saya juga sangat tertarik dengan bidang Quality Assurance (QA) & Software Testing untuk memastikan seluruh aplikasi yang dikembangkan memiliki performa tinggi, keamanan teruji, dan bebas dari kendala.",
       location: "Indonesia",
       role: "Web Dev & QA Tester",
       pillar1Title: "Web Development",
-      pillar1Desc: "Membangun antarmuka web modern dengan React, Next.js, dan Tailwind CSS.",
+      pillar1Desc:
+        "Membangun antarmuka web modern dengan React, Next.js, dan Tailwind CSS.",
       pillar2Title: "Quality Assurance (QA)",
-      pillar2Desc: "Pengujian aplikasi, identifikasi bug, dan skenario pengujian kualitas software.",
+      pillar2Desc:
+        "Pengujian aplikasi, identifikasi bug, dan skenario pengujian kualitas software.",
       pillar3Title: "Continuous Learning",
-      pillar3Desc: "Selalu belajar dan beradaptasi dengan tren serta arsitektur teknologi terbaru.",
+      pillar3Desc:
+        "Selalu belajar dan beradaptasi dengan tren serta arsitektur teknologi terbaru.",
       skillsTitlePrefix: "Keahlian ",
       skillsTitleSuffix: "Teknis.",
-      skillsSubtitle: "Ringkasan keahlian rekayasa perangkat lunak dan teknologi yang saya gunakan sehari-hari.",
+      skillsSubtitle:
+        "Ringkasan keahlian rekayasa perangkat lunak dan teknologi yang saya gunakan sehari-hari.",
       downloadCV: "UNDUH CV",
     },
     experience: {
       titlePrefix: "Pengalaman ",
       titleSuffix: "Kerja.",
-      subtitle: "Perjalanan profesional dan rekam jejak saya dalam pengembangan web & kualitas perangkat lunak.",
+      subtitle:
+        "Perjalanan profesional dan rekam jejak saya dalam pengembangan web & kualitas perangkat lunak.",
       present: "SEKARANG",
       noExperience: "Belum ada entri pengalaman kerja yang ditambahkan.",
     },
     projects: {
       titlePrefix: "Proyek ",
       titleSuffix: "Unggulan.",
-      subtitle: "Jelajahi koleksi aplikasi web dan proyek pengujian kualitas (QA) yang telah saya bangun.",
+      subtitle:
+        "Jelajahi koleksi aplikasi web dan proyek pengujian kualitas (QA) yang telah saya bangun.",
       allCategories: "Semua Proyek",
       share: "Bagikan",
       liveDemo: "Live Demo",
@@ -198,7 +218,8 @@ const translations = {
     contact: {
       titlePrefix: "Hubungi ",
       titleSuffix: "Saya.",
-      subtitle: "Punya ide proyek atau ingin berkolaborasi? Jangan ragu untuk mengirimkan pesan!",
+      subtitle:
+        "Punya ide proyek atau ingin berkolaborasi? Jangan ragu untuk mengirimkan pesan!",
       nameLabel: "Nama Anda",
       namePlaceholder: "John Doe",
       emailLabel: "Email Anda",
@@ -208,11 +229,13 @@ const translations = {
       sendBtn: "Kirim Pesan",
       sendingBtn: "Mengirim...",
       successTitle: "Pesan Terkirim!",
-      successText: "Terima kasih telah menghubungi. Saya akan segera membalas pesan Anda!",
+      successText:
+        "Terima kasih telah menghubungi. Saya akan segera membalas pesan Anda!",
       errorTitle: "Gagal",
       errorText: "Gagal mengirim pesan. Silakan coba lagi nanti.",
       infoTitle: "Informasi Kontak",
-      infoDesc: "Jangan ragu untuk menghubungi langsung melalui email atau media sosial.",
+      infoDesc:
+        "Jangan ragu untuk menghubungi langsung melalui email atau media sosial.",
       emailTitle: "Alamat Email",
       locationTitle: "Lokasi",
       statusTitle: "Status Pekerjaan",
@@ -220,7 +243,8 @@ const translations = {
     },
     footer: {
       rights: "Hak Cipta Dilindungi.",
-      tagline: "Dirancang & dibangun dengan penuh dedikasi oleh Muhammad Abi Rafdi Pratama.",
+      tagline:
+        "Dirancang & dibangun dengan penuh dedikasi oleh Muhammad Abi Rafdi Pratama.",
     },
     sessionExpired: {
       title: "Sesi Berakhir",

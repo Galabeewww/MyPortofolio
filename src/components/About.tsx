@@ -1,5 +1,12 @@
 import React from "react";
-import { Code2, CheckCircle2, Sparkles, MapPin, Briefcase, Download } from "lucide-react";
+import {
+  Code2,
+  CheckCircle2,
+  Sparkles,
+  MapPin,
+  Briefcase,
+  Download,
+} from "lucide-react";
 import Swal from "sweetalert2";
 import { useLanguage } from "../context/LanguageContext";
 
@@ -34,7 +41,8 @@ const About = () => {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 space-y-12">
         <div className="text-center max-w-3xl mx-auto space-y-3">
           <h2 className="text-3xl sm:text-5xl font-extrabold font-display text-[var(--text-primary)] tracking-tight">
-            {t.about.titlePrefix}<span className="text-sky-500">{t.about.titleSuffix}</span>
+            {t.about.titlePrefix}
+            <span className="text-sky-500">{t.about.titleSuffix}</span>
           </h2>
           <p className="text-[var(--text-secondary)] text-sm sm:text-base font-medium leading-relaxed">
             {t.about.subtitle}
@@ -42,7 +50,7 @@ const About = () => {
         </div>
 
         {/* Kartu Profil Bio & Fitur Utama */}
-        <div className="glow-card p-6 sm:p-10 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-color)] shadow-xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        <div className="glow-card p-6 sm:p-10 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-color)] shadow-xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Kolom Kiri: Deskripsi & Informasi */}
           <div className="lg:col-span-7 space-y-6 text-left">
             <div className="space-y-3">
@@ -78,17 +86,6 @@ const About = () => {
                 <span>{t.about.role}</span>
               </div>
             </div>
-
-            {/* Tombol Fitur Download CV */}
-            <div className="pt-3">
-              <button
-                onClick={handleDownloadCV}
-                className="inline-flex items-center gap-2.5 px-6 py-3 rounded-2xl bg-sky-500 hover:bg-sky-600 text-white font-extrabold text-xs sm:text-sm tracking-wider uppercase shadow-lg shadow-sky-500/20 hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer group"
-              >
-                <Download size={17} className="group-hover:translate-y-0.5 transition-transform" />
-                <span>{t.about.downloadCV || "DOWNLOAD CV"}</span>
-              </button>
-            </div>
           </div>
 
           {/* Kolom Kanan: 3 Kartu Keunggulan / Pilar Utama */}
@@ -98,7 +95,9 @@ const About = () => {
                 <Code2 size={22} />
               </div>
               <div className="text-left space-y-1">
-                <h4 className="font-bold text-sm text-[var(--text-primary)]">{t.about.pillar1Title}</h4>
+                <h4 className="font-bold text-sm text-[var(--text-primary)]">
+                  {t.about.pillar1Title}
+                </h4>
                 <p className="text-xs text-[var(--text-muted)] leading-relaxed">
                   {t.about.pillar1Desc}
                 </p>
@@ -110,7 +109,9 @@ const About = () => {
                 <CheckCircle2 size={22} />
               </div>
               <div className="text-left space-y-1">
-                <h4 className="font-bold text-sm text-[var(--text-primary)]">{t.about.pillar2Title}</h4>
+                <h4 className="font-bold text-sm text-[var(--text-primary)]">
+                  {t.about.pillar2Title}
+                </h4>
                 <p className="text-xs text-[var(--text-muted)] leading-relaxed">
                   {t.about.pillar2Desc}
                 </p>
@@ -122,12 +123,28 @@ const About = () => {
                 <Sparkles size={22} />
               </div>
               <div className="text-left space-y-1">
-                <h4 className="font-bold text-sm text-[var(--text-primary)]">{t.about.pillar3Title}</h4>
+                <h4 className="font-bold text-sm text-[var(--text-primary)]">
+                  {t.about.pillar3Title}
+                </h4>
                 <p className="text-xs text-[var(--text-muted)] leading-relaxed">
                   {t.about.pillar3Desc}
                 </p>
               </div>
             </div>
+          </div>
+
+          {/* Tombol Download CV di bawah isi, rata tengah */}
+          <div className="lg:col-span-12 flex justify-center pt-6">
+            <button
+              onClick={handleDownloadCV}
+              className="inline-flex items-center gap-2.5 px-6 py-3 rounded-2xl bg-sky-500 hover:bg-sky-600 text-white font-extrabold text-xs sm:text-sm tracking-wider uppercase shadow-lg shadow-sky-500/20 hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer group"
+            >
+              <Download
+                size={17}
+                className="group-hover:translate-y-0.5 transition-transform"
+              />
+              <span>{t.about.downloadCV || "DOWNLOAD CV"}</span>
+            </button>
           </div>
         </div>
       </div>
