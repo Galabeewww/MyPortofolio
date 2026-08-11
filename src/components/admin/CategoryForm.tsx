@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { X, Save } from 'lucide-react';
+import { X, Save, Loader2 } from 'lucide-react';
 
 const CategoryForm = ({ category, onSave, onClose }) => {
   const [name, setName] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (category) {
@@ -10,14 +11,19 @@ const CategoryForm = ({ category, onSave, onClose }) => {
     }
   }, [category]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!name.trim()) return;
+    if (isSubmitting || !name.trim()) return;
 
-    onSave({
-      id: category ? category.id : undefined,
-      name: name.trim().toUpperCase(),
-    });
+    setIsSubmitting(true);
+    try {
+      await onSave({
+        id: category ? category.id : undefined,
+        name: name.trim().toUpperCase(),
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -34,7 +40,8 @@ const CategoryForm = ({ category, onSave, onClose }) => {
           </h3>
           <button
             onClick={onClose}
-            className="p-2 rounded-full hover:bg-[var(--bg-secondary)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors duration-200 cursor-pointer"
+            disabled={isSubmitting}
+            className="p-2 rounded-full hover:bg-[var(--bg-secondary)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors duration-200 cursor-pointer disabled:opacity-50"
           >
             <X size={20} />
           </button>
@@ -48,10 +55,11 @@ const CategoryForm = ({ category, onSave, onClose }) => {
             <input
               type="text"
               required
+              disabled={isSubmitting}
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Contoh: WEB, MOBILE, UI/UX, AI/ML"
-              className="w-full px-4 py-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--text-primary)] transition-colors duration-200 font-bold uppercase"
+              className="w-full px-4 py-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--text-primary)] transition-colors duration-200 font-bold uppercase disabled:opacity-50"
             />
           </div>
 
@@ -59,16 +67,27 @@ const CategoryForm = ({ category, onSave, onClose }) => {
             <button
               type="button"
               onClick={onClose}
-              className="px-5 py-2.5 rounded-xl border border-[var(--border-color)] hover:bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-sm font-semibold transition-colors duration-200 cursor-pointer"
+              disabled={isSubmitting}
+              className="px-5 py-2.5 rounded-xl border border-[var(--border-color)] hover:bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-sm font-semibold transition-colors duration-200 cursor-pointer disabled:opacity-50"
             >
               Batal
             </button>
             <button
               type="submit"
-              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[var(--accent-btn)] hover:bg-[var(--accent-btn-hover)] text-[var(--accent-btn-text)] text-sm font-semibold shadow-md transition-all duration-200 cursor-pointer"
+              disabled={isSubmitting}
+              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[var(--accent-btn)] hover:bg-[var(--accent-btn-hover)] text-[var(--accent-btn-text)] text-sm font-semibold shadow-md transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <Save size={16} />
-              Simpan
+              {isSubmitting ? (
+                <>
+                  <Loader2 size={16} className="animate-spin" />
+                  <span>Menyimpan...</span>
+                </>
+              ) : (
+                <>
+                  <Save size={16} />
+                  <span>Simpan</span>
+                </>
+              )}
             </button>
           </div>
         </form>

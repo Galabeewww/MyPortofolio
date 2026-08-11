@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { X, Save, Plus, Trash2 } from "lucide-react";
+import { X, Save, Plus, Trash2, Loader2 } from "lucide-react";
 import ImageUploader from "./ImageUploader";
 
 const ProjectForm = ({ project, categories = [], onSave, onClose }) => {
@@ -15,6 +15,8 @@ const ProjectForm = ({ project, categories = [], onSave, onClose }) => {
     github_link: "",
     images: [],
   });
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (project) {
@@ -67,10 +69,10 @@ const ProjectForm = ({ project, categories = [], onSave, onClose }) => {
     }));
   };
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isSubmitting) return;
+
     setIsSubmitting(true);
 
     try {
@@ -126,7 +128,8 @@ const ProjectForm = ({ project, categories = [], onSave, onClose }) => {
           </h3>
           <button
             onClick={onClose}
-            className="p-2 rounded-full hover:bg-[var(--bg-secondary)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors duration-200"
+            disabled={isSubmitting}
+            className="p-2 rounded-full hover:bg-[var(--bg-secondary)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors duration-200 disabled:opacity-50"
           >
             <X size={20} />
           </button>
@@ -143,10 +146,11 @@ const ProjectForm = ({ project, categories = [], onSave, onClose }) => {
                 type="text"
                 name="title"
                 required
+                disabled={isSubmitting}
                 value={formData.title}
                 onChange={handleChange}
                 placeholder="Contoh: Coreculture E-Commerce"
-                className="w-full px-4 py-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--text-primary)] transition-colors duration-200"
+                className="w-full px-4 py-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--text-primary)] transition-colors duration-200 disabled:opacity-50"
               />
             </div>
 
@@ -156,9 +160,10 @@ const ProjectForm = ({ project, categories = [], onSave, onClose }) => {
               </label>
               <select
                 name="category"
+                disabled={isSubmitting}
                 value={formData.category}
                 onChange={handleChange}
-                className="w-full px-4 py-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--text-primary)] transition-colors duration-200 uppercase "
+                className="w-full px-4 py-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--text-primary)] transition-colors duration-200 uppercase disabled:opacity-50"
               >
                 {categories.length > 0 ? (
                   categories.map((cat) => (
@@ -185,9 +190,10 @@ const ProjectForm = ({ project, categories = [], onSave, onClose }) => {
                 type="month"
                 name="created_at"
                 required
+                disabled={isSubmitting}
                 value={formData.created_at}
                 onChange={handleChange}
-                className="w-full px-4 py-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--text-primary)] transition-colors duration-200"
+                className="w-full px-4 py-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--text-primary)] transition-colors duration-200 disabled:opacity-50"
               />
             </div>
           </div>
@@ -200,11 +206,12 @@ const ProjectForm = ({ project, categories = [], onSave, onClose }) => {
             <textarea
               name="description"
               required
+              disabled={isSubmitting}
               rows={2}
               value={formData.description}
               onChange={handleChange}
               placeholder="Ringkasan singkat proyek..."
-              className="w-full px-4 py-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--text-primary)] transition-colors duration-200"
+              className="w-full px-4 py-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--text-primary)] transition-colors duration-200 disabled:opacity-50"
             />
           </div>
 
@@ -215,11 +222,12 @@ const ProjectForm = ({ project, categories = [], onSave, onClose }) => {
             </label>
             <textarea
               name="full_description"
+              disabled={isSubmitting}
               rows={4}
               value={formData.full_description}
               onChange={handleChange}
               placeholder="Penjelasan mendalam proyek yang akan tampil di bagian Description di bawah gambar pop-up..."
-              className="w-full px-4 py-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--text-primary)] transition-colors duration-200"
+              className="w-full px-4 py-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--text-primary)] transition-colors duration-200 disabled:opacity-50"
             />
           </div>
 
@@ -239,10 +247,11 @@ const ProjectForm = ({ project, categories = [], onSave, onClose }) => {
             <input
               type="text"
               name="tech"
+              disabled={isSubmitting}
               value={formData.tech}
               onChange={handleChange}
               placeholder="React, Next.js, Tailwind, Supabase, PostgreSQL"
-              className="w-full px-4 py-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--text-primary)] transition-colors duration-200"
+              className="w-full px-4 py-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--text-primary)] transition-colors duration-200 disabled:opacity-50"
             />
           </div>
 
@@ -255,7 +264,8 @@ const ProjectForm = ({ project, categories = [], onSave, onClose }) => {
               <button
                 type="button"
                 onClick={addFeatureInput}
-                className="inline-flex items-center gap-1 text-xs font-semibold text-[var(--text-primary)] hover:underline"
+                disabled={isSubmitting}
+                className="inline-flex items-center gap-1 text-xs font-semibold text-[var(--text-primary)] hover:underline disabled:opacity-50"
               >
                 <Plus size={14} /> Tambah Fitur
               </button>
@@ -265,16 +275,18 @@ const ProjectForm = ({ project, categories = [], onSave, onClose }) => {
                 <div key={idx} className="flex items-center gap-2">
                   <input
                     type="text"
+                    disabled={isSubmitting}
                     value={feature}
                     onChange={(e) => handleFeatureChange(idx, e.target.value)}
                     placeholder={`Fitur #${idx + 1}`}
-                    className="flex-1 px-4 py-2.5 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] text-sm focus:outline-none focus:border-[var(--text-primary)] transition-colors duration-200"
+                    className="flex-1 px-4 py-2.5 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] text-sm focus:outline-none focus:border-[var(--text-primary)] transition-colors duration-200 disabled:opacity-50"
                   />
                   {formData.features.length > 1 && (
                     <button
                       type="button"
+                      disabled={isSubmitting}
                       onClick={() => removeFeatureInput(idx)}
-                      className="p-2 rounded-lg hover:bg-rose-500/10 text-rose-500 transition-colors duration-200"
+                      className="p-2 rounded-lg hover:bg-rose-500/10 text-rose-500 transition-colors duration-200 disabled:opacity-50"
                     >
                       <Trash2 size={16} />
                     </button>
@@ -293,10 +305,11 @@ const ProjectForm = ({ project, categories = [], onSave, onClose }) => {
               <input
                 type="text"
                 name="live_link"
+                disabled={isSubmitting}
                 value={formData.live_link}
                 onChange={handleChange}
                 placeholder="https://myproject.vercel.app"
-                className="w-full px-4 py-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--text-primary)] transition-colors duration-200"
+                className="w-full px-4 py-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--text-primary)] transition-colors duration-200 disabled:opacity-50"
               />
             </div>
             <div>
@@ -306,10 +319,11 @@ const ProjectForm = ({ project, categories = [], onSave, onClose }) => {
               <input
                 type="text"
                 name="github_link"
+                disabled={isSubmitting}
                 value={formData.github_link}
                 onChange={handleChange}
                 placeholder="https://github.com/user/repo"
-                className="w-full px-4 py-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--text-primary)] transition-colors duration-200"
+                className="w-full px-4 py-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--text-primary)] transition-colors duration-200 disabled:opacity-50"
               />
             </div>
           </div>
@@ -319,17 +333,27 @@ const ProjectForm = ({ project, categories = [], onSave, onClose }) => {
             <button
               type="button"
               onClick={onClose}
-              className="px-5 py-2.5 rounded-xl border border-[var(--border-color)] hover:bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-sm font-semibold transition-colors duration-200"
+              disabled={isSubmitting}
+              className="px-5 py-2.5 rounded-xl border border-[var(--border-color)] hover:bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-sm font-semibold transition-colors duration-200 disabled:opacity-50 cursor-pointer"
             >
               Batal
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[var(--accent-btn)] hover:bg-[var(--accent-btn-hover)] text-[var(--accent-btn-text)] text-sm font-semibold shadow-md transition-all duration-200 disabled:opacity-50 cursor-pointer"
+              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[var(--accent-btn)] hover:bg-[var(--accent-btn-hover)] text-[var(--accent-btn-text)] text-sm font-semibold shadow-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             >
-              <Save size={16} />
-              {isSubmitting ? "Menyimpan..." : "Simpan Proyek"}
+              {isSubmitting ? (
+                <>
+                  <Loader2 size={16} className="animate-spin" />
+                  <span>Menyimpan Proyek...</span>
+                </>
+              ) : (
+                <>
+                  <Save size={16} />
+                  <span>Simpan Proyek</span>
+                </>
+              )}
             </button>
           </div>
         </form>

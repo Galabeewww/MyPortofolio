@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Save, Upload, Image as ImageIcon } from 'lucide-react';
+import { X, Save, Upload, Loader2 } from 'lucide-react';
 import { supabase, isSupabaseConfigured } from '../../lib/supabaseClient';
 
 const SkillForm = ({ skill, onSave, onClose }) => {
@@ -9,6 +9,7 @@ const SkillForm = ({ skill, onSave, onClose }) => {
     category: 'Skills',
   });
   const [uploading, setUploading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (skill) {
@@ -71,12 +72,19 @@ const SkillForm = ({ skill, onSave, onClose }) => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onSave({
-      ...formData,
-      id: skill ? skill.id : undefined,
-    });
+    if (isSubmitting) return;
+
+    setIsSubmitting(true);
+    try {
+      await onSave({
+        ...formData,
+        id: skill ? skill.id : undefined,
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -93,7 +101,8 @@ const SkillForm = ({ skill, onSave, onClose }) => {
           </h3>
           <button
             onClick={onClose}
-            className="p-2 rounded-full hover:bg-[var(--bg-secondary)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors duration-200 cursor-pointer"
+            disabled={isSubmitting}
+            className="p-2 rounded-full hover:bg-[var(--bg-secondary)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors duration-200 cursor-pointer disabled:opacity-50"
           >
             <X size={20} />
           </button>
@@ -108,10 +117,11 @@ const SkillForm = ({ skill, onSave, onClose }) => {
               type="text"
               name="name"
               required
+              disabled={isSubmitting}
               value={formData.name}
               onChange={handleChange}
               placeholder="Contoh: ReactJS, Figma, Tailwind"
-              className="w-full px-4 py-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--text-primary)] transition-colors duration-200"
+              className="w-full px-4 py-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--text-primary)] transition-colors duration-200 disabled:opacity-50"
             />
           </div>
 
@@ -121,9 +131,10 @@ const SkillForm = ({ skill, onSave, onClose }) => {
             </label>
             <select
               name="category"
+              disabled={isSubmitting}
               value={formData.category}
               onChange={handleChange}
-              className="w-full px-4 py-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--text-primary)] transition-colors duration-200"
+              className="w-full px-4 py-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--text-primary)] transition-colors duration-200 disabled:opacity-50"
             >
               <option value="Skills">Skills</option>
               <option value="Tools">Tools</option>
@@ -146,7 +157,7 @@ const SkillForm = ({ skill, onSave, onClose }) => {
                 type="file"
                 accept="image/*"
                 onChange={handleFileUpload}
-                disabled={uploading}
+                disabled={uploading || isSubmitting}
                 className="hidden"
               />
             </label>
@@ -158,10 +169,11 @@ const SkillForm = ({ skill, onSave, onClose }) => {
               type="text"
               name="logo_url"
               required
+              disabled={isSubmitting}
               value={formData.logo_url}
               onChange={handleChange}
               placeholder="/icon/react.png atau https://..."
-              className="w-full px-4 py-2.5 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] text-sm focus:outline-none focus:border-[var(--text-primary)] transition-colors duration-200"
+              className="w-full px-4 py-2.5 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] text-sm focus:outline-none focus:border-[var(--text-primary)] transition-colors duration-200 disabled:opacity-50"
             />
           </div>
 
@@ -174,8 +186,8 @@ const SkillForm = ({ skill, onSave, onClose }) => {
                 alt="Preview"
                 className="w-10 h-10 object-contain"
                 onError={(e) => {
-                  e.target.onerror = null;
-                  e.target.src = '/icon/react.png';
+                  (e.target as HTMLImageElement).onerror = null;
+                  (e.target as HTMLImageElement).src = '/icon/react.png';
                 }}
               />
               <span className="text-sm font-semibold text-[var(--text-primary)]">
@@ -188,16 +200,27 @@ const SkillForm = ({ skill, onSave, onClose }) => {
             <button
               type="button"
               onClick={onClose}
-              className="px-5 py-2.5 rounded-xl border border-[var(--border-color)] hover:bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-sm font-semibold transition-colors duration-200 cursor-pointer"
+              disabled={isSubmitting}
+              className="px-5 py-2.5 rounded-xl border border-[var(--border-color)] hover:bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-sm font-semibold transition-colors duration-200 cursor-pointer disabled:opacity-50"
             >
               Batal
             </button>
             <button
               type="submit"
-              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[var(--accent-btn)] hover:bg-[var(--accent-btn-hover)] text-[var(--accent-btn-text)] text-sm font-semibold shadow-md transition-all duration-200 cursor-pointer"
+              disabled={isSubmitting}
+              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[var(--accent-btn)] hover:bg-[var(--accent-btn-hover)] text-[var(--accent-btn-text)] text-sm font-semibold shadow-md transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <Save size={16} />
-              Simpan
+              {isSubmitting ? (
+                <>
+                  <Loader2 size={16} className="animate-spin" />
+                  <span>Menyimpan...</span>
+                </>
+              ) : (
+                <>
+                  <Save size={16} />
+                  <span>Simpan</span>
+                </>
+              )}
             </button>
           </div>
         </form>

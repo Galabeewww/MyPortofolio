@@ -271,6 +271,24 @@ const AdminDashboard = () => {
       }
     }
 
+    // ===== Detect Duplicate Title on Create =====
+    if (!isEdit) {
+      const isDuplicate = projects.some(
+        (p) => p.title.toLowerCase().trim() === formattedProject.title.toLowerCase().trim()
+      );
+      if (isDuplicate) {
+        MySwal.fire({
+          icon: "warning",
+          title: "Proyek Sudah Ada",
+          text: `Proyek dengan judul "${formattedProject.title}" sudah terdaftar. Silakan gunakan judul lain.`,
+          confirmButtonColor: "#0284c7",
+          background: "var(--bg-card)",
+          color: "var(--text-primary)",
+        });
+        return;
+      }
+    }
+
     if (isSupabaseConfigured) {
       try {
         let resError = null;
@@ -324,7 +342,7 @@ const AdminDashboard = () => {
           });
           return;
         }
-      } catch (err) {
+      } catch (err: any) {
         console.error("Supabase project save catch error:", err);
         MySwal.fire({
           icon: "error",
@@ -432,6 +450,21 @@ const AdminDashboard = () => {
           });
           return;
         }
+      }
+    } else {
+      const isDuplicate = skills.some(
+        (s) => s.name.toLowerCase().trim() === formattedSkill.name.toLowerCase().trim()
+      );
+      if (isDuplicate) {
+        MySwal.fire({
+          icon: "warning",
+          title: "Skill Sudah Ada",
+          text: `Skill dengan nama "${formattedSkill.name}" sudah terdaftar. Silakan gunakan nama lain.`,
+          confirmButtonColor: "#0284c7",
+          background: "var(--bg-card)",
+          color: "var(--text-primary)",
+        });
+        return;
       }
     }
 
@@ -567,6 +600,21 @@ const AdminDashboard = () => {
         });
         return;
       }
+    } else {
+      const isDuplicate = categories.some(
+        (c) => c.name.toLowerCase().trim() === formattedCat.name.toLowerCase().trim()
+      );
+      if (isDuplicate) {
+        MySwal.fire({
+          icon: "warning",
+          title: "Kategori Sudah Ada",
+          text: `Kategori "${formattedCat.name}" sudah terdaftar. Silakan gunakan nama kategori lain.`,
+          confirmButtonColor: "#0284c7",
+          background: "var(--bg-card)",
+          color: "var(--text-primary)",
+        });
+        return;
+      }
     }
 
     if (isSupabaseConfigured) {
@@ -596,7 +644,7 @@ const AdminDashboard = () => {
           });
           return;
         }
-      } catch (err) {
+      } catch (err: any) {
         MySwal.fire({
           icon: "error",
           title: "Terjadi Kesalahan",
@@ -656,8 +704,9 @@ const AdminDashboard = () => {
 
         MySwal.fire({
           icon: "success",
-          title: "Terhapus!",
-          timer: 1500,
+          title: "Kategori Terhapus!",
+          text: `Kategori "${cat.name}" telah berhasil dihapus.`,
+          timer: 1800,
           showConfirmButton: false,
           background: "var(--bg-card)",
           color: "var(--text-primary)",
@@ -731,7 +780,7 @@ const AdminDashboard = () => {
           });
           return;
         }
-      } catch (err) {
+      } catch (err: any) {
         MySwal.fire({
           icon: "error",
           title: "Terjadi Kesalahan",
@@ -792,8 +841,9 @@ const AdminDashboard = () => {
 
         MySwal.fire({
           icon: "success",
-          title: "Terhapus!",
-          timer: 1500,
+          title: "Pengalaman Kerja Terhapus!",
+          text: `Pengalaman "${exp.title}" di ${exp.company} telah berhasil dihapus.`,
+          timer: 1800,
           showConfirmButton: false,
           background: "var(--bg-card)",
           color: "var(--text-primary)",

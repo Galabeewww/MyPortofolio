@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Save, Plus, Trash2, Calendar } from 'lucide-react';
+import { X, Save, Plus, Trash2, Calendar, Loader2 } from 'lucide-react';
 
 const formatMonthYear = (yyyyMM) => {
   if (!yyyyMM) return '';
@@ -24,6 +24,8 @@ const ExperienceForm = ({ experience, onSave, onClose }) => {
     responsibilities: [''],
     tech: '',
   });
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (experience) {
@@ -80,42 +82,47 @@ const ExperienceForm = ({ experience, onSave, onClose }) => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isSubmitting) return;
 
-    const techArray = formData.tech
-      .split(',')
-      .map((t) => t.trim())
-      .filter((t) => t.length > 0);
+    setIsSubmitting(true);
+    try {
+      const techArray = formData.tech
+        .split(',')
+        .map((t) => t.trim())
+        .filter((t) => t.length > 0);
 
-    const respArray = formData.responsibilities
-      .map((r) => r.trim())
-      .filter((r) => r.length > 0);
+      const respArray = formData.responsibilities
+        .map((r) => r.trim())
+        .filter((r) => r.length > 0);
 
-    // Build formatted period string
-    const startText = formatMonthYear(formData.start_date) || '2025';
-    let endText = 'Present';
+      const startText = formatMonthYear(formData.start_date) || '2025';
+      let endText = 'Present';
 
-    if (formData.is_present) {
-      endText = 'Present';
-    } else if (formData.end_date) {
-      endText = formatMonthYear(formData.end_date);
-    } else {
-      endText = 'Present';
+      if (formData.is_present) {
+        endText = 'Present';
+      } else if (formData.end_date) {
+        endText = formatMonthYear(formData.end_date);
+      } else {
+        endText = 'Present';
+      }
+
+      const formattedPeriod = `${startText} – ${endText}`;
+
+      const payload = {
+        ...formData,
+        period: formattedPeriod,
+        id: experience ? experience.id : undefined,
+        responsibilities: respArray,
+        tech: techArray,
+        created_at: experience?.created_at || new Date().toISOString(),
+      };
+
+      await onSave(payload);
+    } finally {
+      setIsSubmitting(false);
     }
-
-    const formattedPeriod = `${startText} – ${endText}`;
-
-    const payload = {
-      ...formData,
-      period: formattedPeriod,
-      id: experience ? experience.id : undefined,
-      responsibilities: respArray,
-      tech: techArray,
-      created_at: experience?.created_at || new Date().toISOString(),
-    };
-
-    onSave(payload);
   };
 
   return (
@@ -132,7 +139,8 @@ const ExperienceForm = ({ experience, onSave, onClose }) => {
           </h3>
           <button
             onClick={onClose}
-            className="p-2 rounded-full hover:bg-[var(--bg-secondary)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors duration-200"
+            disabled={isSubmitting}
+            className="p-2 rounded-full hover:bg-[var(--bg-secondary)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors duration-200 disabled:opacity-50"
           >
             <X size={20} />
           </button>
@@ -149,10 +157,11 @@ const ExperienceForm = ({ experience, onSave, onClose }) => {
                 type="text"
                 name="title"
                 required
+                disabled={isSubmitting}
                 value={formData.title}
                 onChange={handleChange}
                 placeholder="Contoh: Fullstack Developer"
-                className="w-full px-4 py-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--text-primary)] transition-colors duration-200"
+                className="w-full px-4 py-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--text-primary)] transition-colors duration-200 disabled:opacity-50"
               />
             </div>
 
@@ -164,10 +173,11 @@ const ExperienceForm = ({ experience, onSave, onClose }) => {
                 type="text"
                 name="company"
                 required
+                disabled={isSubmitting}
                 value={formData.company}
                 onChange={handleChange}
                 placeholder="Contoh: MTs At-Tarbiyah Lebak"
-                className="w-full px-4 py-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--text-primary)] transition-colors duration-200"
+                className="w-full px-4 py-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--text-primary)] transition-colors duration-200 disabled:opacity-50"
               />
             </div>
           </div>
@@ -180,10 +190,11 @@ const ExperienceForm = ({ experience, onSave, onClose }) => {
             <input
               type="text"
               name="location"
+              disabled={isSubmitting}
               value={formData.location}
               onChange={handleChange}
               placeholder="Contoh: Remote / Rangkasbitung"
-              className="w-full px-4 py-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--text-primary)] transition-colors duration-200"
+              className="w-full px-4 py-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--text-primary)] transition-colors duration-200 disabled:opacity-50"
             />
           </div>
 
@@ -203,9 +214,10 @@ const ExperienceForm = ({ experience, onSave, onClose }) => {
                   type="month"
                   name="start_date"
                   required
+                  disabled={isSubmitting}
                   value={formData.start_date}
                   onChange={handleChange}
-                  className="w-full px-4 py-2.5 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:border-sky-500 transition-colors duration-200 text-sm"
+                  className="w-full px-4 py-2.5 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:border-sky-500 transition-colors duration-200 text-sm disabled:opacity-50"
                 />
               </div>
 
@@ -216,7 +228,7 @@ const ExperienceForm = ({ experience, onSave, onClose }) => {
                 <input
                   type="month"
                   name="end_date"
-                  disabled={formData.is_present}
+                  disabled={formData.is_present || isSubmitting}
                   value={formData.end_date}
                   onChange={handleChange}
                   placeholder="Kosongkan jika masih bekerja"
@@ -231,9 +243,10 @@ const ExperienceForm = ({ experience, onSave, onClose }) => {
                 type="checkbox"
                 id="is_present"
                 name="is_present"
+                disabled={isSubmitting}
                 checked={formData.is_present}
                 onChange={handleChange}
-                className="w-4 h-4 accent-sky-500 rounded cursor-pointer"
+                className="w-4 h-4 accent-sky-500 rounded cursor-pointer disabled:opacity-50"
               />
               <label htmlFor="is_present" className="text-xs font-bold text-sky-500 cursor-pointer select-none">
                 Masih Bekerja Di Sini (Belum Selesai / Status Present)
@@ -250,7 +263,8 @@ const ExperienceForm = ({ experience, onSave, onClose }) => {
               <button
                 type="button"
                 onClick={addRespInput}
-                className="inline-flex items-center gap-1 text-xs font-semibold text-sky-500 hover:underline"
+                disabled={isSubmitting}
+                className="inline-flex items-center gap-1 text-xs font-semibold text-sky-500 hover:underline disabled:opacity-50"
               >
                 <Plus size={14} /> Tambah Poin
               </button>
@@ -260,16 +274,18 @@ const ExperienceForm = ({ experience, onSave, onClose }) => {
                 <div key={idx} className="flex items-center gap-2">
                   <input
                     type="text"
+                    disabled={isSubmitting}
                     value={resp}
                     onChange={(e) => handleRespChange(idx, e.target.value)}
                     placeholder={`Poin #${idx + 1}...`}
-                    className="flex-1 px-4 py-2.5 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] text-sm focus:outline-none focus:border-[var(--text-primary)] transition-colors duration-200"
+                    className="flex-1 px-4 py-2.5 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] text-sm focus:outline-none focus:border-[var(--text-primary)] transition-colors duration-200 disabled:opacity-50"
                   />
                   {formData.responsibilities.length > 1 && (
                     <button
                       type="button"
+                      disabled={isSubmitting}
                       onClick={() => removeRespInput(idx)}
-                      className="p-2 rounded-lg hover:bg-rose-500/10 text-rose-500 transition-colors duration-200"
+                      className="p-2 rounded-lg hover:bg-rose-500/10 text-rose-500 transition-colors duration-200 disabled:opacity-50"
                     >
                       <Trash2 size={16} />
                     </button>
@@ -287,10 +303,11 @@ const ExperienceForm = ({ experience, onSave, onClose }) => {
             <input
               type="text"
               name="tech"
+              disabled={isSubmitting}
               value={formData.tech}
               onChange={handleChange}
               placeholder="React, TypeScript, Node.js, NGINX, Tailwind CSS"
-              className="w-full px-4 py-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--text-primary)] transition-colors duration-200"
+              className="w-full px-4 py-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--text-primary)] transition-colors duration-200 disabled:opacity-50"
             />
           </div>
 
@@ -299,16 +316,27 @@ const ExperienceForm = ({ experience, onSave, onClose }) => {
             <button
               type="button"
               onClick={onClose}
-              className="px-5 py-2.5 rounded-xl border border-[var(--border-color)] hover:bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-sm font-semibold transition-colors duration-200"
+              disabled={isSubmitting}
+              className="px-5 py-2.5 rounded-xl border border-[var(--border-color)] hover:bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-sm font-semibold transition-colors duration-200 cursor-pointer disabled:opacity-50"
             >
               Batal
             </button>
             <button
               type="submit"
-              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-600 text-white text-sm font-extrabold shadow-md transition-all duration-200 cursor-pointer"
+              disabled={isSubmitting}
+              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-600 text-white text-sm font-extrabold shadow-md transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <Save size={16} />
-              Simpan Pengalaman
+              {isSubmitting ? (
+                <>
+                  <Loader2 size={16} className="animate-spin" />
+                  <span>Menyimpan...</span>
+                </>
+              ) : (
+                <>
+                  <Save size={16} />
+                  <span>Simpan Pengalaman</span>
+                </>
+              )}
             </button>
           </div>
         </form>
