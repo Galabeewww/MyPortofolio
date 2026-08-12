@@ -375,9 +375,7 @@ const AdminDashboard = () => {
     MySwal.fire({
       icon: "success",
       title: isEdit ? "Project Updated!" : "Project Added!",
-      text: isEdit
-        ? `Project "${formattedProject.title}" has been successfully updated.`
-        : `Project "${formattedProject.title}" has been saved permanently.`,
+      text: `Project "${formattedProject.title}" has been saved successfully.`,
       timer: 2000,
       showConfirmButton: false,
       background: "var(--bg-card)",
