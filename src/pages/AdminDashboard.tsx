@@ -17,6 +17,7 @@ import {
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { useAuth } from "../context/AuthContext";
+import api, { useLocalApi } from "../lib/api";
 import { supabase, isSupabaseConfigured } from "../lib/supabaseClient";
 import ProjectForm from "../components/admin/ProjectForm";
 import SkillForm from "../components/admin/SkillForm";
@@ -44,9 +45,7 @@ const GithubIcon = (props) => (
 );
 
 const INITIAL_PROJECTS = [];
-
 const INITIAL_SKILLS = [];
-
 const INITIAL_CATEGORIES = [];
 
 const AdminDashboard = () => {
@@ -75,49 +74,39 @@ const AdminDashboard = () => {
 
   const fetchData = async () => {
     setLoading(true);
-    if (isSupabaseConfigured) {
-      try {
-        const { data: dbProjects } = await supabase
-          .from("projects")
-          .select("*")
-          .order("created_at", { ascending: false });
+    try {
+      const [resProjects, resSkills, resCat, resExp] = await Promise.all([
+        api.projects.getAll().catch(() => ({ data: null })),
+        api.skills.getAll().catch(() => ({ data: null })),
+        api.categories.getAll().catch(() => ({ data: null })),
+        api.experiences.getAll().catch(() => ({ data: null })),
+      ]);
 
-        const { data: dbSkills } = await supabase
-          .from("skills")
-          .select("*")
-          .order("created_at", { ascending: false });
-
-        const { data: dbCategories } = await supabase
-          .from("categories")
-          .select("*")
-          .order("name", { ascending: true });
-
-        const { data: dbExperiences } = await supabase
-          .from("experiences")
-          .select("*")
-          .order("created_at", { ascending: false });
-
-        if (dbProjects && dbProjects.length > 0) setProjects(dbProjects);
-        else loadLocalProjects();
-
-        if (dbSkills && dbSkills.length > 0) setSkills(dbSkills);
-        else loadLocalSkills();
-
-        if (dbCategories && dbCategories.length > 0)
-          setCategories(dbCategories);
-        else loadLocalCategories();
-
-        if (dbExperiences && dbExperiences.length > 0)
-          setExperiences(dbExperiences);
-        else loadLocalExperiences();
-      } catch (err) {
-        console.error(err);
+      if (resProjects?.data && Array.isArray(resProjects.data) && resProjects.data.length > 0) {
+        setProjects(resProjects.data);
+      } else {
         loadLocalProjects();
+      }
+
+      if (resSkills?.data && Array.isArray(resSkills.data) && resSkills.data.length > 0) {
+        setSkills(resSkills.data);
+      } else {
         loadLocalSkills();
+      }
+
+      if (resCat?.data && Array.isArray(resCat.data) && resCat.data.length > 0) {
+        setCategories(resCat.data);
+      } else {
         loadLocalCategories();
+      }
+
+      if (resExp?.data && Array.isArray(resExp.data) && resExp.data.length > 0) {
+        setExperiences(sortExperiences(resExp.data));
+      } else {
         loadLocalExperiences();
       }
-    } else {
+    } catch (err) {
+      console.error("fetchData catch error:", err);
       loadLocalProjects();
       loadLocalSkills();
       loadLocalCategories();
@@ -131,10 +120,7 @@ const AdminDashboard = () => {
     if (saved) setProjects(JSON.parse(saved));
     else {
       setProjects(INITIAL_PROJECTS);
-      localStorage.setItem(
-        "portfolio_crud_projects",
-        JSON.stringify(INITIAL_PROJECTS),
-      );
+      localStorage.setItem("portfolio_crud_projects", JSON.stringify(INITIAL_PROJECTS));
     }
   };
 
@@ -143,10 +129,7 @@ const AdminDashboard = () => {
     if (saved) setSkills(JSON.parse(saved));
     else {
       setSkills(INITIAL_SKILLS);
-      localStorage.setItem(
-        "portfolio_crud_skills",
-        JSON.stringify(INITIAL_SKILLS),
-      );
+      localStorage.setItem("portfolio_crud_skills", JSON.stringify(INITIAL_SKILLS));
     }
   };
 
@@ -155,10 +138,7 @@ const AdminDashboard = () => {
     if (saved) setCategories(JSON.parse(saved));
     else {
       setCategories(INITIAL_CATEGORIES);
-      localStorage.setItem(
-        "portfolio_crud_categories",
-        JSON.stringify(INITIAL_CATEGORIES),
-      );
+      localStorage.setItem("portfolio_crud_categories", JSON.stringify(INITIAL_CATEGORIES));
     }
   };
 
@@ -174,30 +154,30 @@ const AdminDashboard = () => {
   };
 
   const loadLocalExperiences = () => {
-    const saved = localStorage.getItem('portfolio_crud_experiences');
+    const saved = localStorage.getItem("portfolio_crud_experiences");
     if (saved) setExperiences(sortExperiences(JSON.parse(saved)));
     else setExperiences([]);
   };
 
   const saveProjectsToStorage = (updated) => {
     setProjects(updated);
-    localStorage.setItem('portfolio_crud_projects', JSON.stringify(updated));
+    localStorage.setItem("portfolio_crud_projects", JSON.stringify(updated));
   };
 
   const saveSkillsToStorage = (updated) => {
     setSkills(updated);
-    localStorage.setItem('portfolio_crud_skills', JSON.stringify(updated));
+    localStorage.setItem("portfolio_crud_skills", JSON.stringify(updated));
   };
 
   const saveCategoriesToStorage = (updated) => {
     setCategories(updated);
-    localStorage.setItem('portfolio_crud_categories', JSON.stringify(updated));
+    localStorage.setItem("portfolio_crud_categories", JSON.stringify(updated));
   };
 
   const saveExperiencesToStorage = (updated) => {
     const sorted = sortExperiences(updated);
     setExperiences(sorted);
-    localStorage.setItem('portfolio_crud_experiences', JSON.stringify(sorted));
+    localStorage.setItem("portfolio_crud_experiences", JSON.stringify(sorted));
   };
 
   // ===== PROJECT CRUD ACTIONS =====
@@ -205,14 +185,13 @@ const AdminDashboard = () => {
   const handleSaveProject = async (projectData) => {
     const isEdit = Boolean(projectData.id);
 
-    // Format new project payload
     const formattedProject = {
       ...projectData,
       id: projectData.id || `p_${Date.now()}`,
       created_at: projectData.created_at || new Date().toISOString(),
     };
 
-    // ===== Detect "No Changes" on Update =====
+    // Detect "No Changes" on Update
     if (isEdit) {
       const original = projects.find((p) => p.id === formattedProject.id);
       if (original) {
@@ -228,36 +207,14 @@ const AdminDashboard = () => {
         const noFieldChanges = fieldsToCompare.every(
           (key) => (original[key] || "") === (formattedProject[key] || ""),
         );
-        const origTech = JSON.stringify(
-          Array.isArray(original.tech) ? original.tech : [],
-        );
-        const newTech = JSON.stringify(
-          Array.isArray(formattedProject.tech) ? formattedProject.tech : [],
-        );
-        const origFeatures = JSON.stringify(
-          Array.isArray(original.features) ? original.features : [],
-        );
-        const newFeatures = JSON.stringify(
-          Array.isArray(formattedProject.features)
-            ? formattedProject.features
-            : [],
-        );
+        const origTech = JSON.stringify(Array.isArray(original.tech) ? original.tech : []);
+        const newTech = JSON.stringify(Array.isArray(formattedProject.tech) ? formattedProject.tech : []);
+        const origFeatures = JSON.stringify(Array.isArray(original.features) ? original.features : []);
+        const newFeatures = JSON.stringify(Array.isArray(formattedProject.features) ? formattedProject.features : []);
         const origImages = JSON.stringify(original.images || []);
         const newImages = JSON.stringify(formattedProject.images || []);
-        const origCreatedAt = original.created_at
-          ? new Date(original.created_at).toISOString().substring(0, 7)
-          : "";
-        const newCreatedAt = formattedProject.created_at
-          ? new Date(formattedProject.created_at).toISOString().substring(0, 7)
-          : "";
 
-        if (
-          noFieldChanges &&
-          origTech === newTech &&
-          origFeatures === newFeatures &&
-          origImages === newImages &&
-          origCreatedAt === newCreatedAt
-        ) {
+        if (noFieldChanges && origTech === newTech && origFeatures === newFeatures && origImages === newImages) {
           MySwal.fire({
             icon: "info",
             title: "No Changes Detected",
@@ -269,10 +226,7 @@ const AdminDashboard = () => {
           return;
         }
       }
-    }
-
-    // ===== Detect Duplicate Title on Create =====
-    if (!isEdit) {
+    } else {
       const isDuplicate = projects.some(
         (p) => p.title.toLowerCase().trim() === formattedProject.title.toLowerCase().trim()
       );
@@ -289,74 +243,27 @@ const AdminDashboard = () => {
       }
     }
 
-    if (isSupabaseConfigured) {
-      try {
-        let resError = null;
-        if (isEdit) {
-          const { error } = await supabase
-            .from("projects")
-            .update({
-              title: formattedProject.title,
-              description: formattedProject.description,
-              full_description: formattedProject.full_description,
-              category: formattedProject.category,
-              tech: formattedProject.tech,
-              features: formattedProject.features,
-              live_link: formattedProject.live_link,
-              github_link: formattedProject.github_link,
-              cover_image: formattedProject.cover_image,
-              images: formattedProject.images,
-              updated_at: new Date().toISOString(),
-            })
-            .eq("id", formattedProject.id);
-          resError = error;
-        } else {
-          const { error } = await supabase.from("projects").insert([
-            {
-              id: formattedProject.id,
-              title: formattedProject.title,
-              description: formattedProject.description,
-              full_description: formattedProject.full_description,
-              category: formattedProject.category,
-              tech: formattedProject.tech,
-              features: formattedProject.features,
-              live_link: formattedProject.live_link,
-              github_link: formattedProject.github_link,
-              cover_image: formattedProject.cover_image,
-              images: formattedProject.images,
-              created_at: formattedProject.created_at,
-            },
-          ]);
-          resError = error;
-        }
+    try {
+      const res = isEdit
+        ? await api.projects.update(formattedProject.id, formattedProject)
+        : await api.projects.insert(formattedProject);
 
-        if (resError) {
-          console.error("Supabase project save error:", resError);
-          MySwal.fire({
-            icon: "error",
-            title: "Gagal Menyimpan ke Supabase",
-            text: `Terjadi kesalahan database: ${resError.message}. Pastikan tabel 'projects' sudah dibuat menggunakan schema.sql.`,
-            confirmButtonColor: "#0284c7",
-            background: "var(--bg-card)",
-            color: "var(--text-primary)",
-          });
-          return;
-        }
-      } catch (err: any) {
-        console.error("Supabase project save catch error:", err);
+      if (res?.error) {
+        console.error("API project save error:", res.error);
         MySwal.fire({
           icon: "error",
-          title: "Terjadi Kesalahan Database",
-          text: err.message || "Gagal menghubungkan ke Supabase.",
+          title: "Gagal Menyimpan Proyek",
+          text: `Terjadi kesalahan database: ${res.error.message || res.error}`,
           confirmButtonColor: "#0284c7",
           background: "var(--bg-card)",
           color: "var(--text-primary)",
         });
         return;
       }
+    } catch (err: any) {
+      console.error("Project save exception:", err);
     }
 
-    // Always update React State & LocalStorage for immediate persistence
     if (isEdit) {
       const updatedList = projects.map((p) =>
         p.id === formattedProject.id ? formattedProject : p,
@@ -367,11 +274,9 @@ const AdminDashboard = () => {
       saveProjectsToStorage(updatedList);
     }
 
-    // Close form modal
     setIsProjectFormOpen(false);
     setEditingProject(null);
 
-    // SweetAlert notification
     MySwal.fire({
       icon: "success",
       title: isEdit ? "Project Updated!" : "Project Added!",
@@ -397,12 +302,10 @@ const AdminDashboard = () => {
       color: "var(--text-primary)",
     }).then(async (result) => {
       if (result.isConfirmed) {
-        if (isSupabaseConfigured) {
-          try {
-            await supabase.from("projects").delete().eq("id", project.id);
-          } catch (err) {
-            console.error(err);
-          }
+        try {
+          await api.projects.delete(project.id);
+        } catch (err) {
+          console.error("Delete project error:", err);
         }
         const updated = projects.filter((p) => p.id !== project.id);
         saveProjectsToStorage(updated);
@@ -429,7 +332,6 @@ const AdminDashboard = () => {
       id: skillData.id || `s_${Date.now()}`,
     };
 
-    // ===== Detect "No Changes" on Update =====
     if (isEdit) {
       const original = skills.find((s) => s.id === formattedSkill.id);
       if (original) {
@@ -466,53 +368,24 @@ const AdminDashboard = () => {
       }
     }
 
-    if (isSupabaseConfigured) {
-      try {
-        let resError = null;
-        if (isEdit) {
-          const { error } = await supabase
-            .from("skills")
-            .update({
-              name: formattedSkill.name,
-              logo_url: formattedSkill.logo_url,
-              category: formattedSkill.category,
-            })
-            .eq("id", formattedSkill.id);
-          resError = error;
-        } else {
-          const { error } = await supabase.from("skills").insert([
-            {
-              id: formattedSkill.id,
-              name: formattedSkill.name,
-              logo_url: formattedSkill.logo_url,
-              category: formattedSkill.category,
-            },
-          ]);
-          resError = error;
-        }
+    try {
+      const res = isEdit
+        ? await api.skills.update(formattedSkill.id, formattedSkill)
+        : await api.skills.insert(formattedSkill);
 
-        if (resError) {
-          MySwal.fire({
-            icon: "error",
-            title: "Gagal Menyimpan Skill",
-            text: `Terjadi kesalahan database: ${resError.message}`,
-            confirmButtonColor: "#0284c7",
-            background: "var(--bg-card)",
-            color: "var(--text-primary)",
-          });
-          return;
-        }
-      } catch (err: any) {
+      if (res?.error) {
         MySwal.fire({
           icon: "error",
-          title: "Terjadi Kesalahan",
-          text: err.message || "Gagal menghubungkan ke Supabase.",
+          title: "Gagal Menyimpan Skill",
+          text: `Terjadi kesalahan database: ${res.error.message || res.error}`,
           confirmButtonColor: "#0284c7",
           background: "var(--bg-card)",
           color: "var(--text-primary)",
         });
         return;
       }
+    } catch (err: any) {
+      console.error("Skill save exception:", err);
     }
 
     if (isEdit) {
@@ -552,12 +425,10 @@ const AdminDashboard = () => {
       color: "var(--text-primary)",
     }).then(async (result) => {
       if (result.isConfirmed) {
-        if (isSupabaseConfigured) {
-          try {
-            await supabase.from("skills").delete().eq("id", skill.id);
-          } catch (err) {
-            console.error(err);
-          }
+        try {
+          await api.skills.delete(skill.id);
+        } catch (err) {
+          console.error(err);
         }
         const updated = skills.filter((s) => s.id !== skill.id);
         saveSkillsToStorage(updated);
@@ -584,7 +455,6 @@ const AdminDashboard = () => {
       id: catData.id || `c_${Date.now()}`,
     };
 
-    // ===== Detect "No Changes" on Update =====
     if (isEdit) {
       const original = categories.find((c) => c.id === formattedCat.id);
       if (original && (original.name || "") === (formattedCat.name || "")) {
@@ -615,44 +485,24 @@ const AdminDashboard = () => {
       }
     }
 
-    if (isSupabaseConfigured) {
-      try {
-        let resError = null;
-        if (isEdit) {
-          const { error } = await supabase
-            .from("categories")
-            .update({ name: formattedCat.name })
-            .eq("id", formattedCat.id);
-          resError = error;
-        } else {
-          const { error } = await supabase
-            .from("categories")
-            .insert([{ id: formattedCat.id, name: formattedCat.name }]);
-          resError = error;
-        }
+    try {
+      const res = isEdit
+        ? await api.categories.update(formattedCat.id, formattedCat)
+        : await api.categories.insert(formattedCat);
 
-        if (resError) {
-          MySwal.fire({
-            icon: "error",
-            title: "Gagal Menyimpan Kategori",
-            text: `Terjadi kesalahan database: ${resError.message}`,
-            confirmButtonColor: "#0284c7",
-            background: "var(--bg-card)",
-            color: "var(--text-primary)",
-          });
-          return;
-        }
-      } catch (err: any) {
+      if (res?.error) {
         MySwal.fire({
           icon: "error",
-          title: "Terjadi Kesalahan",
-          text: err.message || "Gagal menghubungkan ke Supabase.",
+          title: "Gagal Menyimpan Kategori",
+          text: `Terjadi kesalahan database: ${res.error.message || res.error}`,
           confirmButtonColor: "#0284c7",
           background: "var(--bg-card)",
           color: "var(--text-primary)",
         });
         return;
       }
+    } catch (err: any) {
+      console.error("Category save exception:", err);
     }
 
     if (isEdit) {
@@ -691,12 +541,10 @@ const AdminDashboard = () => {
       color: "var(--text-primary)",
     }).then(async (result) => {
       if (result.isConfirmed) {
-        if (isSupabaseConfigured) {
-          try {
-            await supabase.from("categories").delete().eq("id", cat.id);
-          } catch (err) {
-            console.error(err);
-          }
+        try {
+          await api.categories.delete(cat.id);
+        } catch (err) {
+          console.error(err);
         }
         saveCategoriesToStorage(categories.filter((c) => c.id !== cat.id));
 
@@ -722,7 +570,6 @@ const AdminDashboard = () => {
       id: expData.id || `exp_${Date.now()}`,
     };
 
-    // ===== Detect "No Changes" on Update =====
     if (isEdit) {
       const original = experiences.find((e) => e.id === formattedExp.id);
       if (original) {
@@ -753,42 +600,24 @@ const AdminDashboard = () => {
       }
     }
 
-    if (isSupabaseConfigured) {
-      try {
-        let resError = null;
-        if (isEdit) {
-          const { error } = await supabase
-            .from("experiences")
-            .update(formattedExp)
-            .eq("id", formattedExp.id);
-          resError = error;
-        } else {
-          const { error } = await supabase.from("experiences").insert([formattedExp]);
-          resError = error;
-        }
+    try {
+      const res = isEdit
+        ? await api.experiences.update(formattedExp.id, formattedExp)
+        : await api.experiences.insert(formattedExp);
 
-        if (resError) {
-          MySwal.fire({
-            icon: "error",
-            title: "Gagal Menyimpan Experience",
-            text: `Terjadi kesalahan database: ${resError.message}`,
-            confirmButtonColor: "#0284c7",
-            background: "var(--bg-card)",
-            color: "var(--text-primary)",
-          });
-          return;
-        }
-      } catch (err: any) {
+      if (res?.error) {
         MySwal.fire({
           icon: "error",
-          title: "Terjadi Kesalahan",
-          text: err.message || "Gagal menghubungkan ke Supabase.",
+          title: "Gagal Menyimpan Experience",
+          text: `Terjadi kesalahan database: ${res.error.message || res.error}`,
           confirmButtonColor: "#0284c7",
           background: "var(--bg-card)",
           color: "var(--text-primary)",
         });
         return;
       }
+    } catch (err: any) {
+      console.error("Experience save exception:", err);
     }
 
     if (isEdit) {
@@ -828,12 +657,10 @@ const AdminDashboard = () => {
       color: "var(--text-primary)",
     }).then(async (result) => {
       if (result.isConfirmed) {
-        if (isSupabaseConfigured) {
-          try {
-            await supabase.from("experiences").delete().eq("id", exp.id);
-          } catch (err) {
-            console.error(err);
-          }
+        try {
+          await api.experiences.delete(exp.id);
+        } catch (err) {
+          console.error(err);
         }
         saveExperiencesToStorage(experiences.filter((e) => e.id !== exp.id));
 
@@ -852,250 +679,230 @@ const AdminDashboard = () => {
 
   const handleLogout = () => {
     MySwal.fire({
-      title: 'Konfirmasi Logout',
-      text: 'Apakah Anda yakin ingin keluar dari dashboard admin?',
-      icon: 'question',
+      title: "Konfirmasi Logout",
+      text: "Apakah Anda yakin ingin keluar dari dashboard admin?",
+      icon: "question",
       showCancelButton: true,
-      confirmButtonColor: '#ef4444',
-      cancelButtonColor: '#3f3f46',
-      confirmButtonText: 'Ya, Keluar',
-      cancelButtonText: 'Batal',
-      background: 'var(--bg-card)',
-      color: 'var(--text-primary)',
+      confirmButtonColor: "#ef4444",
+      cancelButtonColor: "#3f3f46",
+      confirmButtonText: "Ya, Logout!",
+      cancelButtonText: "Batal",
+      background: "var(--bg-card)",
+      color: "var(--text-primary)",
     }).then((result) => {
       if (result.isConfirmed) {
         logout();
-        navigate('/admin/login');
         MySwal.fire({
-          icon: 'success',
-          title: 'Logged Out',
-          text: 'Anda telah berhasil keluar dari akun admin.',
+          icon: "success",
+          title: "Berhasil Logout!",
+          text: "Anda telah keluar dari halaman admin.",
           timer: 1500,
           showConfirmButton: false,
-          background: 'var(--bg-card)',
-          color: 'var(--text-primary)',
+          background: "var(--bg-card)",
+          color: "var(--text-primary)",
+        }).then(() => {
+          navigate("/");
         });
       }
     });
   };
 
   return (
-    <div className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] relative">
-      {/* Top Navbar Admin */}
-      <header className="border-b border-[var(--border-color)] bg-[var(--bg-card)] sticky top-0 z-30 backdrop-blur-md">
+    <div className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] transition-colors duration-300">
+      {/* Header Admin Navbar */}
+      <header className="sticky top-0 z-40 bg-[var(--bg-primary)]/90 backdrop-blur-md border-b border-[var(--border-color)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Link
               to="/"
-              className="p-2 rounded-xl border border-[var(--border-color)] hover:bg-[var(--bg-secondary)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors duration-200"
-              title="Lihat Website Utama"
+              className="p-2 rounded-xl border border-[var(--border-color)] hover:bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors duration-200"
+              title="Kembali ke Beranda Portofolio"
             >
               <ArrowLeft size={18} />
             </Link>
-            <h1 className="text-lg font-bold font-display text-[var(--text-primary)] flex items-center gap-2">
-              Dashboard Admin{" "}
-              <span className="text-xs px-2 py-0.5 rounded bg-[var(--badge-bg)] border border-[var(--badge-border)] text-[var(--badge-text)]">
-                CRUD
-              </span>
-            </h1>
+            <div>
+              <h1 className="text-lg font-bold font-display text-[var(--text-primary)] leading-tight">
+                Admin Dashboard
+              </h1>
+              <div className="flex items-center gap-2">
+                <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded-full">
+                  <CheckCircle2 size={10} /> Authenticated
+                </span>
+                <span className="text-[11px] text-[var(--text-muted)] flex items-center gap-1">
+                  <Database size={10} />
+                  {isSupabaseConfigured ? "Supabase Cloud" : "Local Mode"}
+                </span>
+              </div>
+            </div>
           </div>
 
-          <div className="flex items-center gap-4">
-            {/* <span className="hidden sm:inline-flex items-center gap-1.5 text-xs text-[var(--text-muted)]">
-              <Database size={14} />
-              {isSupabaseConfigured ? (
-                <span className="text-emerald-500 font-semibold flex items-center gap-1">
-                  <CheckCircle2 size={12} /> Supabase Connected
-                </span>
-              ) : (
-                <span className="text-amber-500 font-semibold">Local Storage Mode</span>
-              )}
-            </span> */}
-
+          <div className="flex items-center gap-2">
             <button
               onClick={handleLogout}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-500 font-semibold text-xs border border-rose-500/20 transition-all duration-200 cursor-pointer"
+              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold bg-rose-500/10 hover:bg-rose-500/20 text-rose-500 transition-colors duration-200 cursor-pointer"
             >
-              <LogOut size={14} /> Logout
+              <LogOut size={14} />
+              <span className="hidden sm:inline">Logout</span>
             </button>
           </div>
         </div>
       </header>
 
-      {/* Main Content Area */}
+      {/* Main Container */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
         {/* Navigation Tabs */}
-        <div className="flex items-center justify-between border-b border-[var(--border-color)] pb-4 flex-wrap gap-4">
-          <div className="flex items-center gap-2 flex-wrap">
-            <button
-              onClick={() => setActiveTab("projects")}
-              className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm transition-all duration-200 cursor-pointer ${
-                activeTab === "projects"
-                  ? "bg-[var(--accent-btn)] text-[var(--accent-btn-text)] shadow-md"
-                  : "border border-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-secondary)]"
-              }`}
-            >
-              <FolderGit2 size={18} /> Proyek ({projects.length})
-            </button>
+        <div className="flex items-center gap-2 border-b border-[var(--border-color)] pb-3 overflow-x-auto">
+          <button
+            onClick={() => setActiveTab("projects")}
+            className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 cursor-pointer whitespace-nowrap ${
+              activeTab === "projects"
+                ? "bg-[var(--accent-btn)] text-[var(--accent-btn-text)] shadow-md"
+                : "text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)] hover:text-[var(--text-primary)]"
+            }`}
+          >
+            <FolderGit2 size={16} />
+            Proyek ({projects.length})
+          </button>
+          <button
+            onClick={() => setActiveTab("skills")}
+            className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 cursor-pointer whitespace-nowrap ${
+              activeTab === "skills"
+                ? "bg-[var(--accent-btn)] text-[var(--accent-btn-text)] shadow-md"
+                : "text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)] hover:text-[var(--text-primary)]"
+            }`}
+          >
+            <Wrench size={16} />
+            Skills ({skills.length})
+          </button>
+          <button
+            onClick={() => setActiveTab("categories")}
+            className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 cursor-pointer whitespace-nowrap ${
+              activeTab === "categories"
+                ? "bg-[var(--accent-btn)] text-[var(--accent-btn-text)] shadow-md"
+                : "text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)] hover:text-[var(--text-primary)]"
+            }`}
+          >
+            <Tag size={16} />
+            Kategori ({categories.length})
+          </button>
+          <button
+            onClick={() => setActiveTab("experiences")}
+            className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 cursor-pointer whitespace-nowrap ${
+              activeTab === "experiences"
+                ? "bg-[var(--accent-btn)] text-[var(--accent-btn-text)] shadow-md"
+                : "text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)] hover:text-[var(--text-primary)]"
+            }`}
+          >
+            <Briefcase size={16} />
+            Work Experience ({experiences.length})
+          </button>
+        </div>
 
-            <button
-              onClick={() => setActiveTab("skills")}
-              className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm transition-all duration-200 cursor-pointer ${
-                activeTab === "skills"
-                  ? "bg-[var(--accent-btn)] text-[var(--accent-btn-text)] shadow-md"
-                  : "border border-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-secondary)]"
-              }`}
-            >
-              <Wrench size={18} /> Skills ({skills.length})
-            </button>
-
-            <button
-              onClick={() => setActiveTab("categories")}
-              className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm transition-all duration-200 cursor-pointer ${
-                activeTab === "categories"
-                  ? "bg-[var(--accent-btn)] text-[var(--accent-btn-text)] shadow-md"
-                  : "border border-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-secondary)]"
-              }`}
-            >
-              <Tag size={18} /> Kategori ({categories.length})
-            </button>
-
-            <button
-              onClick={() => setActiveTab("experiences")}
-              className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm transition-all duration-200 cursor-pointer ${
-                activeTab === "experiences"
-                  ? "bg-[var(--accent-btn)] text-[var(--accent-btn-text)] shadow-md"
-                  : "border border-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-secondary)]"
-              }`}
-            >
-              <Briefcase size={18} /> Pengalaman ({experiences.length})
-            </button>
-          </div>
-
-          <div>
-            {activeTab === "projects" && (
+        {/* TAB 1: PROJECTS */}
+        {activeTab === "projects" && (
+          <div className="space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[var(--border-color)]">
+              <div>
+                <h2 className="text-xl font-bold font-display text-[var(--text-primary)]">
+                  Kelola Proyek Portofolio
+                </h2>
+                <p className="text-xs text-[var(--text-muted)]">
+                  Tambah, ubah, atau hapus karya proyek yang akan tampil di halaman portofolio utama.
+                </p>
+              </div>
               <button
                 onClick={() => {
                   setEditingProject(null);
                   setIsProjectFormOpen(true);
                 }}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[var(--accent-btn)] hover:bg-[var(--accent-btn-hover)] text-[var(--accent-btn-text)] font-semibold text-sm shadow-md transition-all duration-200 cursor-pointer"
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[var(--accent-btn)] hover:bg-[var(--accent-btn-hover)] text-[var(--accent-btn-text)] text-xs font-semibold shadow-md transition-all duration-200 cursor-pointer"
               >
-                <Plus size={18} /> Tambah Proyek Baru
+                <Plus size={16} />
+                Tambah Proyek Baru
               </button>
-            )}
+            </div>
 
-            {activeTab === "skills" && (
-              <button
-                onClick={() => {
-                  setEditingSkill(null);
-                  setIsSkillFormOpen(true);
-                }}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[var(--accent-btn)] hover:bg-[var(--accent-btn-hover)] text-[var(--accent-btn-text)] font-semibold text-sm shadow-md transition-all duration-200 cursor-pointer"
-              >
-                <Plus size={18} /> Tambah Skill Baru
-              </button>
-            )}
-
-            {activeTab === "categories" && (
-              <button
-                onClick={() => {
-                  setEditingCategory(null);
-                  setIsCategoryFormOpen(true);
-                }}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[var(--accent-btn)] hover:bg-[var(--accent-btn-hover)] text-[var(--accent-btn-text)] font-semibold text-sm shadow-md transition-all duration-200 cursor-pointer"
-              >
-                <Plus size={18} /> Tambah Kategori
-              </button>
-            )}
-
-            {activeTab === "experiences" && (
-              <button
-                onClick={() => {
-                  setEditingExperience(null);
-                  setIsExperienceFormOpen(true);
-                }}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-semibold text-sm shadow-md transition-all duration-200 cursor-pointer"
-              >
-                <Plus size={18} /> Tambah Pengalaman Baru
-              </button>
-            )}
-          </div>
-        </div>
-
-        {/* TAB 1: KELOLA PROYEK */}
-        {activeTab === "projects" && (
-          <div className="space-y-6">
             {loading ? (
-              <div className="text-center py-12 text-[var(--text-muted)]">
+              <div className="py-16 text-center text-xs text-[var(--text-muted)]">
                 Memuat data proyek...
               </div>
             ) : projects.length === 0 ? (
-              <div className="text-center py-16 p-8 rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card)] space-y-3">
-                <FolderGit2 className="w-12 h-12 text-[var(--text-muted)] mx-auto" />
-                <h3 className="text-lg font-bold">Belum Ada Proyek</h3>
-                <p className="text-sm text-[var(--text-muted)]">
-                  Klik tombol "Tambah Proyek Baru" untuk memasukkan proyek
-                  pertama Anda.
+              <div className="py-16 text-center rounded-2xl border border-dashed border-[var(--border-color)] p-8">
+                <FolderGit2 className="w-12 h-12 text-[var(--text-muted)] mx-auto mb-3 opacity-40" />
+                <p className="text-sm font-semibold text-[var(--text-primary)]">Belum Ada Proyek</p>
+                <p className="text-xs text-[var(--text-muted)] mt-1 mb-4">
+                  Klik tombol "Tambah Proyek Baru" untuk memasukkan proyek pertama Anda.
                 </p>
+                <button
+                  onClick={() => {
+                    setEditingProject(null);
+                    setIsProjectFormOpen(true);
+                  }}
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[var(--accent-btn)] text-[var(--accent-btn-text)] text-xs font-semibold shadow-sm"
+                >
+                  <Plus size={14} /> Tambah Proyek
+                </button>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {projects.map((project) => (
                   <div
                     key={project.id}
-                    className="glow-card rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card)] overflow-hidden flex flex-col justify-between"
+                    className="group rounded-2xl bg-[var(--bg-card)] border border-[var(--border-color)] overflow-hidden flex flex-col justify-between hover:border-[var(--text-secondary)] transition-all duration-300 shadow-sm hover:shadow-lg"
                   >
                     <div>
-                      <div className="relative h-44 w-full bg-[var(--bg-secondary)] overflow-hidden">
+                      <div className="relative aspect-video w-full overflow-hidden bg-[var(--bg-secondary)]">
                         <img
-                          src={
-                            project.cover_image ||
-                            project.image ||
-                            "/project/py.png"
-                          }
+                          src={project.cover_image || project.image || "/icon/react.png"}
                           alt={project.title}
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).onerror = null;
+                            (e.target as HTMLImageElement).src = "/icon/react.png";
+                          }}
                         />
-                        <span className="absolute top-3 left-3 px-2.5 py-1 rounded text-[10px] font-bold bg-black/70 text-white uppercase tracking-wider backdrop-blur-md">
-                          {project.category || "WEB"}
-                        </span>
+                        <div className="absolute top-3 right-3 flex items-center gap-1.5">
+                          <span className="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-black/60 backdrop-blur-md text-white border border-white/10 shadow-sm">
+                            {project.category || "WEB"}
+                          </span>
+                        </div>
                       </div>
 
                       <div className="p-5 space-y-3">
-                        <h3 className="font-bold text-lg text-[var(--text-primary)] font-display line-clamp-1">
+                        <h3 className="text-base font-bold font-display text-[var(--text-primary)] line-clamp-1">
                           {project.title}
                         </h3>
                         <p className="text-xs text-[var(--text-secondary)] line-clamp-2 leading-relaxed">
                           {project.description}
                         </p>
 
-                        <div className="flex flex-wrap gap-1.5 pt-1">
-                          {(Array.isArray(project.tech) ? project.tech : [])
-                            .slice(0, 3)
-                            .map((t, idx) => (
+                        {/* Tech tags */}
+                        {Array.isArray(project.tech) && project.tech.length > 0 && (
+                          <div className="flex flex-wrap gap-1.5 pt-1">
+                            {project.tech.map((t, idx) => (
                               <span
                                 key={idx}
-                                className="px-2 py-0.5 rounded text-[10px] font-medium bg-[var(--badge-bg)] border border-[var(--badge-border)] text-[var(--badge-text)]"
+                                className="px-2 py-0.5 rounded-md text-[10px] font-medium bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-secondary)]"
                               >
                                 {t}
                               </span>
                             ))}
-                        </div>
+                          </div>
+                        )}
                       </div>
                     </div>
 
-                    <div className="p-4 border-t border-[var(--border-color)] flex items-center justify-between bg-[var(--bg-secondary)]/50">
+                    <div className="p-4 border-t border-[var(--border-color)] bg-[var(--bg-secondary)]/30 flex items-center justify-between gap-2">
                       <div className="flex items-center gap-2">
                         {project.live_link && (
                           <a
                             href={project.live_link}
                             target="_blank"
                             rel="noreferrer"
-                            className="p-1.5 rounded-lg border border-[var(--border-color)] text-[var(--text-muted)] hover:text-[var(--text-primary)]"
+                            className="p-1.5 rounded-lg hover:bg-[var(--bg-secondary)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors duration-200"
                             title="Live Demo"
                           >
-                            <ExternalLink size={14} />
+                            <ExternalLink size={15} />
                           </a>
                         )}
                         {project.github_link && (
@@ -1103,29 +910,30 @@ const AdminDashboard = () => {
                             href={project.github_link}
                             target="_blank"
                             rel="noreferrer"
-                            className="p-1.5 rounded-lg border border-[var(--border-color)] text-[var(--text-muted)] hover:text-[var(--text-primary)]"
-                            title="GitHub"
+                            className="p-1.5 rounded-lg hover:bg-[var(--bg-secondary)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors duration-200"
+                            title="GitHub Repo"
                           >
-                            <GithubIcon size={14} />
+                            <GithubIcon size={15} />
                           </a>
                         )}
                       </div>
 
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-1.5">
                         <button
                           onClick={() => {
                             setEditingProject(project);
                             setIsProjectFormOpen(true);
                           }}
-                          className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[var(--bg-secondary)] hover:bg-[var(--border-color)] text-xs font-semibold border border-[var(--border-color)] transition-colors duration-200 cursor-pointer"
+                          className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[var(--bg-secondary)] hover:bg-[var(--border-color)] text-[var(--text-primary)] text-xs font-semibold transition-colors duration-200 cursor-pointer"
                         >
-                          <Edit size={14} /> Edit
+                          <Edit size={13} /> Edit
                         </button>
                         <button
                           onClick={() => handleDeleteProject(project)}
-                          className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-500 text-xs font-semibold border border-rose-500/20 transition-colors duration-200 cursor-pointer"
+                          className="p-1.5 rounded-lg hover:bg-rose-500/10 text-rose-500 transition-colors duration-200 cursor-pointer"
+                          title="Hapus Proyek"
                         >
-                          <Trash2 size={14} /> Hapus
+                          <Trash2 size={15} />
                         </button>
                       </div>
                     </div>
@@ -1136,47 +944,75 @@ const AdminDashboard = () => {
           </div>
         )}
 
-        {/* TAB 2: KELOLA SKILLS */}
+        {/* TAB 2: SKILLS */}
         {activeTab === "skills" && (
           <div className="space-y-6">
-            {loading ? (
-              <div className="text-center py-12 text-[var(--text-muted)]">
-                Memuat data skill...
-              </div>
-            ) : skills.length === 0 ? (
-              <div className="text-center py-16 p-8 rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card)] space-y-3">
-                <Wrench className="w-12 h-12 text-[var(--text-muted)] mx-auto" />
-                <h3 className="text-lg font-bold">Belum Ada Skill</h3>
-                <p className="text-sm text-[var(--text-muted)]">
-                  Klik tombol "Tambah Skill Baru" untuk memasukkan skill.
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[var(--border-color)]">
+              <div>
+                <h2 className="text-xl font-bold font-display text-[var(--text-primary)]">
+                  Kelola Technical Skills & Tools
+                </h2>
+                <p className="text-xs text-[var(--text-muted)]">
+                  Kelola keahlian teknis dan perangkat lunak yang akan muncul di section Technical Skills.
                 </p>
+              </div>
+              <button
+                onClick={() => {
+                  setEditingSkill(null);
+                  setIsSkillFormOpen(true);
+                }}
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[var(--accent-btn)] hover:bg-[var(--accent-btn-hover)] text-[var(--accent-btn-text)] text-xs font-semibold shadow-md transition-all duration-200 cursor-pointer"
+              >
+                <Plus size={16} />
+                Tambah Skill Baru
+              </button>
+            </div>
+
+            {skills.length === 0 ? (
+              <div className="py-16 text-center rounded-2xl border border-dashed border-[var(--border-color)] p-8">
+                <Wrench className="w-12 h-12 text-[var(--text-muted)] mx-auto mb-3 opacity-40" />
+                <p className="text-sm font-semibold text-[var(--text-primary)]">Belum Ada Skill</p>
+                <p className="text-xs text-[var(--text-muted)] mt-1 mb-4">
+                  Klik tombol "Tambah Skill Baru" untuk menambahkan keahlian teknis Anda.
+                </p>
+                <button
+                  onClick={() => {
+                    setEditingSkill(null);
+                    setIsSkillFormOpen(true);
+                  }}
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[var(--accent-btn)] text-[var(--accent-btn-text)] text-xs font-semibold shadow-sm"
+                >
+                  <Plus size={14} /> Tambah Skill
+                </button>
               </div>
             ) : (
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
                 {skills.map((skill) => (
                   <div
                     key={skill.id}
-                    className="glow-card rounded-2xl p-4 border border-[var(--border-color)] bg-[var(--bg-card)] flex flex-col items-center justify-between text-center space-y-3 group"
+                    className="group relative rounded-2xl bg-[var(--bg-card)] border border-[var(--border-color)] p-4 flex flex-col items-center text-center justify-between hover:border-[var(--text-secondary)] transition-all duration-300 shadow-sm hover:shadow-md"
                   >
-                    <img
-                      src={skill.logo_url || skill.logo}
-                      alt={skill.name}
-                      className="w-12 h-12 object-contain group-hover:scale-110 transition-transform duration-200"
-                      onError={(e) => {
-                        e.target.onerror = null;
-                        e.target.src = "/icon/react.png";
-                      }}
-                    />
-                    <div>
-                      <h4 className="font-bold text-sm text-[var(--text-primary)]">
+                    <div className="w-12 h-12 rounded-xl bg-[var(--bg-secondary)] flex items-center justify-center p-2 mb-3 mt-1">
+                      <img
+                        src={skill.logo_url || skill.logo || "/icon/react.png"}
+                        alt={skill.name}
+                        className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).onerror = null;
+                          (e.target as HTMLImageElement).src = "/icon/react.png";
+                        }}
+                      />
+                    </div>
+                    <div className="space-y-1 mb-3">
+                      <h4 className="text-xs font-bold text-[var(--text-primary)] line-clamp-1">
                         {skill.name}
                       </h4>
-                      <span className="text-[10px] text-[var(--text-muted)] uppercase tracking-wider">
+                      <span className="inline-block px-2 py-0.5 rounded-full text-[9px] font-semibold text-[var(--text-secondary)] bg-[var(--bg-secondary)]">
                         {skill.category || "Skills"}
                       </span>
                     </div>
 
-                    <div className="flex items-center gap-1.5 pt-2 border-t border-[var(--border-color)] w-full justify-center">
+                    <div className="w-full flex items-center justify-center gap-1.5 pt-2 border-t border-[var(--border-color)]">
                       <button
                         onClick={() => {
                           setEditingSkill(skill);
@@ -1202,125 +1038,200 @@ const AdminDashboard = () => {
           </div>
         )}
 
-        {/* TAB 3: KELOLA KATEGORI */}
+        {/* TAB 3: CATEGORIES */}
         {activeTab === "categories" && (
           <div className="space-y-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {categories.map((cat) => (
-                <div
-                  key={cat.id}
-                  className="glow-card rounded-2xl p-5 border border-[var(--border-color)] bg-[var(--bg-card)] flex items-center justify-between"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="p-2.5 rounded-xl bg-[var(--badge-bg)] border border-[var(--badge-border)] text-[var(--text-primary)]">
-                      <Tag size={18} />
-                    </div>
-                    <span className="font-bold text-base font-display tracking-wide">
-                      {cat.name}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center gap-1">
-                    <button
-                      onClick={() => {
-                        setEditingCategory(cat);
-                        setIsCategoryFormOpen(true);
-                      }}
-                      className="p-1.5 rounded-lg hover:bg-[var(--bg-secondary)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors duration-200 cursor-pointer"
-                    >
-                      <Edit size={14} />
-                    </button>
-                    <button
-                      onClick={() => handleDeleteCategory(cat)}
-                      className="p-1.5 rounded-lg hover:bg-rose-500/10 text-rose-500 transition-colors duration-200 cursor-pointer"
-                    >
-                      <Trash2 size={14} />
-                    </button>
-                  </div>
-                </div>
-              ))}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[var(--border-color)]">
+              <div>
+                <h2 className="text-xl font-bold font-display text-[var(--text-primary)]">
+                  Kelola Kategori Proyek
+                </h2>
+                <p className="text-xs text-[var(--text-muted)]">
+                  Kelola pilihan kategori filter untuk mengelompokkan proyek (misal: WEB, MOBILE, UI/UX).
+                </p>
+              </div>
+              <button
+                onClick={() => {
+                  setEditingCategory(null);
+                  setIsCategoryFormOpen(true);
+                }}
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[var(--accent-btn)] hover:bg-[var(--accent-btn-hover)] text-[var(--accent-btn-text)] text-xs font-semibold shadow-md transition-all duration-200 cursor-pointer"
+              >
+                <Plus size={16} />
+                Tambah Kategori Baru
+              </button>
             </div>
+
+            {categories.length === 0 ? (
+              <div className="py-16 text-center rounded-2xl border border-dashed border-[var(--border-color)] p-8">
+                <Tag className="w-12 h-12 text-[var(--text-muted)] mx-auto mb-3 opacity-40" />
+                <p className="text-sm font-semibold text-[var(--text-primary)]">Belum Ada Kategori</p>
+                <p className="text-xs text-[var(--text-muted)] mt-1 mb-4">
+                  Klik tombol "Tambah Kategori Baru" untuk menambahkan kategori pertama Anda.
+                </p>
+                <button
+                  onClick={() => {
+                    setEditingCategory(null);
+                    setIsCategoryFormOpen(true);
+                  }}
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[var(--accent-btn)] text-[var(--accent-btn-text)] text-xs font-semibold shadow-sm"
+                >
+                  <Plus size={14} /> Tambah Kategori
+                </button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                {categories.map((cat) => (
+                  <div
+                    key={cat.id}
+                    className="rounded-2xl bg-[var(--bg-card)] border border-[var(--border-color)] p-4 flex items-center justify-between hover:border-[var(--text-secondary)] transition-all duration-200 shadow-sm"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-9 h-9 rounded-xl bg-[var(--bg-secondary)] flex items-center justify-center text-[var(--text-primary)]">
+                        <Tag size={16} />
+                      </div>
+                      <span className="text-sm font-bold uppercase text-[var(--text-primary)] tracking-wide">
+                        {cat.name}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-1">
+                      <button
+                        onClick={() => {
+                          setEditingCategory(cat);
+                          setIsCategoryFormOpen(true);
+                        }}
+                        className="p-1.5 rounded-lg hover:bg-[var(--bg-secondary)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors duration-200 cursor-pointer"
+                        title="Edit Kategori"
+                      >
+                        <Edit size={14} />
+                      </button>
+                      <button
+                        onClick={() => handleDeleteCategory(cat)}
+                        className="p-1.5 rounded-lg hover:bg-rose-500/10 text-rose-500 transition-colors duration-200 cursor-pointer"
+                        title="Hapus Kategori"
+                      >
+                        <Trash2 size={14} />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
 
-        {/* TAB 4: KELOLA PENGALAMAN KERJA */}
+        {/* TAB 4: WORK EXPERIENCES */}
         {activeTab === "experiences" && (
           <div className="space-y-6">
-            {loading ? (
-              <div className="text-center py-12 text-[var(--text-muted)]">
-                Memuat data pengalaman...
-              </div>
-            ) : experiences.length === 0 ? (
-              <div className="text-center py-16 p-8 rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card)] space-y-3">
-                <Briefcase className="w-12 h-12 text-[var(--text-muted)] mx-auto" />
-                <h3 className="text-lg font-bold">
-                  Belum Ada Pengalaman Kerja
-                </h3>
-                <p className="text-sm text-[var(--text-muted)]">
-                  Klik tombol "Tambah Pengalaman Baru" untuk memasukkan data
-                  pengalaman kerja pertama Anda.
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[var(--border-color)]">
+              <div>
+                <h2 className="text-xl font-bold font-display text-[var(--text-primary)]">
+                  Kelola Work Experience
+                </h2>
+                <p className="text-xs text-[var(--text-muted)]">
+                  Kelola riwayat posisi, perusahaan, tanggung jawab, dan periode pengalaman kerja.
                 </p>
               </div>
+              <button
+                onClick={() => {
+                  setEditingExperience(null);
+                  setIsExperienceFormOpen(true);
+                }}
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[var(--accent-btn)] hover:bg-[var(--accent-btn-hover)] text-[var(--accent-btn-text)] text-xs font-semibold shadow-md transition-all duration-200 cursor-pointer"
+              >
+                <Plus size={16} />
+                Tambah Pengalaman Baru
+              </button>
+            </div>
+
+            {experiences.length === 0 ? (
+              <div className="py-16 text-center rounded-2xl border border-dashed border-[var(--border-color)] p-8">
+                <Briefcase className="w-12 h-12 text-[var(--text-muted)] mx-auto mb-3 opacity-40" />
+                <p className="text-sm font-semibold text-[var(--text-primary)]">Belum Ada Pengalaman Kerja</p>
+                <p className="text-xs text-[var(--text-muted)] mt-1 mb-4">
+                  Klik tombol "Tambah Pengalaman Baru" untuk memasukkan riwayat pengalaman kerja Anda.
+                </p>
+                <button
+                  onClick={() => {
+                    setEditingExperience(null);
+                    setIsExperienceFormOpen(true);
+                  }}
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[var(--accent-btn)] text-[var(--accent-btn-text)] text-xs font-semibold shadow-sm"
+                >
+                  <Plus size={14} /> Tambah Pengalaman
+                </button>
+              </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-4">
                 {experiences.map((exp) => (
                   <div
                     key={exp.id}
-                    className="glow-card rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card)] p-6 flex flex-col justify-between space-y-4 text-left"
+                    className="rounded-2xl bg-[var(--bg-card)] border border-[var(--border-color)] p-5 sm:p-6 flex flex-col sm:flex-row sm:items-start justify-between gap-4 hover:border-[var(--text-secondary)] transition-all duration-200 shadow-sm"
                   >
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between gap-2 flex-wrap">
-                        <span className="px-3 py-1 rounded-full text-xs font-bold bg-[var(--badge-bg)] text-sky-500 border border-[var(--badge-border)]">
-                          {exp.period || "2025 - Present"}
+                    <div className="space-y-2 flex-1">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <h3 className="text-base font-bold font-display text-[var(--text-primary)]">
+                          {exp.title}
+                        </h3>
+                        <span className="text-xs font-medium text-[var(--text-secondary)]">
+                          @ {exp.company}
                         </span>
                         {exp.is_present && (
-                          <span className="px-2.5 py-0.5 rounded text-[10px] font-black bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 uppercase">
-                            PRESENT
+                          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
+                            Present / Masih Bekerja
                           </span>
                         )}
                       </div>
 
-                      <div>
-                        <h4 className="font-extrabold text-lg text-[var(--text-primary)] font-display">
-                          {exp.title}
-                        </h4>
-                        <p className="text-xs font-semibold text-[var(--text-secondary)]">
-                          {exp.company}{" "}
-                          {exp.location ? `• ${exp.location}` : ""}
-                        </p>
+                      <div className="flex flex-wrap items-center gap-3 text-xs text-[var(--text-muted)]">
+                        <span className="font-semibold text-sky-500">{exp.period}</span>
+                        {exp.location && <span>• {exp.location}</span>}
                       </div>
 
-                      {Array.isArray(exp.responsibilities) &&
-                        exp.responsibilities.length > 0 && (
-                          <ul className="space-y-1 text-xs text-[var(--text-muted)] pt-1">
-                            {exp.responsibilities.map((resp, idx) => (
-                              <li
-                                key={idx}
-                                className="flex items-start gap-1.5"
-                              >
-                                <span className="text-sky-500 mt-0.5">•</span>
-                                <span className="line-clamp-2">{resp}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        )}
+                      {/* Responsibilities list */}
+                      {Array.isArray(exp.responsibilities) && exp.responsibilities.length > 0 && (
+                        <ul className="space-y-1 pt-2">
+                          {exp.responsibilities.map((resp, idx) => (
+                            <li key={idx} className="text-xs text-[var(--text-secondary)] flex items-start gap-2">
+                              <span className="text-sky-500 mt-0.5">•</span>
+                              <span>{resp}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+
+                      {/* Tech stack */}
+                      {Array.isArray(exp.tech) && exp.tech.length > 0 && (
+                        <div className="flex flex-wrap gap-1.5 pt-2">
+                          {exp.tech.map((t, idx) => (
+                            <span
+                              key={idx}
+                              className="px-2 py-0.5 rounded-md text-[10px] font-medium bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-secondary)]"
+                            >
+                              {t}
+                            </span>
+                          ))}
+                        </div>
+                      )}
                     </div>
 
-                    <div className="flex items-center justify-end gap-2 pt-3 border-t border-[var(--border-color)]">
+                    <div className="flex items-center gap-2 self-end sm:self-start pt-2 sm:pt-0">
                       <button
                         onClick={() => {
                           setEditingExperience(exp);
                           setIsExperienceFormOpen(true);
                         }}
-                        className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[var(--bg-secondary)] hover:bg-[var(--border-color)] text-xs font-semibold border border-[var(--border-color)] transition-colors duration-200 cursor-pointer"
+                        className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[var(--bg-secondary)] hover:bg-[var(--border-color)] text-[var(--text-primary)] text-xs font-semibold transition-colors duration-200 cursor-pointer"
                       >
-                        <Edit size={14} /> Edit
+                        <Edit size={13} /> Edit
                       </button>
                       <button
                         onClick={() => handleDeleteExperience(exp)}
-                        className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-500 text-xs font-semibold border border-rose-500/20 transition-colors duration-200 cursor-pointer"
+                        className="p-1.5 rounded-lg hover:bg-rose-500/10 text-rose-500 transition-colors duration-200 cursor-pointer"
+                        title="Hapus Pengalaman"
                       >
-                        <Trash2 size={14} /> Hapus
+                        <Trash2 size={15} />
                       </button>
                     </div>
                   </div>
@@ -1331,7 +1242,7 @@ const AdminDashboard = () => {
         )}
       </main>
 
-      {/* Modal Forms */}
+      {/* FORM MODALS */}
       {isProjectFormOpen && (
         <ProjectForm
           project={editingProject}
