@@ -119,7 +119,7 @@ const Skills = () => {
         </div>
       ) : (
         <div className="text-center py-12 text-[var(--text-muted)] text-sm">
-          No skills added yet. Add skills in the Admin Dashboard.
+          No skills added yet.
         </div>
       )}
     </section>
