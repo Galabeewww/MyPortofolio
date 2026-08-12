@@ -93,13 +93,17 @@ const ProjectForm = ({ project, categories = [], onSave, onClose }) => {
       const cover_image = coverImageObj ? coverImageObj.url : "";
 
       const payload = {
-        ...formData,
         id: project ? project.id : undefined,
+        title: formData.title,
+        description: formData.description,
+        full_description: formData.full_description,
+        category: formData.category,
         tech: techArray,
         features: featuresArray,
         cover_image: cover_image,
-        image: cover_image,
         images: formData.images,
+        live_link: formData.live_link,
+        github_link: formData.github_link,
         created_at: formData.created_at
           ? `${formData.created_at}-01T00:00:00Z`
           : new Date().toISOString(),

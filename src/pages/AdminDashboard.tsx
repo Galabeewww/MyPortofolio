@@ -243,10 +243,30 @@ const AdminDashboard = () => {
       }
     }
 
+    // Sanitize: only send columns that exist in the database table
+    const dbPayload: Record<string, unknown> = {
+      id: formattedProject.id,
+      title: formattedProject.title,
+      description: formattedProject.description,
+      full_description: formattedProject.full_description || "",
+      category: formattedProject.category || "",
+      tech: Array.isArray(formattedProject.tech) ? formattedProject.tech : [],
+      features: Array.isArray(formattedProject.features) ? formattedProject.features : [],
+      live_link: formattedProject.live_link || "",
+      github_link: formattedProject.github_link || "",
+      cover_image: formattedProject.cover_image || "",
+      images: formattedProject.images || [],
+    };
+
     try {
-      const res = isEdit
-        ? await api.projects.update(formattedProject.id, formattedProject)
-        : await api.projects.insert(formattedProject);
+      let res;
+      if (isEdit) {
+        const updatePayload = { ...dbPayload, updated_at: new Date().toISOString() };
+        delete updatePayload.id;
+        res = await api.projects.update(formattedProject.id, updatePayload);
+      } else {
+        res = await api.projects.insert({ ...dbPayload, created_at: formattedProject.created_at });
+      }
 
       if (res?.error) {
         console.error("API project save error:", res.error);
