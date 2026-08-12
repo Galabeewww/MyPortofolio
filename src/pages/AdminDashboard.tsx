@@ -297,15 +297,17 @@ const AdminDashboard = () => {
     setIsProjectFormOpen(false);
     setEditingProject(null);
 
-    MySwal.fire({
-      icon: "success",
-      title: isEdit ? "Project Updated!" : "Project Added!",
-      text: `Project "${formattedProject.title}" has been saved successfully.`,
-      timer: 2000,
-      showConfirmButton: false,
-      background: "var(--bg-card)",
-      color: "var(--text-primary)",
-    });
+    setTimeout(() => {
+      MySwal.fire({
+        icon: "success",
+        title: isEdit ? "Project Updated!" : "Project Added!",
+        text: `Project "${formattedProject.title}" has been saved successfully.`,
+        timer: 2000,
+        showConfirmButton: false,
+        background: "var(--bg-card)",
+        color: "var(--text-primary)",
+      });
+    }, 150);
   };
 
   const handleDeleteProject = (project) => {
@@ -330,15 +332,17 @@ const AdminDashboard = () => {
         const updated = projects.filter((p) => p.id !== project.id);
         saveProjectsToStorage(updated);
 
-        MySwal.fire({
-          icon: "success",
-          title: "Terhapus!",
-          text: `Proyek "${project.title}" telah terhapus.`,
-          timer: 1500,
-          showConfirmButton: false,
-          background: "var(--bg-card)",
-          color: "var(--text-primary)",
-        });
+        setTimeout(() => {
+          MySwal.fire({
+            icon: "success",
+            title: "Terhapus!",
+            text: `Proyek "${project.title}" telah terhapus.`,
+            timer: 1500,
+            showConfirmButton: false,
+            background: "var(--bg-card)",
+            color: "var(--text-primary)",
+          });
+        }, 150);
       }
     });
   };
@@ -420,15 +424,17 @@ const AdminDashboard = () => {
     setIsSkillFormOpen(false);
     setEditingSkill(null);
 
-    MySwal.fire({
-      icon: "success",
-      title: isEdit ? "Skill Updated!" : "Skill Added!",
-      text: `Skill "${formattedSkill.name}" has been saved successfully.`,
-      timer: 2000,
-      showConfirmButton: false,
-      background: "var(--bg-card)",
-      color: "var(--text-primary)",
-    });
+    setTimeout(() => {
+      MySwal.fire({
+        icon: "success",
+        title: isEdit ? "Skill Updated!" : "Skill Added!",
+        text: `Skill "${formattedSkill.name}" has been saved successfully.`,
+        timer: 2000,
+        showConfirmButton: false,
+        background: "var(--bg-card)",
+        color: "var(--text-primary)",
+      });
+    }, 150);
   };
 
   const handleDeleteSkill = (skill) => {
@@ -453,15 +459,17 @@ const AdminDashboard = () => {
         const updated = skills.filter((s) => s.id !== skill.id);
         saveSkillsToStorage(updated);
 
-        MySwal.fire({
-          icon: "success",
-          title: "Terhapus!",
-          text: `Skill "${skill.name}" telah terhapus.`,
-          timer: 1500,
-          showConfirmButton: false,
-          background: "var(--bg-card)",
-          color: "var(--text-primary)",
-        });
+        setTimeout(() => {
+          MySwal.fire({
+            icon: "success",
+            title: "Terhapus!",
+            text: `Skill "${skill.name}" telah terhapus.`,
+            timer: 1500,
+            showConfirmButton: false,
+            background: "var(--bg-card)",
+            color: "var(--text-primary)",
+          });
+        }, 150);
       }
     });
   };
@@ -537,15 +545,17 @@ const AdminDashboard = () => {
     setIsCategoryFormOpen(false);
     setEditingCategory(null);
 
-    MySwal.fire({
-      icon: "success",
-      title: isEdit ? "Category Updated!" : "Category Added!",
-      text: `Category "${formattedCat.name}" has been saved successfully.`,
-      timer: 1800,
-      showConfirmButton: false,
-      background: "var(--bg-card)",
-      color: "var(--text-primary)",
-    });
+    setTimeout(() => {
+      MySwal.fire({
+        icon: "success",
+        title: isEdit ? "Category Updated!" : "Category Added!",
+        text: `Category "${formattedCat.name}" has been saved successfully.`,
+        timer: 1800,
+        showConfirmButton: false,
+        background: "var(--bg-card)",
+        color: "var(--text-primary)",
+      });
+    }, 150);
   };
 
   const handleDeleteCategory = (cat) => {
@@ -568,15 +578,17 @@ const AdminDashboard = () => {
         }
         saveCategoriesToStorage(categories.filter((c) => c.id !== cat.id));
 
-        MySwal.fire({
-          icon: "success",
-          title: "Kategori Terhapus!",
-          text: `Kategori "${cat.name}" telah berhasil dihapus.`,
-          timer: 1800,
-          showConfirmButton: false,
-          background: "var(--bg-card)",
-          color: "var(--text-primary)",
-        });
+        setTimeout(() => {
+          MySwal.fire({
+            icon: "success",
+            title: "Kategori Terhapus!",
+            text: `Kategori "${cat.name}" telah berhasil dihapus.`,
+            timer: 1800,
+            showConfirmButton: false,
+            background: "var(--bg-card)",
+            color: "var(--text-primary)",
+          });
+        }, 150);
       }
     });
   };
@@ -652,15 +664,17 @@ const AdminDashboard = () => {
     setIsExperienceFormOpen(false);
     setEditingExperience(null);
 
-    MySwal.fire({
-      icon: "success",
-      title: isEdit ? "Experience Updated!" : "Experience Added!",
-      text: `Experience "${formattedExp.title}" has been saved successfully.`,
-      timer: 2000,
-      showConfirmButton: false,
-      background: "var(--bg-card)",
-      color: "var(--text-primary)",
-    });
+    setTimeout(() => {
+      MySwal.fire({
+        icon: "success",
+        title: isEdit ? "Experience Updated!" : "Experience Added!",
+        text: `Experience "${formattedExp.title}" has been saved successfully.`,
+        timer: 2000,
+        showConfirmButton: false,
+        background: "var(--bg-card)",
+        color: "var(--text-primary)",
+      });
+    }, 150);
   };
 
   const handleDeleteExperience = (exp) => {
@@ -684,15 +698,17 @@ const AdminDashboard = () => {
         }
         saveExperiencesToStorage(experiences.filter((e) => e.id !== exp.id));
 
-        MySwal.fire({
-          icon: "success",
-          title: "Pengalaman Kerja Terhapus!",
-          text: `Pengalaman "${exp.title}" di ${exp.company} telah berhasil dihapus.`,
-          timer: 1800,
-          showConfirmButton: false,
-          background: "var(--bg-card)",
-          color: "var(--text-primary)",
-        });
+        setTimeout(() => {
+          MySwal.fire({
+            icon: "success",
+            title: "Pengalaman Kerja Terhapus!",
+            text: `Pengalaman "${exp.title}" di ${exp.company} telah berhasil dihapus.`,
+            timer: 1800,
+            showConfirmButton: false,
+            background: "var(--bg-card)",
+            color: "var(--text-primary)",
+          });
+        }, 150);
       }
     });
   };
