@@ -159,25 +159,57 @@ const AdminDashboard = () => {
     else setExperiences([]);
   };
 
+  const safeSetLocalStorage = (key: string, value: any) => {
+    try {
+      localStorage.setItem(key, JSON.stringify(value));
+    } catch (err) {
+      console.warn(`LocalStorage quota warning for "${key}":`, err);
+      try {
+        const lightweight = Array.isArray(value)
+          ? value.map((item) => {
+              if (item && typeof item === "object") {
+                const clone = { ...item };
+                if (typeof clone.cover_image === "string" && clone.cover_image.startsWith("data:image")) {
+                  delete clone.cover_image;
+                }
+                if (Array.isArray(clone.images)) {
+                  clone.images = clone.images.map((img: any) =>
+                    img && typeof img === "object" && typeof img.url === "string" && img.url.startsWith("data:image")
+                      ? { ...img, url: "/icon/react.png" }
+                      : img
+                  );
+                }
+                return clone;
+              }
+              return item;
+            })
+          : value;
+        localStorage.setItem(key, JSON.stringify(lightweight));
+      } catch (fallbackErr) {
+        console.error("LocalStorage write fallback failed:", fallbackErr);
+      }
+    }
+  };
+
   const saveProjectsToStorage = (updated) => {
     setProjects(updated);
-    localStorage.setItem("portfolio_crud_projects", JSON.stringify(updated));
+    safeSetLocalStorage("portfolio_crud_projects", updated);
   };
 
   const saveSkillsToStorage = (updated) => {
     setSkills(updated);
-    localStorage.setItem("portfolio_crud_skills", JSON.stringify(updated));
+    safeSetLocalStorage("portfolio_crud_skills", updated);
   };
 
   const saveCategoriesToStorage = (updated) => {
     setCategories(updated);
-    localStorage.setItem("portfolio_crud_categories", JSON.stringify(updated));
+    safeSetLocalStorage("portfolio_crud_categories", updated);
   };
 
   const saveExperiencesToStorage = (updated) => {
     const sorted = sortExperiences(updated);
     setExperiences(sorted);
-    localStorage.setItem("portfolio_crud_experiences", JSON.stringify(sorted));
+    safeSetLocalStorage("portfolio_crud_experiences", sorted);
   };
 
   // ===== PROJECT CRUD ACTIONS =====
