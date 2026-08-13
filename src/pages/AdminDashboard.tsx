@@ -191,9 +191,27 @@ const AdminDashboard = () => {
     }
   };
 
+  const sortProjects = (list) => {
+    return [...list].sort((a, b) => {
+      const getYearMonth = (proj) => {
+        if (!proj || !proj.created_at) return 0;
+        const str = String(proj.created_at).trim();
+        const match = str.match(/^(\d{4})-(\d{1,2})/);
+        if (match) return parseInt(match[1], 10) * 100 + parseInt(match[2], 10);
+        const d = new Date(proj.created_at);
+        if (!isNaN(d.getTime())) return d.getUTCFullYear() * 100 + (d.getUTCMonth() + 1);
+        return 0;
+      };
+      const diff = getYearMonth(b) - getYearMonth(a);
+      if (diff !== 0) return diff;
+      return String(b.created_at || b.id).localeCompare(String(a.created_at || a.id));
+    });
+  };
+
   const saveProjectsToStorage = (updated) => {
-    setProjects(updated);
-    safeSetLocalStorage("portfolio_crud_projects", updated);
+    const sorted = sortProjects(updated);
+    setProjects(sorted);
+    safeSetLocalStorage("portfolio_crud_projects", sorted);
   };
 
   const saveSkillsToStorage = (updated) => {

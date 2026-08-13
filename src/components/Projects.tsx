@@ -157,27 +157,30 @@ const Projects = () => {
     });
   };
 
-  // Helper to parse date/year for newest-first sorting
-  const getProjectTimestamp = (proj) => {
+  // Helper to parse Created At (Bulan & Tahun) for newest-first sorting
+  const getProjectYearMonthValue = (proj) => {
     if (!proj || !proj.created_at) return 0;
-    const val = proj.created_at;
-    if (typeof val === "number") return val;
-    const parsed = new Date(val).getTime();
-    if (!isNaN(parsed)) return parsed;
-    const str = String(val).trim();
-    const match = str.match(/^(\d{4})(?:-(\d{1,2}))?/);
+    const str = String(proj.created_at).trim();
+    // Match YYYY-MM format from Created At (Bulan & Tahun) input
+    const match = str.match(/^(\d{4})-(\d{1,2})/);
     if (match) {
       const year = parseInt(match[1], 10);
-      const month = parseInt(match[2] || "1", 10);
-      return new Date(year, month - 1, 1).getTime();
+      const month = parseInt(match[2], 10);
+      return year * 100 + month; // e.g. 202608 for August 2026
+    }
+    const d = new Date(proj.created_at);
+    if (!isNaN(d.getTime())) {
+      return d.getUTCFullYear() * 100 + (d.getUTCMonth() + 1);
     }
     return 0;
   };
 
-  // Sort projects descending (newest date / year first)
-  const sortedProjects = [...projects].sort(
-    (a, b) => getProjectTimestamp(b) - getProjectTimestamp(a)
-  );
+  // Sort projects descending by Created At (Bulan & Tahun) - newest year & month first
+  const sortedProjects = [...projects].sort((a, b) => {
+    const diff = getProjectYearMonthValue(b) - getProjectYearMonthValue(a);
+    if (diff !== 0) return diff;
+    return String(b.created_at || b.id).localeCompare(String(a.created_at || a.id));
+  });
 
   const filteredProjects =
     activeCategory === "ALL"
