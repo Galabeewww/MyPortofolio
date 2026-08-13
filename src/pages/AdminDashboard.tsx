@@ -254,6 +254,7 @@ const AdminDashboard = () => {
       github_link: formattedProject.github_link || "",
       cover_image: formattedProject.cover_image || "",
       images: formattedProject.images || [],
+      created_at: formattedProject.created_at,
     };
 
     try {
@@ -263,7 +264,7 @@ const AdminDashboard = () => {
         delete updatePayload.id;
         res = await api.projects.update(formattedProject.id, updatePayload);
       } else {
-        res = await api.projects.insert({ ...dbPayload, created_at: formattedProject.created_at });
+        res = await api.projects.insert(dbPayload);
       }
 
       if (res?.error) {
