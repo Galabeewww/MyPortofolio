@@ -6,6 +6,7 @@ import {
   ArrowUpRight,
   ChevronDown,
   ChevronUp,
+  Calendar,
 } from "lucide-react";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -36,7 +37,7 @@ const GithubIcon = (props) => (
 const MOCK_PROJECTS = [];
 
 const Projects = () => {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedProject, setSelectedProject] = useState(null);
@@ -161,18 +162,51 @@ const Projects = () => {
   const getProjectYearMonthValue = (proj) => {
     if (!proj || !proj.created_at) return 0;
     const str = String(proj.created_at).trim();
-    // Match YYYY-MM format from Created At (Bulan & Tahun) input
     const match = str.match(/^(\d{4})-(\d{1,2})/);
     if (match) {
       const year = parseInt(match[1], 10);
       const month = parseInt(match[2], 10);
-      return year * 100 + month; // e.g. 202608 for August 2026
+      return year * 100 + month;
     }
     const d = new Date(proj.created_at);
     if (!isNaN(d.getTime())) {
       return d.getUTCFullYear() * 100 + (d.getUTCMonth() + 1);
     }
     return 0;
+  };
+
+  // Format month and year label (e.g. "Agustus 2026" / "August 2026")
+  const formatMonthYear = (createdAt) => {
+    if (!createdAt) return "";
+    const str = String(createdAt).trim();
+    const match = str.match(/^(\d{4})-(\d{1,2})/);
+    let year = 0;
+    let month = 0;
+
+    if (match) {
+      year = parseInt(match[1], 10);
+      month = parseInt(match[2], 10);
+    } else {
+      const d = new Date(createdAt);
+      if (!isNaN(d.getTime())) {
+        year = d.getUTCFullYear();
+        month = d.getUTCMonth() + 1;
+      }
+    }
+
+    if (!year || !month || month < 1 || month > 12) return "";
+
+    const monthNamesEn = [
+      "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+    ];
+    const monthNamesId = [
+      "Jan", "Feb", "Mar", "Apr", "Mei", "Jun",
+      "Jul", "Agus", "Sep", "Okt", "Nov", "Des"
+    ];
+
+    const monthName = (lang === "id" ? monthNamesId : monthNamesEn)[month - 1] || "";
+    return `${monthName} ${year}`;
   };
 
   // Sort projects descending by Created At (Bulan & Tahun) - newest year & month first
@@ -281,6 +315,13 @@ const Projects = () => {
                     <span className="text-[11px] font-extrabold uppercase tracking-wider text-sky-500 px-3 py-1 rounded-full bg-sky-500/10 border border-sky-500/20">
                       {project.category || "WEB"}
                     </span>
+
+                    {project.created_at && (
+                      <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[var(--text-muted)] px-2.5 py-1 rounded-md bg-[var(--bg-secondary)] border border-[var(--border-color)]">
+                        <Calendar size={12} className="text-sky-500" />
+                        <span>{formatMonthYear(project.created_at)}</span>
+                      </span>
+                    )}
                   </div>
 
                   <h3 className="text-xl sm:text-2xl font-bold font-display text-[var(--text-primary)] group-hover:text-sky-500 transition-colors">
