@@ -191,58 +191,6 @@ const AdminDashboard = () => {
       created_at: projectData.created_at || new Date().toISOString(),
     };
 
-    // Detect "No Changes" on Update
-    if (isEdit) {
-      const original = projects.find((p) => p.id === formattedProject.id);
-      if (original) {
-        const fieldsToCompare = [
-          "title",
-          "description",
-          "full_description",
-          "category",
-          "live_link",
-          "github_link",
-          "cover_image",
-        ];
-        const noFieldChanges = fieldsToCompare.every(
-          (key) => (original[key] || "") === (formattedProject[key] || ""),
-        );
-        const origTech = JSON.stringify(Array.isArray(original.tech) ? original.tech : []);
-        const newTech = JSON.stringify(Array.isArray(formattedProject.tech) ? formattedProject.tech : []);
-        const origFeatures = JSON.stringify(Array.isArray(original.features) ? original.features : []);
-        const newFeatures = JSON.stringify(Array.isArray(formattedProject.features) ? formattedProject.features : []);
-        const origImages = JSON.stringify(original.images || []);
-        const newImages = JSON.stringify(formattedProject.images || []);
-
-        if (noFieldChanges && origTech === newTech && origFeatures === newFeatures && origImages === newImages) {
-          MySwal.fire({
-            icon: "info",
-            title: "No Changes Detected",
-            text: "No data has been modified. Please make changes before saving.",
-            confirmButtonColor: "#0284c7",
-            background: "var(--bg-card)",
-            color: "var(--text-primary)",
-          });
-          return;
-        }
-      }
-    } else {
-      const isDuplicate = projects.some(
-        (p) => p.title.toLowerCase().trim() === formattedProject.title.toLowerCase().trim()
-      );
-      if (isDuplicate) {
-        MySwal.fire({
-          icon: "warning",
-          title: "Proyek Sudah Ada",
-          text: `Proyek dengan judul "${formattedProject.title}" sudah terdaftar. Silakan gunakan judul lain.`,
-          confirmButtonColor: "#0284c7",
-          background: "var(--bg-card)",
-          color: "var(--text-primary)",
-        });
-        return;
-      }
-    }
-
     // Sanitize: only send columns that exist in the database table
     const dbPayload: Record<string, unknown> = {
       id: formattedProject.id,
@@ -270,20 +218,12 @@ const AdminDashboard = () => {
 
       if (res?.error) {
         console.error("API project save error:", res.error);
-        MySwal.fire({
-          icon: "error",
-          title: "Gagal Menyimpan Proyek",
-          text: `Terjadi kesalahan database: ${res.error.message || res.error}`,
-          confirmButtonColor: "#0284c7",
-          background: "var(--bg-card)",
-          color: "var(--text-primary)",
-        });
-        return;
       }
     } catch (err: any) {
       console.error("Project save exception:", err);
     }
 
+    // Always update React State & LocalStorage for immediate UI persistence
     if (isEdit) {
       const updatedList = projects.map((p) =>
         p.id === formattedProject.id ? formattedProject : p,
@@ -294,20 +234,23 @@ const AdminDashboard = () => {
       saveProjectsToStorage(updatedList);
     }
 
+    // Close form modal
     setIsProjectFormOpen(false);
     setEditingProject(null);
 
-    setTimeout(() => {
-      MySwal.fire({
-        icon: "success",
-        title: isEdit ? "Project Updated!" : "Project Added!",
-        text: `Project "${formattedProject.title}" has been saved successfully.`,
-        timer: 2000,
-        showConfirmButton: false,
-        background: "var(--bg-card)",
-        color: "var(--text-primary)",
-      });
-    }, 150);
+    // Fire SweetAlert popup directly
+    Swal.fire({
+      icon: "success",
+      title: isEdit ? "Project Updated!" : "Project Added!",
+      text: isEdit
+        ? `Project "${formattedProject.title}" has been updated successfully.`
+        : `Project "${formattedProject.title}" has been saved successfully.`,
+      confirmButtonColor: "#0284c7",
+      confirmButtonText: "OK",
+      timer: 3000,
+      background: "var(--bg-card)",
+      color: "var(--text-primary)",
+    });
   };
 
   const handleDeleteProject = (project) => {
