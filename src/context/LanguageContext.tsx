@@ -86,6 +86,8 @@ const translations = {
       copiedTitle: "Link Copied",
       copiedText: "Project link has been copied to clipboard!",
       noProjects: "No projects found in this category.",
+      viewAll: "View All Projects",
+      showLess: "Show Less",
     },
     contact: {
       titlePrefix: "Get In ",
@@ -206,6 +208,8 @@ const translations = {
       copiedTitle: "Tautan Disalin",
       copiedText: "Tautan proyek telah berhasil disalin ke papan klip!",
       noProjects: "Tidak ada proyek ditemukan dalam kategori ini.",
+      viewAll: "Lihat Semua Proyek",
+      showLess: "Tampilkan Lebih Sedikit",
     },
     contact: {
       titlePrefix: "Hubungi ",

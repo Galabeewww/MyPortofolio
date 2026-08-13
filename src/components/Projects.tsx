@@ -4,6 +4,8 @@ import {
   X,
   Maximize2,
   ArrowUpRight,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -41,6 +43,7 @@ const Projects = () => {
   const [previewImage, setPreviewImage] = useState(null);
   const [activeCategory, setActiveCategory] = useState("ALL");
   const [categories, setCategories] = useState([]);
+  const [showAll, setShowAll] = useState(false);
 
   useEffect(() => {
     fetchProjects();
@@ -154,12 +157,38 @@ const Projects = () => {
     });
   };
 
+  // Helper to parse date/year for newest-first sorting
+  const getProjectTimestamp = (proj) => {
+    if (!proj || !proj.created_at) return 0;
+    const val = proj.created_at;
+    if (typeof val === "number") return val;
+    const parsed = new Date(val).getTime();
+    if (!isNaN(parsed)) return parsed;
+    const str = String(val).trim();
+    const match = str.match(/^(\d{4})(?:-(\d{1,2}))?/);
+    if (match) {
+      const year = parseInt(match[1], 10);
+      const month = parseInt(match[2] || "1", 10);
+      return new Date(year, month - 1, 1).getTime();
+    }
+    return 0;
+  };
+
+  // Sort projects descending (newest date / year first)
+  const sortedProjects = [...projects].sort(
+    (a, b) => getProjectTimestamp(b) - getProjectTimestamp(a)
+  );
+
   const filteredProjects =
     activeCategory === "ALL"
-      ? projects
-      : projects.filter(
+      ? sortedProjects
+      : sortedProjects.filter(
           (p) => (p.category || "").toUpperCase() === activeCategory.toUpperCase()
         );
+
+  const displayedProjects = showAll
+    ? filteredProjects
+    : filteredProjects.slice(0, 4);
 
   return (
     <section id="projects" className="py-24 relative border-t border-[var(--border-color)]">
@@ -177,7 +206,10 @@ const Projects = () => {
         {categories.length > 0 && (
           <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
             <button
-              onClick={() => setActiveCategory("ALL")}
+              onClick={() => {
+                setActiveCategory("ALL");
+                setShowAll(false);
+              }}
               className={`px-4 py-2 rounded-full text-xs font-bold transition-all duration-200 cursor-pointer ${
                 activeCategory === "ALL"
                   ? "bg-sky-500 text-white shadow-md shadow-sky-500/25"
@@ -190,7 +222,10 @@ const Projects = () => {
             {categories.map((cat) => (
               <button
                 key={cat.id || cat.name}
-                onClick={() => setActiveCategory(cat.name)}
+                onClick={() => {
+                  setActiveCategory(cat.name);
+                  setShowAll(false);
+                }}
                 className={`px-4 py-2 rounded-full text-xs font-bold transition-all duration-200 cursor-pointer ${
                   activeCategory.toUpperCase() === cat.name.toUpperCase()
                     ? "bg-sky-500 text-white shadow-md shadow-sky-500/25"
@@ -205,7 +240,7 @@ const Projects = () => {
 
         {/* Grid Proyek */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {filteredProjects.map((project) => (
+          {displayedProjects.map((project) => (
             <div
               key={project.id}
               onClick={() => setSelectedProject(project)}
@@ -218,8 +253,8 @@ const Projects = () => {
                   alt={project.title}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   onError={(e) => {
-                    e.target.onerror = null;
-                    e.target.src = "/project/py.png";
+                    (e.target as HTMLImageElement).onerror = null;
+                    (e.target as HTMLImageElement).src = "/project/py.png";
                   }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
@@ -301,6 +336,34 @@ const Projects = () => {
             </div>
           ))}
         </div>
+
+        {/* View All / Show Less Button */}
+        {filteredProjects.length > 4 && (
+          <div className="flex justify-center pt-6">
+            <button
+              onClick={() => {
+                if (showAll) {
+                  setShowAll(false);
+                  document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" });
+                } else {
+                  setShowAll(true);
+                }
+              }}
+              className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-[var(--bg-card)] hover:bg-[var(--bg-secondary)] border border-[var(--border-color)] hover:border-sky-500/50 text-[var(--text-primary)] font-bold text-xs sm:text-sm shadow-xl transition-all duration-300 hover:scale-105 cursor-pointer group"
+            >
+              <span>
+                {showAll
+                  ? (t.projects.showLess || "Show Less")
+                  : `${t.projects.viewAll || "View All Projects"} (${filteredProjects.length})`}
+              </span>
+              {showAll ? (
+                <ChevronUp size={16} className="text-sky-500 group-hover:-translate-y-1 transition-transform" />
+              ) : (
+                <ChevronDown size={16} className="text-sky-500 group-hover:translate-y-1 transition-transform" />
+              )}
+            </button>
+          </div>
+        )}
 
         {filteredProjects.length === 0 && !loading && (
           <div className="text-center py-12 text-[var(--text-muted)]">
