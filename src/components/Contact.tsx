@@ -77,8 +77,10 @@ const Contact = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Validasi form
     if (!formData.name || !formData.email || !formData.message) {
       MySwal.fire({
         icon: "error",
@@ -93,23 +95,56 @@ const Contact = () => {
 
     setStatus("sending");
 
-    setTimeout(() => {
-      setStatus("success");
-      setFormData({ name: "", email: "", message: "" });
-      setIsFormModalOpen(false);
+    try {
+      // Ganti "PASTE_ACCESS_KEY_DISINI" dengan Access Key yang Anda dapatkan dari Web3Forms
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          access_key: import.meta.env.VITE_WEB3FORMS_KEY,
+          name: formData.name,
+          email: formData.email,
+          message: formData.message,
+        }),
+      });
 
+      const result = await response.json();
+
+      if (result.success) {
+        setStatus("success");
+        setFormData({ name: "", email: "", message: "" });
+        setIsFormModalOpen(false);
+
+        MySwal.fire({
+          icon: "success",
+          title: t.contact.successTitle,
+          text: t.contact.successText,
+          timer: 3000,
+          showConfirmButton: false,
+          background: "var(--bg-card)",
+          color: "var(--text-primary)",
+        });
+
+        setTimeout(() => setStatus("idle"), 3000);
+      } else {
+        console.error("Error dari Web3Forms:", result);
+        throw new Error(result.message || "Gagal mengirim pesan");
+      }
+    } catch (error) {
+      console.error("Catch error:", error);
+      setStatus("idle");
       MySwal.fire({
-        icon: "success",
-        title: t.contact.successTitle,
-        text: t.contact.successText,
-        timer: 3000,
-        showConfirmButton: false,
+        icon: "error",
+        title: "Oops...",
+        text: "Terjadi kesalahan saat mengirim pesan. Coba lagi nanti.",
+        confirmButtonColor: "#0284c7",
         background: "var(--bg-card)",
         color: "var(--text-primary)",
       });
-
-      setTimeout(() => setStatus("idle"), 3000);
-    }, 1500);
+    }
   };
 
   return (
@@ -130,8 +165,6 @@ const Contact = () => {
         </div>
 
         {/* Main Contact Layout - Two Columns */}
-
-        {/* Right: 3 Contact Cards + Send Message */}
         <div className="lg:col-span-3 space-y-6">
           {/* 3 Quick Action Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -271,6 +304,7 @@ const Contact = () => {
                   onChange={handleChange}
                   placeholder={t.contact.namePlaceholder}
                   className="w-full px-4 py-3 rounded-xl bg-slate-100 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 text-slate-900 dark:text-white focus:outline-none focus:border-sky-500 transition-colors"
+                  required
                 />
               </div>
 
@@ -289,6 +323,7 @@ const Contact = () => {
                   onChange={handleChange}
                   placeholder={t.contact.emailPlaceholder}
                   className="w-full px-4 py-3 rounded-xl bg-slate-100 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 text-slate-900 dark:text-white focus:outline-none focus:border-sky-500 transition-colors"
+                  required
                 />
               </div>
 
@@ -307,6 +342,7 @@ const Contact = () => {
                   onChange={handleChange}
                   placeholder={t.contact.messagePlaceholder}
                   className="w-full px-4 py-3 rounded-xl bg-slate-100 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 text-slate-900 dark:text-white focus:outline-none focus:border-sky-500 transition-colors"
+                  required
                 />
               </div>
 
