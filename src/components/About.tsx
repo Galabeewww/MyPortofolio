@@ -13,23 +13,39 @@ import { useLanguage } from "../context/LanguageContext";
 const About = () => {
   const { t } = useLanguage();
 
-  const handleDownloadCV = () => {
-    const link = document.createElement("a");
-    link.href = "/cv.pdf";
-    link.download = "Muhammad_Abi_Rafdi_Pratama_CV.pdf";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-
-    Swal.fire({
-      icon: "success",
-      title: "Downloading CV...",
-      text: "Curriculum Vitae download has been initiated.",
-      timer: 2500,
-      showConfirmButton: false,
+  const handleDownloadCV = async () => {
+    const { value: selectedCV } = await Swal.fire({
+      title: "Pilih CV untuk diunduh",
+      input: "select",
+      inputOptions: {
+        cv_fullstack: "CV Fullstack Developer",
+        cv_qa: "CV Quality Assurance",
+      },
+      inputPlaceholder: "Pilih salah satu CV",
+      showCancelButton: true,
+      confirmButtonText: "Download",
       background: "var(--bg-card)",
       color: "var(--text-primary)",
     });
+
+    if (selectedCV) {
+      const link = document.createElement("a");
+      link.href = `/${selectedCV}.pdf`; // pastikan file ada di folder public
+      link.download = `${selectedCV}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      Swal.fire({
+        icon: "success",
+        title: "Downloading CV...",
+        text: `${selectedCV} sedang diunduh.`,
+        timer: 2500,
+        showConfirmButton: false,
+        background: "var(--bg-card)",
+        color: "var(--text-primary)",
+      });
+    }
   };
 
   return (
