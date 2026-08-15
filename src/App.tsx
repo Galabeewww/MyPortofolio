@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from './context/ThemeContext';
 import { AuthProvider } from './context/AuthContext';
@@ -13,17 +13,21 @@ import Projects from './components/Projects';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import FloatingThemeToggle from './components/FloatingThemeToggle';
+import RasenganIntro from './components/RasenganIntro';
 
 import Login from './pages/Login';
 import AdminDashboard from './pages/AdminDashboard';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function MainPortfolio() {
+  const [showIntro, setShowIntro] = useState(true);
+
   return (
     <div className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] relative bg-grid-pattern overflow-x-hidden transition-colors duration-250">
+      {showIntro && <RasenganIntro onComplete={() => setShowIntro(false)} />}
       <div className="relative z-10">
         <Navbar />
-        <Hero />
+        <Hero onReplayIntro={() => setShowIntro(true)} />
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <About />
           <Skills />

@@ -11,13 +11,13 @@ const Footer = () => {
         {/* <p className="text-xs">
           &copy; {currentYear} Muhammad Abi Rafdi Pratama. {t.footer.rights}
         </p> */}
-        <p className="text-xs">
+        <p className="text-xs ">
           &copy; {currentYear}{" "}
           <a
             href="https://www.linkedin.com/in/muhammad-abi-rafdi-pratama-436044290/"
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-[var(--text-primary)] transition-colors hover:underline"
+            className="hover:text-[var(--text-primary)] transition-colors hover:underline font-bold "
           >
             Muhammad Abi Rafdi Pratama
           </a>

@@ -13,9 +13,15 @@ const FloatingThemeToggle = () => {
       aria-label="Toggle Dark/Light Mode"
     >
       {theme === "dark" ? (
-        <Sun size={20} className="text-amber-400 group-hover:rotate-45 transition-transform duration-300" />
+        <Sun
+          size={20}
+          className="text-slate-700 group-hover:rotate-45 transition-transform duration-300"
+        />
       ) : (
-        <Moon size={20} className="text-slate-700 dark:text-zinc-200 group-hover:-rotate-12 transition-transform duration-300" />
+        <Moon
+          size={20}
+          className="text-slate-700 dark:text-zinc-200 group-hover:-rotate-12 transition-transform duration-300"
+        />
       )}
     </button>
   );

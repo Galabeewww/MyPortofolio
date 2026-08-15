@@ -249,3 +249,69 @@ body {
   }
 }
 
+/* ===== RASENGAN INTRO ANIMATIONS ===== */
+@keyframes rasenganSpin {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  50% {
+    transform: rotate(180deg) scale(1.08);
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
+  }
+}
+
+@keyframes rasenganReverseSpin {
+  0% {
+    transform: rotate(360deg) scale(1);
+  }
+  50% {
+    transform: rotate(180deg) scale(0.92);
+  }
+  100% {
+    transform: rotate(0deg) scale(1);
+  }
+}
+
+@keyframes rasenganPulse {
+  0%, 100% {
+    box-shadow: 0 0 35px #38bdf8, 0 0 75px #0284c7, inset 0 0 30px #ffffff;
+    filter: brightness(1);
+  }
+  50% {
+    box-shadow: 0 0 65px #38bdf8, 0 0 130px #0284c7, inset 0 0 50px #ffffff;
+    filter: brightness(1.3);
+  }
+}
+
+@keyframes rasenganExpandWipe {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(45);
+    opacity: 0;
+  }
+}
+
+.animate-rasengan-spin {
+  animation: rasenganSpin 0.7s linear infinite;
+}
+
+.animate-rasengan-spin-fast {
+  animation: rasenganSpin 0.35s linear infinite;
+}
+
+.animate-rasengan-spin-reverse {
+  animation: rasenganReverseSpin 0.5s linear infinite;
+}
+
+.animate-rasengan-pulse {
+  animation: rasenganPulse 1.2s ease-in-out infinite;
+}
+
