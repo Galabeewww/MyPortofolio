@@ -1,0 +1,255 @@
+==================================================================
+1. pertama (animasi kata2 doang)
+==================================================================
+
+import React, { useState, useEffect } from "react";
+
+interface LokiTextIntroProps {
+  onComplete: () => void;
+}
+
+const words = [
+  "Selamat Datang", // Indonesia
+  "Welcome", // English
+  "Bienvenido", // Spanish
+  "Bienvenue", // French
+  "Willkommen", // German
+  "Benvenuto", // Italian
+  "ようこそ", // Japanese
+  "欢迎", // Chinese
+  "Добро пожаловать", // Russian
+  "환영합니다", // Korean
+];
+
+const fonts = [
+  "font-bold tracking-widest",
+  "italic font-serif",
+  "font-mono text-lg",
+  "uppercase font-black",
+  "font-light text-xl",
+];
+
+const LokiTextIntro: React.FC<LokiTextIntroProps> = ({ onComplete }) => {
+  const [index, setIndex] = useState(0);
+  const [fade, setFade] = useState(false);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIndex((prev) => (prev + 1) % words.length);
+    }, 400); // ganti kata tiap 0.4 detik
+
+    const finish = setTimeout(() => {
+      setFade(true);
+      setTimeout(onComplete, 1000); // fade out lalu lanjut
+    }, 5000); // total durasi intro 5 detik
+
+    return () => {
+      clearInterval(interval);
+      clearTimeout(finish);
+    };
+  }, [onComplete]);
+
+  return (
+    <div
+      className={`fixed inset-0 flex items-center justify-center bg-white z-[200] transition-opacity duration-1000 ${
+        fade ? "opacity-0 pointer-events-none" : "opacity-100"
+      }`}
+    >
+      <h1
+        className={`text-black text-4xl sm:text-6xl transition-all duration-300 ${
+          fonts[index % fonts.length]
+        }`}
+      >
+        {words[index]}
+      </h1>
+    </div>
+  );
+};
+
+export default LokiTextIntro;
+
+==================================================================
+2. kedua (kata2 warna)
+==================================================================
+import React, { useState, useEffect } from "react";
+
+interface LokiTextIntroProps {
+  onComplete: () => void;
+}
+
+const words = [
+  "Welcome",        // English
+  "Bienvenido",     // Spanish
+  "Bienvenue",      // French
+  "Willkommen",     // German
+  "Benvenuto",      // Italian
+  "ようこそ",        // Japanese
+  "欢迎",            // Chinese
+  "Добро пожаловать", // Russian
+  "환영합니다",       // Korean
+  "Selamat Datang", // Indonesia (last)
+];
+
+// Variasi font & warna untuk huruf terakhir (Indonesia)
+const letterStyles = [
+  "text-red-500 font-black",
+  "text-green-500 italic font-serif",
+  "text-blue-500 font-bold tracking-widest",
+  "text-yellow-500 font-mono",
+  "text-purple-500 uppercase font-extrabold",
+  "text-pink-500 font-light",
+  "text-indigo-500 font-semibold",
+  "text-orange-500 font-display",
+  "text-teal-500 font-medium",
+  "text-emerald-500 font-black",
+  "text-cyan-500 font-thin",
+  "text-fuchsia-500 font-bold",
+  "text-lime-500 font-extrabold",
+  "text-rose-500 font-mono",
+];
+
+const LokiTextIntro: React.FC<LokiTextIntroProps> = ({ onComplete }) => {
+  const [index, setIndex] = useState(0);
+  const [fade, setFade] = useState(false);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIndex((prev) => (prev + 1) % words.length);
+    }, 500); // ganti kata tiap 0.5 detik
+
+    const finish = setTimeout(() => {
+      setFade(true);
+      setTimeout(onComplete, 1500); // fade out lalu lanjut
+    }, 6000); // total durasi intro 6 detik
+
+    return () => {
+      clearInterval(interval);
+      clearTimeout(finish);
+    };
+  }, [onComplete]);
+
+  const currentWord = words[index];
+
+  return (
+    <div
+      className={`fixed inset-0 flex items-center justify-center bg-black z-[200] transition-opacity duration-1000 ${
+        fade ? "opacity-0 pointer-events-none" : "opacity-100"
+      }`}
+    >
+      {currentWord === "Selamat Datang" ? (
+        <div className="flex gap-1 text-4xl sm:text-6xl">
+          {currentWord.split("").map((letter, i) => (
+            <span
+              key={i}
+              className={`${letterStyles[i % letterStyles.length]} transition-all duration-300`}
+            >
+              {letter}
+            </span>
+          ))}
+        </div>
+      ) : (
+        <h1 className="text-white text-4xl sm:text-6xl font-bold transition-all duration-300">
+          {currentWord}
+        </h1>
+      )}
+    </div>
+  );
+};
+
+export default LokiTextIntro;
+
+==================================================================
+3. ketiga (kata2 warna + animasi)
+==================================================================
+
+import React, { useState, useEffect } from "react";
+
+interface LokiTextIntroProps {
+  onComplete: () => void;
+}
+
+const words = [
+  "Welcome",        // English
+  "Bienvenido",     // Spanish
+  "Bienvenue",      // French
+  "Willkommen",     // German
+  "Benvenuto",      // Italian
+  "ようこそ",        // Japanese
+  "欢迎",            // Chinese
+  "Добро пожаловать", // Russian
+  "환영합니다",       // Korean
+  "Selamat Datang", // Indonesia (last)
+];
+
+const letterStyles = [
+  "text-red-500 font-black",
+  "text-green-500 italic font-serif",
+  "text-blue-500 font-bold tracking-widest",
+  "text-yellow-500 font-mono",
+  "text-purple-500 uppercase font-extrabold",
+  "text-pink-500 font-light",
+  "text-indigo-500 font-semibold",
+  "text-orange-500 font-display",
+  "text-teal-500 font-medium",
+  "text-emerald-500 font-black",
+  "text-cyan-500 font-thin",
+  "text-fuchsia-500 font-bold",
+  "text-lime-500 font-extrabold",
+  "text-rose-500 font-mono",
+];
+
+const LokiTextIntro: React.FC<LokiTextIntroProps> = ({ onComplete }) => {
+  const [index, setIndex] = useState(0);
+  const [phase, setPhase] = useState<"words" | "circle" | "fade">("words");
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIndex((prev) => {
+        if (prev + 1 === words.length) {
+          clearInterval(interval);
+          // setelah kata terakhir, ubah jadi circle
+          setTimeout(() => setPhase("circle"), 1200);
+          // fade out setelah circle expand
+          setTimeout(() => setPhase("fade"), 2500);
+          // masuk halaman utama
+          setTimeout(onComplete, 3500);
+        }
+        return (prev + 1) % words.length;
+      });
+    }, 600);
+
+    return () => clearInterval(interval);
+  }, [onComplete]);
+
+  const currentWord = words[index];
+
+  return (
+    <div
+      className={`fixed inset-0 flex items-center justify-center bg-black z-[200] transition-opacity duration-1000 ${
+        phase === "fade" ? "opacity-0 pointer-events-none" : "opacity-100"
+      }`}
+    >
+      {phase === "words" ? (
+        <div className="flex gap-1 text-3xl sm:text-5xl">
+          {currentWord.split("").map((letter, i) => (
+            <span
+              key={i}
+              className={`${letterStyles[i % letterStyles.length]} transition-all duration-300`}
+            >
+              {letter}
+            </span>
+          ))}
+        </div>
+      ) : (
+        <div
+          className={`rounded-full bg-gradient-to-r from-emerald-400 via-green-600 to-yellow-500 transition-transform duration-1000 ${
+            phase === "circle" ? "w-24 h-24 scale-[1]" : "w-[2000px] h-[2000px] scale-[50]"
+          }`}
+        />
+      )}
+    </div>
+  );
+};
+
+export default LokiTextIntro;
+
