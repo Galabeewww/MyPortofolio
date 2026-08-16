@@ -3,6 +3,7 @@ import { Mail, Send, X, MapPin, Briefcase, ArrowUpRight } from "lucide-react";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { useLanguage } from "../context/LanguageContext";
+import { useScrollReveal } from "../hooks/useScrollReveal";
 
 const MySwal = withReactContent(Swal);
 
@@ -43,27 +44,9 @@ const LinkedinIcon = (props) => (
   </svg>
 );
 
-const InstagramIcon = (props) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width={props.size || 24}
-    height={props.size || 24}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    {...props}
-  >
-    <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
-    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-    <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
-  </svg>
-);
-
 const Contact = () => {
   const { t } = useLanguage();
+  const { ref: sectionRef, isVisible } = useScrollReveal();
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -80,7 +63,6 @@ const Contact = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validasi form
     if (!formData.name || !formData.email || !formData.message) {
       MySwal.fire({
         icon: "error",
@@ -96,7 +78,6 @@ const Contact = () => {
     setStatus("sending");
 
     try {
-      // Ganti "PASTE_ACCESS_KEY_DISINI" dengan Access Key yang Anda dapatkan dari Web3Forms
       const response = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
         headers: {
@@ -149,6 +130,7 @@ const Contact = () => {
 
   return (
     <section
+      ref={sectionRef}
       id="contact"
       className="py-24 relative border-t border-[var(--border-color)]"
     >
@@ -164,8 +146,12 @@ const Contact = () => {
           </p>
         </div>
 
-        {/* Main Contact Layout - Two Columns */}
-        <div className="lg:col-span-3 space-y-6">
+        {/* Main Contact Layout */}
+        <div
+          className={`lg:col-span-3 space-y-6 anim-contact-form ${
+            isVisible ? "is-visible" : ""
+          }`}
+        >
           {/* 3 Quick Action Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {/* Email Card */}

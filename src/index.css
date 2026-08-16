@@ -243,10 +243,109 @@ body {
   }
 }
 
-@media (min-width: 1024px) {
-  .hero-ribbon-band {
-    padding: 20px 0;
+/* ===== DISTINCT SECTION SCROLL ENTRANCE ANIMATIONS ===== */
+.section-reveal {
+  opacity: 0;
+  will-change: opacity, transform;
+  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* 1. Hero Section: Scale-Up & Glow Drop */
+.anim-hero-content {
+  opacity: 0;
+  transform: scale(0.92) translateY(24px);
+  transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.anim-hero-content.is-visible {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+}
+
+/* 2. About Section: Bi-Directional Split Slide */
+.anim-about-left {
+  opacity: 0;
+  transform: translateX(-70px);
+  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.anim-about-left.is-visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.anim-about-right {
+  opacity: 0;
+  transform: translateX(70px);
+  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.15s,
+              transform 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.15s;
+}
+.anim-about-right.is-visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* 3. Skills Section: 3D Flip Up */
+.anim-skills-container {
+  opacity: 0;
+  transform: perspective(1000px) rotateX(-25deg) translateY(45px);
+  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.anim-skills-container.is-visible {
+  opacity: 1;
+  transform: perspective(1000px) rotateX(0deg) translateY(0);
+}
+
+/* 4. Experience Section: Timeline Slide Up & Glow */
+.anim-exp-card {
+  opacity: 0;
+  transform: translateY(55px) scale(0.95);
+  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.anim-exp-card.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* 5. Projects Section: Ascending Zoom Wave */
+.anim-project-card {
+  opacity: 0;
+  transform: scale(0.88) translateY(45px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.anim-project-card.is-visible {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+}
+
+/* 6. Contact Section: Elastic Spring Rise */
+.anim-contact-form {
+  opacity: 0;
+  transform: translateY(65px);
+  transition: opacity 0.9s cubic-bezier(0.34, 1.45, 0.64, 1),
+              transform 0.9s cubic-bezier(0.34, 1.45, 0.64, 1);
+}
+.anim-contact-form.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Shimmer Loading Animation for Skeletons */
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
   }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 1.8s infinite;
 }
 
 /* ===== RASENGAN INTRO ANIMATIONS ===== */

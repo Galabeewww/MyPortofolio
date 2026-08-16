@@ -13,6 +13,8 @@ import withReactContent from "sweetalert2-react-content";
 import { supabase, isSupabaseConfigured } from "../lib/supabaseClient";
 import { useLanguage } from "../context/LanguageContext";
 import ProjectDetailModal from "./ProjectDetailModal";
+import { ProjectsSkeleton } from "./Skeletons";
+import { useScrollReveal } from "../hooks/useScrollReveal";
 
 const MySwal = withReactContent(Swal);
 
@@ -45,6 +47,8 @@ const Projects = () => {
   const [activeCategory, setActiveCategory] = useState("ALL");
   const [categories, setCategories] = useState([]);
   const [showAll, setShowAll] = useState(false);
+
+  const { ref: sectionRef, isVisible } = useScrollReveal();
 
   useEffect(() => {
     fetchProjects();
@@ -228,7 +232,11 @@ const Projects = () => {
     : filteredProjects.slice(0, 4);
 
   return (
-    <section id="projects" className="py-24 relative border-t border-[var(--border-color)]">
+    <section
+      ref={sectionRef}
+      id="projects"
+      className="py-24 relative border-t border-[var(--border-color)]"
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-12">
         <div className="text-center max-w-3xl mx-auto space-y-3">
           <h2 className="text-3xl sm:text-5xl font-extrabold font-display text-[var(--text-primary)] tracking-tight">
@@ -239,50 +247,57 @@ const Projects = () => {
           </p>
         </div>
 
-        {/* Filter Kategori */}
-        {categories.length > 0 && (
-          <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
-            <button
-              onClick={() => {
-                setActiveCategory("ALL");
-                setShowAll(false);
-              }}
-              className={`px-4 py-2 rounded-full text-xs font-bold transition-all duration-200 cursor-pointer ${
-                activeCategory === "ALL"
-                  ? "bg-sky-500 text-white shadow-md shadow-sky-500/25"
-                  : "bg-[var(--bg-card)] border border-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
-              }`}
-            >
-              {t.projects.allCategories}
-            </button>
+        {loading ? (
+          <ProjectsSkeleton />
+        ) : (
+          <>
+            {/* Filter Kategori */}
+            {categories.length > 0 && (
+              <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
+                <button
+                  onClick={() => {
+                    setActiveCategory("ALL");
+                    setShowAll(false);
+                  }}
+                  className={`px-4 py-2 rounded-full text-xs font-bold transition-all duration-200 cursor-pointer ${
+                    activeCategory === "ALL"
+                      ? "bg-sky-500 text-white shadow-md shadow-sky-500/25"
+                      : "bg-[var(--bg-card)] border border-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+                  }`}
+                >
+                  {t.projects.allCategories}
+                </button>
 
-            {categories.map((cat) => (
-              <button
-                key={cat.id || cat.name}
-                onClick={() => {
-                  setActiveCategory(cat.name);
-                  setShowAll(false);
-                }}
-                className={`px-4 py-2 rounded-full text-xs font-bold transition-all duration-200 cursor-pointer ${
-                  activeCategory.toUpperCase() === cat.name.toUpperCase()
-                    ? "bg-sky-500 text-white shadow-md shadow-sky-500/25"
-                    : "bg-[var(--bg-card)] border border-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
-                }`}
-              >
-                {cat.name}
-              </button>
-            ))}
-          </div>
-        )}
+                {categories.map((cat) => (
+                  <button
+                    key={cat.id || cat.name}
+                    onClick={() => {
+                      setActiveCategory(cat.name);
+                      setShowAll(false);
+                    }}
+                    className={`px-4 py-2 rounded-full text-xs font-bold transition-all duration-200 cursor-pointer ${
+                      activeCategory.toUpperCase() === cat.name.toUpperCase()
+                        ? "bg-sky-500 text-white shadow-md shadow-sky-500/25"
+                        : "bg-[var(--bg-card)] border border-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+                    }`}
+                  >
+                    {cat.name}
+                  </button>
+                ))}
+              </div>
+            )}
 
-        {/* Grid Proyek */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {displayedProjects.map((project) => (
-            <div
-              key={project.id}
-              onClick={() => setSelectedProject(project)}
-              className="glow-card group rounded-3xl bg-[var(--bg-card)] border border-[var(--border-color)] overflow-hidden flex flex-col justify-between transition-all duration-300 hover:border-sky-500/50 cursor-pointer shadow-xl"
-            >
+            {/* Grid Proyek */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {displayedProjects.map((project, idx) => (
+                <div
+                  key={project.id}
+                  onClick={() => setSelectedProject(project)}
+                  style={{ transitionDelay: `${idx * 0.1}s` }}
+                  className={`glow-card group rounded-3xl bg-[var(--bg-card)] border border-[var(--border-color)] overflow-hidden flex flex-col justify-between cursor-pointer shadow-xl anim-project-card ${
+                    isVisible ? "is-visible" : ""
+                  }`}
+                >
               {/* Gambar Cover Proyek */}
               <div className="relative aspect-[16/10] overflow-hidden bg-slate-900 border-b border-[var(--border-color)]">
                 <img
@@ -414,6 +429,8 @@ const Projects = () => {
             <p>{t.projects.noProjects}</p>
           </div>
         )}
+      </>
+    )}
       </div>
 
       {/* Pop-Up Modal Detail Proyek Sesuai Referensi Gambar */}

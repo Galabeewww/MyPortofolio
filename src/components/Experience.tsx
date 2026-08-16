@@ -2,11 +2,14 @@ import React, { useState, useEffect } from "react";
 import { Briefcase, Calendar, MapPin, CheckCircle2 } from "lucide-react";
 import { supabase, isSupabaseConfigured } from "../lib/supabaseClient";
 import { useLanguage } from "../context/LanguageContext";
+import { ExperienceSkeleton } from "./Skeletons";
+import { useScrollReveal } from "../hooks/useScrollReveal";
 
 const Experience = () => {
   const [experiences, setExperiences] = useState([]);
   const [loading, setLoading] = useState(true);
   const { t } = useLanguage();
+  const { ref: sectionRef, isVisible } = useScrollReveal();
 
   useEffect(() => {
     fetchExperiences();
@@ -53,6 +56,7 @@ const Experience = () => {
 
   return (
     <section
+      ref={sectionRef}
       id="experience"
       className="py-24 relative border-t border-[var(--border-color)] overflow-hidden"
     >
@@ -70,9 +74,7 @@ const Experience = () => {
 
         {/* Timeline Container */}
         {loading ? (
-          <div className="text-center py-12 text-[var(--text-muted)]">
-            Loading experience data...
-          </div>
+          <ExperienceSkeleton />
         ) : experiences.length === 0 ? (
           <div className="text-center py-16 p-8 rounded-3xl border border-[var(--border-color)] bg-[var(--bg-card)] space-y-3 max-w-lg mx-auto">
             <div className="p-4 rounded-2xl bg-sky-500/10 text-sky-500 w-fit mx-auto border border-sky-500/20">
@@ -107,14 +109,17 @@ const Experience = () => {
                 return (
                   <div
                     key={exp.id || index}
-                    className="relative flex flex-col md:flex-row items-center w-full"
+                    style={{ transitionDelay: `${index * 0.15}s` }}
+                    className={`relative flex flex-col md:flex-row items-center w-full anim-exp-card ${
+                      isVisible ? "is-visible" : ""
+                    }`}
                   >
                     {/* Glowing Center Node Circle */}
                     <div className="absolute left-4 md:left-1/2 -translate-x-1/2 w-6 h-6 rounded-full bg-[var(--bg-primary)] border-4 border-sky-500 shadow-[0_0_15px_rgba(14,165,233,0.6)] z-20 flex items-center justify-center">
-                      <div className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
+                      <div className="w-1.5 h-1.5 rounded-full bg-sky-500 animate-ping" />
                     </div>
 
-                    {/* Timeline Card Container dengan Jarak Simetris di Kiri & Kanan */}
+                    {/* Timeline Card Container */}
                     <div
                       className={`w-full md:w-1/2 ${
                         isEven
@@ -147,7 +152,6 @@ const Experience = () => {
                             <span>{exp.company}</span>
                             {exp.location && (
                               <div className="flex items-center gap-1 text-[var(--text-muted)]">
-                                {/* <span>•</span> */}
                                 <MapPin size={13} />
                                 <span>{exp.location}</span>
                               </div>

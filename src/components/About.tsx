@@ -9,9 +9,11 @@ import {
 } from "lucide-react";
 import Swal from "sweetalert2";
 import { useLanguage } from "../context/LanguageContext";
+import { useScrollReveal } from "../hooks/useScrollReveal";
 
 const About = () => {
   const { t } = useLanguage();
+  const { ref: sectionRef, isVisible } = useScrollReveal();
 
   const handleDownloadCV = async () => {
     const { value: selectedCV } = await Swal.fire({
@@ -30,7 +32,7 @@ const About = () => {
 
     if (selectedCV) {
       const link = document.createElement("a");
-      link.href = `/${selectedCV}.pdf`; // pastikan file ada di folder public
+      link.href = `/${selectedCV}.pdf`;
       link.download = `${selectedCV}.pdf`;
       document.body.appendChild(link);
       link.click();
@@ -50,6 +52,7 @@ const About = () => {
 
   return (
     <section
+      ref={sectionRef}
       id="about"
       className="py-24 relative border-t border-[var(--border-color)] overflow-hidden space-y-16"
     >
@@ -68,7 +71,11 @@ const About = () => {
         {/* Kartu Profil Bio & Fitur Utama */}
         <div className="glow-card p-6 sm:p-10 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-color)] shadow-xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Kolom Kiri: Deskripsi & Informasi */}
-          <div className="lg:col-span-7 space-y-6 text-left">
+          <div
+            className={`lg:col-span-7 space-y-6 text-left anim-about-left ${
+              isVisible ? "is-visible" : ""
+            }`}
+          >
             <div className="space-y-3">
               <span className="inline-block px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider bg-sky-500/10 text-sky-500 border border-sky-500/30">
                 {t.about.badge}
@@ -105,7 +112,11 @@ const About = () => {
           </div>
 
           {/* Kolom Kanan: 3 Kartu Keunggulan / Pilar Utama */}
-          <div className="lg:col-span-5 space-y-4">
+          <div
+            className={`lg:col-span-5 space-y-4 anim-about-right ${
+              isVisible ? "is-visible" : ""
+            }`}
+          >
             <div className="p-5 rounded-2xl bg-[var(--bg-secondary)] border border-[var(--border-color)] flex items-start gap-4 hover:border-[var(--border-color-hover)] transition-all duration-300">
               <div className="p-3 rounded-xl bg-sky-500/10 text-sky-500 border border-sky-500/20 shrink-0">
                 <Code2 size={22} />
@@ -149,7 +160,7 @@ const About = () => {
             </div>
           </div>
 
-          {/* Tombol Download CV di bawah isi, rata tengah */}
+          {/* Tombol Download CV */}
           <div className="lg:col-span-12 flex justify-center pt-6">
             <button
               onClick={handleDownloadCV}

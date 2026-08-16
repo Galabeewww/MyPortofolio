@@ -1,6 +1,7 @@
 import React from "react";
 import { ArrowRight } from "lucide-react";
 import { useLanguage } from "../context/LanguageContext";
+import { useScrollReveal } from "../hooks/useScrollReveal";
 
 const GithubIcon = (props) => (
   <svg
@@ -41,6 +42,7 @@ const LinkedinIcon = (props) => (
 
 const Hero = ({ onReplayIntro }: { onReplayIntro?: () => void }) => {
   const { t } = useLanguage();
+  const { ref: sectionRef, isVisible } = useScrollReveal();
 
   const marqueeItems = t.hero.marqueeItems;
   const fullMarquee = [
@@ -54,8 +56,11 @@ const Hero = ({ onReplayIntro }: { onReplayIntro?: () => void }) => {
 
   return (
     <section
+      ref={sectionRef}
       id="home"
-      className="min-h-screen flex flex-col justify-between pt-24 pb-8 relative select-none w-full overflow-hidden"
+      className={`min-h-screen flex flex-col justify-between pt-24 pb-8 relative select-none w-full overflow-hidden anim-hero-content ${
+        isVisible ? "is-visible" : ""
+      }`}
     >
       {/* Background Glow */}
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-sky-500/10 dark:bg-sky-500/15 blur-[140px] pointer-events-none rounded-full" />

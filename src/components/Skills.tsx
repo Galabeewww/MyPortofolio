@@ -1,16 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { supabase, isSupabaseConfigured } from "../lib/supabaseClient";
 import { useLanguage } from "../context/LanguageContext";
+import { SkillsSkeleton } from "./Skeletons";
+import { useScrollReveal } from "../hooks/useScrollReveal";
 
 const Skills = () => {
   const [skillsList, setSkillsList] = useState([]);
+  const [loading, setLoading] = useState(true);
   const { t } = useLanguage();
+  const { ref: sectionRef, isVisible } = useScrollReveal();
 
   useEffect(() => {
     fetchSkills();
   }, []);
 
   const fetchSkills = async () => {
+    setLoading(true);
     const savedSkills = localStorage.getItem("portfolio_crud_skills");
 
     if (isSupabaseConfigured) {
@@ -24,6 +29,7 @@ const Skills = () => {
               category: item.category || "Skills",
             }))
           );
+          setLoading(false);
           return;
         }
       } catch (err) {
@@ -41,6 +47,7 @@ const Skills = () => {
         }))
       );
     }
+    setLoading(false);
   };
 
   const halfLength = Math.ceil(skillsList.length / 2);
@@ -52,6 +59,7 @@ const Skills = () => {
 
   return (
     <section
+      ref={sectionRef}
       id="skills"
       className="py-24 relative border-t border-[var(--border-color)] overflow-hidden space-y-12"
     >
@@ -65,9 +73,14 @@ const Skills = () => {
         </p>
       </div>
 
-      {/* Marquee Interaktif Bergerak Dinamis */}
-      {skillsList.length > 0 ? (
-        <div className="relative max-w-7xl mx-auto marquee-container py-4">
+      {loading ? (
+        <SkillsSkeleton />
+      ) : skillsList.length > 0 ? (
+        <div
+          className={`relative max-w-7xl mx-auto marquee-container py-4 anim-skills-container ${
+            isVisible ? "is-visible" : ""
+          }`}
+        >
           <div className="pointer-events-none absolute inset-y-0 left-0 w-20 sm:w-36 bg-gradient-to-r from-[var(--bg-primary)] via-[var(--bg-primary)]/80 to-transparent z-20" />
           <div className="pointer-events-none absolute inset-y-0 right-0 w-20 sm:w-36 bg-gradient-to-l from-[var(--bg-primary)] via-[var(--bg-primary)]/80 to-transparent z-20" />
 
@@ -83,8 +96,8 @@ const Skills = () => {
                     alt={skill.name}
                     className="w-7 h-7 sm:w-8 sm:h-8 object-contain transition-transform duration-300 group-hover:scale-110"
                     onError={(e) => {
-                      e.target.onerror = null;
-                      e.target.src = "/icon/react.png";
+                      (e.target as HTMLImageElement).onerror = null;
+                      (e.target as HTMLImageElement).src = "/icon/react.png";
                     }}
                   />
                   <span className="font-bold text-sm sm:text-base tracking-tight font-sans">
@@ -105,8 +118,8 @@ const Skills = () => {
                     alt={skill.name}
                     className="w-7 h-7 sm:w-8 sm:h-8 object-contain transition-transform duration-300 group-hover:scale-110"
                     onError={(e) => {
-                      e.target.onerror = null;
-                      e.target.src = "/icon/react.png";
+                      (e.target as HTMLImageElement).onerror = null;
+                      (e.target as HTMLImageElement).src = "/icon/react.png";
                     }}
                   />
                   <span className="font-bold text-sm sm:text-base tracking-tight font-sans">
