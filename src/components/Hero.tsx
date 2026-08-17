@@ -96,7 +96,7 @@ const Hero = ({ onReplayIntro }: { onReplayIntro?: () => void }) => {
 
           {/* Foto Profil Melingkar */}
           <div
-            onClick={onReplayIntro}
+            // onClick={onReplayIntro}
             className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-30 pointer-events-auto group cursor-pointer"
             title="Klik untuk putar ulang animasi Rasengan"
           >
