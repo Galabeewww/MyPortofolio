@@ -164,21 +164,21 @@ export default LokiTextIntro;
 
 import React, { useState, useEffect } from "react";
 
-interface LokiTextIntroProps {
+interface LanguangeTextIntroProps {
   onComplete: () => void;
 }
 
 const words = [
-  "Welcome",        // English
-  "Bienvenido",     // Spanish
-  "Bienvenue",      // French
-  "Willkommen",     // German
-  "Benvenuto",      // Italian
-  "ようこそ",        // Japanese
-  "欢迎",            // Chinese
-  "Добро пожаловать", // Russian
-  "환영합니다",       // Korean
-  "Selamat Datang", // Indonesia (last)
+  "Welcome",
+  "Bienvenido",
+  "Bienvenue",
+  "Willkommen",
+  "Benvenuto",
+  "ようこそ",
+  "欢迎",
+  "Добро пожаловать",
+  "환영합니다",
+  "Selamat Datang", // terakhir
 ];
 
 const letterStyles = [
@@ -198,25 +198,26 @@ const letterStyles = [
   "text-rose-500 font-mono",
 ];
 
-const LokiTextIntro: React.FC<LokiTextIntroProps> = ({ onComplete }) => {
+const LanguangeTextIntro: React.FC<LanguangeTextIntroProps> = ({
+  onComplete,
+}) => {
   const [index, setIndex] = useState(0);
-  const [phase, setPhase] = useState<"words" | "circle" | "fade">("words");
+  const [phase, setPhase] = useState<"words" | "expand" | "fade">("words");
 
   useEffect(() => {
     const interval = setInterval(() => {
       setIndex((prev) => {
-        if (prev + 1 === words.length) {
+        // berhenti sebelum kata terakhir
+        if (prev + 1 === words.length - 1) {
           clearInterval(interval);
-          // setelah kata terakhir, ubah jadi circle
-          setTimeout(() => setPhase("circle"), 1200);
-          // fade out setelah circle expand
+          // langsung masuk ke fase expand untuk kata terakhir
+          setTimeout(() => setPhase("expand"), 1000);
           setTimeout(() => setPhase("fade"), 2500);
-          // masuk halaman utama
           setTimeout(onComplete, 3500);
         }
-        return (prev + 1) % words.length;
+        return prev + 1;
       });
-    }, 600);
+    }, 700);
 
     return () => clearInterval(interval);
   }, [onComplete]);
@@ -225,12 +226,12 @@ const LokiTextIntro: React.FC<LokiTextIntroProps> = ({ onComplete }) => {
 
   return (
     <div
-      className={`fixed inset-0 flex items-center justify-center bg-black z-[200] transition-opacity duration-1000 ${
+      className={`fixed inset-0 flex items-center justify-center bg-white z-[200] transition-opacity duration-1000 ${
         phase === "fade" ? "opacity-0 pointer-events-none" : "opacity-100"
       }`}
     >
       {phase === "words" ? (
-        <div className="flex gap-1 text-3xl sm:text-5xl">
+        <div className="flex gap-3 text-5xl sm:text-8xl tracking-[0.35em] transition-all duration-700 ease-out">
           {currentWord.split("").map((letter, i) => (
             <span
               key={i}
@@ -240,16 +241,15 @@ const LokiTextIntro: React.FC<LokiTextIntroProps> = ({ onComplete }) => {
             </span>
           ))}
         </div>
+      ) : phase === "expand" ? (
+        <div></div>
       ) : (
-        <div
-          className={`rounded-full bg-gradient-to-r from-emerald-400 via-green-600 to-yellow-500 transition-transform duration-1000 ${
-            phase === "circle" ? "w-24 h-24 scale-[1]" : "w-[2000px] h-[2000px] scale-[50]"
-          }`}
-        />
+        <div />
       )}
     </div>
   );
 };
 
-export default LokiTextIntro;
+export default LanguangeTextIntro;
+
 

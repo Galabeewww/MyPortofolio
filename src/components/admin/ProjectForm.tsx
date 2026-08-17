@@ -318,7 +318,7 @@ const ProjectForm = ({ project, categories = [], onSave, onClose }) => {
             </div>
             <div>
               <label className="block text-xs font-semibold uppercase tracking-wider text-[var(--text-secondary)] mb-2">
-                GitHub Repository URL (Kosongkan jika tidak ada)
+                GitHub Repo URL (Kosongkan jika tidak ada)
               </label>
               <input
                 type="text"
