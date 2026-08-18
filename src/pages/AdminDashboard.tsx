@@ -13,6 +13,8 @@ import {
   CheckCircle2,
   Tag,
   Briefcase,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -59,6 +61,10 @@ const AdminDashboard = () => {
   const [experiences, setExperiences] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // State Pagination Projects
+  const [projectsPage, setProjectsPage] = useState(1);
+  const projectsPerPage = 6;
+
   const [editingProject, setEditingProject] = useState(null);
   const [isProjectFormOpen, setIsProjectFormOpen] = useState(false);
   const [editingSkill, setEditingSkill] = useState(null);
@@ -72,6 +78,20 @@ const AdminDashboard = () => {
     fetchData();
   }, []);
 
+  // Clamp halaman proyek jika data berubah (misal hapus/tambah)
+  useEffect(() => {
+    const totalPages = Math.max(
+      1,
+      Math.ceil(projects.length / projectsPerPage),
+    );
+    if (projectsPage > totalPages) {
+      setProjectsPage(totalPages);
+    }
+    if (projectsPage < 1) {
+      setProjectsPage(1);
+    }
+  }, [projects, projectsPage, projectsPerPage]);
+
   const fetchData = async () => {
     setLoading(true);
     try {
@@ -82,25 +102,41 @@ const AdminDashboard = () => {
         api.experiences.getAll().catch(() => ({ data: null })),
       ]);
 
-      if (resProjects?.data && Array.isArray(resProjects.data) && resProjects.data.length > 0) {
+      if (
+        resProjects?.data &&
+        Array.isArray(resProjects.data) &&
+        resProjects.data.length > 0
+      ) {
         setProjects(resProjects.data);
       } else {
         loadLocalProjects();
       }
 
-      if (resSkills?.data && Array.isArray(resSkills.data) && resSkills.data.length > 0) {
+      if (
+        resSkills?.data &&
+        Array.isArray(resSkills.data) &&
+        resSkills.data.length > 0
+      ) {
         setSkills(resSkills.data);
       } else {
         loadLocalSkills();
       }
 
-      if (resCat?.data && Array.isArray(resCat.data) && resCat.data.length > 0) {
+      if (
+        resCat?.data &&
+        Array.isArray(resCat.data) &&
+        resCat.data.length > 0
+      ) {
         setCategories(resCat.data);
       } else {
         loadLocalCategories();
       }
 
-      if (resExp?.data && Array.isArray(resExp.data) && resExp.data.length > 0) {
+      if (
+        resExp?.data &&
+        Array.isArray(resExp.data) &&
+        resExp.data.length > 0
+      ) {
         setExperiences(sortExperiences(resExp.data));
       } else {
         loadLocalExperiences();
@@ -120,7 +156,10 @@ const AdminDashboard = () => {
     if (saved) setProjects(JSON.parse(saved));
     else {
       setProjects(INITIAL_PROJECTS);
-      localStorage.setItem("portfolio_crud_projects", JSON.stringify(INITIAL_PROJECTS));
+      localStorage.setItem(
+        "portfolio_crud_projects",
+        JSON.stringify(INITIAL_PROJECTS),
+      );
     }
   };
 
@@ -129,7 +168,10 @@ const AdminDashboard = () => {
     if (saved) setSkills(JSON.parse(saved));
     else {
       setSkills(INITIAL_SKILLS);
-      localStorage.setItem("portfolio_crud_skills", JSON.stringify(INITIAL_SKILLS));
+      localStorage.setItem(
+        "portfolio_crud_skills",
+        JSON.stringify(INITIAL_SKILLS),
+      );
     }
   };
 
@@ -138,7 +180,10 @@ const AdminDashboard = () => {
     if (saved) setCategories(JSON.parse(saved));
     else {
       setCategories(INITIAL_CATEGORIES);
-      localStorage.setItem("portfolio_crud_categories", JSON.stringify(INITIAL_CATEGORIES));
+      localStorage.setItem(
+        "portfolio_crud_categories",
+        JSON.stringify(INITIAL_CATEGORIES),
+      );
     }
   };
 
@@ -169,14 +214,20 @@ const AdminDashboard = () => {
           ? value.map((item) => {
               if (item && typeof item === "object") {
                 const clone = { ...item };
-                if (typeof clone.cover_image === "string" && clone.cover_image.startsWith("data:image")) {
+                if (
+                  typeof clone.cover_image === "string" &&
+                  clone.cover_image.startsWith("data:image")
+                ) {
                   delete clone.cover_image;
                 }
                 if (Array.isArray(clone.images)) {
                   clone.images = clone.images.map((img: any) =>
-                    img && typeof img === "object" && typeof img.url === "string" && img.url.startsWith("data:image")
+                    img &&
+                    typeof img === "object" &&
+                    typeof img.url === "string" &&
+                    img.url.startsWith("data:image")
                       ? { ...img, url: "/icon/react.png" }
-                      : img
+                      : img,
                   );
                 }
                 return clone;
@@ -199,12 +250,15 @@ const AdminDashboard = () => {
         const match = str.match(/^(\d{4})-(\d{1,2})/);
         if (match) return parseInt(match[1], 10) * 100 + parseInt(match[2], 10);
         const d = new Date(proj.created_at);
-        if (!isNaN(d.getTime())) return d.getUTCFullYear() * 100 + (d.getUTCMonth() + 1);
+        if (!isNaN(d.getTime()))
+          return d.getUTCFullYear() * 100 + (d.getUTCMonth() + 1);
         return 0;
       };
       const diff = getYearMonth(b) - getYearMonth(a);
       if (diff !== 0) return diff;
-      return String(b.created_at || b.id).localeCompare(String(a.created_at || a.id));
+      return String(b.created_at || b.id).localeCompare(
+        String(a.created_at || a.id),
+      );
     });
   };
 
@@ -249,7 +303,9 @@ const AdminDashboard = () => {
       full_description: formattedProject.full_description || "",
       category: formattedProject.category || "",
       tech: Array.isArray(formattedProject.tech) ? formattedProject.tech : [],
-      features: Array.isArray(formattedProject.features) ? formattedProject.features : [],
+      features: Array.isArray(formattedProject.features)
+        ? formattedProject.features
+        : [],
       live_link: formattedProject.live_link || "",
       github_link: formattedProject.github_link || "",
       cover_image: formattedProject.cover_image || "",
@@ -260,7 +316,10 @@ const AdminDashboard = () => {
     try {
       let res;
       if (isEdit) {
-        const updatePayload = { ...dbPayload, updated_at: new Date().toISOString() };
+        const updatePayload = {
+          ...dbPayload,
+          updated_at: new Date().toISOString(),
+        };
         delete updatePayload.id;
         res = await api.projects.update(formattedProject.id, updatePayload);
       } else {
@@ -283,6 +342,7 @@ const AdminDashboard = () => {
     } else {
       const updatedList = [formattedProject, ...projects];
       saveProjectsToStorage(updatedList);
+      setProjectsPage(1); // Reset ke page 1 saat menambah data baru
     }
 
     // Close form modal
@@ -371,7 +431,9 @@ const AdminDashboard = () => {
       }
     } else {
       const isDuplicate = skills.some(
-        (s) => s.name.toLowerCase().trim() === formattedSkill.name.toLowerCase().trim()
+        (s) =>
+          s.name.toLowerCase().trim() ===
+          formattedSkill.name.toLowerCase().trim(),
       );
       if (isDuplicate) {
         MySwal.fire({
@@ -492,7 +554,9 @@ const AdminDashboard = () => {
       }
     } else {
       const isDuplicate = categories.some(
-        (c) => c.name.toLowerCase().trim() === formattedCat.name.toLowerCase().trim()
+        (c) =>
+          c.name.toLowerCase().trim() ===
+          formattedCat.name.toLowerCase().trim(),
       );
       if (isDuplicate) {
         MySwal.fire({
@@ -737,6 +801,57 @@ const AdminDashboard = () => {
     });
   };
 
+  // ===== PAGINATION HELPERS =====
+  const totalProjectPages = Math.max(
+    1,
+    Math.ceil(projects.length / projectsPerPage),
+  );
+  const indexOfLastProject = projectsPage * projectsPerPage;
+  const indexOfFirstProject = indexOfLastProject - projectsPerPage;
+  const currentProjects = projects.slice(
+    indexOfFirstProject,
+    indexOfLastProject,
+  );
+
+  const goToProjectsPage = (page: number) => {
+    if (page < 1 || page > totalProjectPages) return;
+    setProjectsPage(page);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const getPageNumbers = () => {
+    const pages: (number | string)[] = [];
+    const maxVisible = 5;
+
+    if (totalProjectPages <= maxVisible + 2) {
+      for (let i = 1; i <= totalProjectPages; i++) pages.push(i);
+      return pages;
+    }
+
+    pages.push(1);
+
+    let start = Math.max(2, projectsPage - 1);
+    let end = Math.min(totalProjectPages - 1, projectsPage + 1);
+
+    if (projectsPage <= 2) {
+      start = 2;
+      end = 4;
+    }
+    if (projectsPage >= totalProjectPages - 1) {
+      start = totalProjectPages - 3;
+      end = totalProjectPages - 1;
+    }
+
+    if (start > 2) pages.push("...");
+
+    for (let i = start; i <= end; i++) pages.push(i);
+
+    if (end < totalProjectPages - 1) pages.push("...");
+
+    pages.push(totalProjectPages);
+    return pages;
+  };
+
   return (
     <div className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] transition-colors duration-300">
       {/* Header Admin Navbar */}
@@ -837,7 +952,8 @@ const AdminDashboard = () => {
                   Kelola Proyek Portofolio
                 </h2>
                 <p className="text-xs text-[var(--text-muted)]">
-                  Tambah, ubah, atau hapus karya proyek yang akan tampil di halaman portofolio utama.
+                  Tambah, ubah, atau hapus karya proyek yang akan tampil di
+                  halaman portofolio utama.
                 </p>
               </div>
               <button
@@ -859,9 +975,12 @@ const AdminDashboard = () => {
             ) : projects.length === 0 ? (
               <div className="py-16 text-center rounded-2xl border border-dashed border-[var(--border-color)] p-8">
                 <FolderGit2 className="w-12 h-12 text-[var(--text-muted)] mx-auto mb-3 opacity-40" />
-                <p className="text-sm font-semibold text-[var(--text-primary)]">Belum Ada Proyek</p>
+                <p className="text-sm font-semibold text-[var(--text-primary)]">
+                  Belum Ada Proyek
+                </p>
                 <p className="text-xs text-[var(--text-muted)] mt-1 mb-4">
-                  Klik tombol "Tambah Proyek Baru" untuk memasukkan proyek pertama Anda.
+                  Klik tombol "Tambah Proyek Baru" untuk memasukkan proyek
+                  pertama Anda.
                 </p>
                 <button
                   onClick={() => {
@@ -874,102 +993,175 @@ const AdminDashboard = () => {
                 </button>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {projects.map((project) => (
-                  <div
-                    key={project.id}
-                    className="group rounded-2xl bg-[var(--bg-card)] border border-[var(--border-color)] overflow-hidden flex flex-col justify-between hover:border-[var(--text-secondary)] transition-all duration-300 shadow-sm hover:shadow-lg"
-                  >
-                    <div>
-                      <div className="relative aspect-video w-full overflow-hidden bg-[var(--bg-secondary)]">
-                        <img
-                          src={project.cover_image || project.image || "/icon/react.png"}
-                          alt={project.title}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                          onError={(e) => {
-                            (e.target as HTMLImageElement).onerror = null;
-                            (e.target as HTMLImageElement).src = "/icon/react.png";
-                          }}
-                        />
-                        <div className="absolute top-3 right-3 flex items-center gap-1.5">
-                          <span className="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-black/60 backdrop-blur-md text-white border border-white/10 shadow-sm">
-                            {project.category || "WEB"}
-                          </span>
+              <>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {currentProjects.map((project) => (
+                    <div
+                      key={project.id}
+                      className="group rounded-2xl bg-[var(--bg-card)] border border-[var(--border-color)] overflow-hidden flex flex-col justify-between hover:border-[var(--text-secondary)] transition-all duration-300 shadow-sm hover:shadow-lg"
+                    >
+                      <div>
+                        <div className="relative aspect-video w-full overflow-hidden bg-[var(--bg-secondary)]">
+                          <img
+                            src={
+                              project.cover_image ||
+                              project.image ||
+                              "/icon/react.png"
+                            }
+                            alt={project.title}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).onerror = null;
+                              (e.target as HTMLImageElement).src =
+                                "/icon/react.png";
+                            }}
+                          />
+                          <div className="absolute top-3 right-3 flex items-center gap-1.5">
+                            <span className="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-black/60 backdrop-blur-md text-white border border-white/10 shadow-sm">
+                              {project.category || "WEB"}
+                            </span>
+                          </div>
+                        </div>
+
+                        <div className="p-5 space-y-3">
+                          <center>
+                            <h3 className="text-base font-bold font-display text-[var(--text-primary)] line-clamp-1">
+                              {project.title}
+                            </h3>
+                          </center>
+                          {/* <p className="text-xs text-[var(--text-secondary)] line-clamp-2 leading-relaxed">
+                            {project.description}
+                          </p> */}
+
+                          {/* Tech tags */}
+                          {/* {Array.isArray(project.tech) &&
+                            project.tech.length > 0 && (
+                              <div className="flex flex-wrap gap-1.5 pt-1">
+                                {project.tech.map((t, idx) => (
+                                  <span
+                                    key={idx}
+                                    className="px-2 py-0.5 rounded-md text-[10px] font-medium bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-secondary)]"
+                                  >
+                                    {t}
+                                  </span>
+                                ))}
+                              </div>
+                            )} */}
                         </div>
                       </div>
 
-                      <div className="p-5 space-y-3">
-                        <h3 className="text-base font-bold font-display text-[var(--text-primary)] line-clamp-1">
-                          {project.title}
-                        </h3>
-                        <p className="text-xs text-[var(--text-secondary)] line-clamp-2 leading-relaxed">
-                          {project.description}
-                        </p>
+                      <div className="p-4 border-t border-[var(--border-color)] bg-[var(--bg-secondary)]/30 flex items-center justify-between gap-2">
+                        <div className="flex items-center gap-2">
+                          {project.live_link && (
+                            <a
+                              href={project.live_link}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="p-1.5 rounded-lg hover:bg-[var(--bg-secondary)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors duration-200"
+                              title="Live Demo"
+                            >
+                              <ExternalLink size={15} />
+                            </a>
+                          )}
+                          {project.github_link && (
+                            <a
+                              href={project.github_link}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="p-1.5 rounded-lg hover:bg-[var(--bg-secondary)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors duration-200"
+                              title="GitHub Repo"
+                            >
+                              <GithubIcon size={15} />
+                            </a>
+                          )}
+                        </div>
 
-                        {/* Tech tags */}
-                        {Array.isArray(project.tech) && project.tech.length > 0 && (
-                          <div className="flex flex-wrap gap-1.5 pt-1">
-                            {project.tech.map((t, idx) => (
-                              <span
-                                key={idx}
-                                className="px-2 py-0.5 rounded-md text-[10px] font-medium bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-secondary)]"
-                              >
-                                {t}
-                              </span>
-                            ))}
-                          </div>
-                        )}
+                        <div className="flex items-center gap-1.5">
+                          <button
+                            onClick={() => {
+                              setEditingProject(project);
+                              setIsProjectFormOpen(true);
+                            }}
+                            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[var(--bg-secondary)] hover:bg-[var(--border-color)] text-[var(--text-primary)] text-xs font-semibold transition-colors duration-200 cursor-pointer"
+                          >
+                            <Edit size={13} /> Edit
+                          </button>
+                          <button
+                            onClick={() => handleDeleteProject(project)}
+                            className="p-1.5 rounded-lg hover:bg-rose-500/10 text-rose-500 transition-colors duration-200 cursor-pointer"
+                            title="Hapus Proyek"
+                          >
+                            <Trash2 size={15} />
+                          </button>
+                        </div>
                       </div>
                     </div>
+                  ))}
+                </div>
 
-                    <div className="p-4 border-t border-[var(--border-color)] bg-[var(--bg-secondary)]/30 flex items-center justify-between gap-2">
-                      <div className="flex items-center gap-2">
-                        {project.live_link && (
-                          <a
-                            href={project.live_link}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="p-1.5 rounded-lg hover:bg-[var(--bg-secondary)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors duration-200"
-                            title="Live Demo"
-                          >
-                            <ExternalLink size={15} />
-                          </a>
-                        )}
-                        {project.github_link && (
-                          <a
-                            href={project.github_link}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="p-1.5 rounded-lg hover:bg-[var(--bg-secondary)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors duration-200"
-                            title="GitHub Repo"
-                          >
-                            <GithubIcon size={15} />
-                          </a>
+                {/* ===== PAGINATION PROYEK ===== */}
+                {totalProjectPages > 1 && (
+                  <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-[var(--border-color)]">
+                    <p className="text-xs text-[var(--text-muted)]">
+                      Menampilkan{" "}
+                      <span className="font-semibold text-[var(--text-primary)]">
+                        {indexOfFirstProject + 1}–
+                        {Math.min(indexOfLastProject, projects.length)}
+                      </span>{" "}
+                      dari{" "}
+                      <span className="font-semibold text-[var(--text-primary)]">
+                        {projects.length}
+                      </span>{" "}
+                      proyek
+                    </p>
+
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        onClick={() => goToProjectsPage(projectsPage - 1)}
+                        disabled={projectsPage === 1}
+                        className="inline-flex items-center gap-1 px-3 py-2 rounded-lg text-xs font-semibold border border-[var(--border-color)] bg-[var(--bg-card)] text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)] hover:text-[var(--text-primary)] transition-colors duration-200 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-[var(--bg-card)] cursor-pointer"
+                      >
+                        <ChevronLeft size={14} />
+                        <span className="hidden sm:inline">Prev</span>
+                      </button>
+
+                      <div className="flex items-center gap-1">
+                        {getPageNumbers().map((p, idx) =>
+                          typeof p === "number" ? (
+                            <button
+                              key={`page-${p}-${idx}`}
+                              onClick={() => goToProjectsPage(p)}
+                              className={`w-9 h-9 rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer ${
+                                projectsPage === p
+                                  ? "bg-[var(--accent-btn)] text-[var(--accent-btn-text)] shadow-md"
+                                  : "border border-[var(--border-color)] bg-[var(--bg-card)] text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)] hover:text-[var(--text-primary)]"
+                              }`}
+                            >
+                              {p}
+                            </button>
+                          ) : (
+                            <span
+                              key={`ellipsis-${idx}`}
+                              className="w-9 h-9 flex items-center justify-center text-xs text-[var(--text-muted)]"
+                            >
+                              …
+                            </span>
+                          ),
                         )}
                       </div>
 
-                      <div className="flex items-center gap-1.5">
-                        <button
-                          onClick={() => {
-                            setEditingProject(project);
-                            setIsProjectFormOpen(true);
-                          }}
-                          className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[var(--bg-secondary)] hover:bg-[var(--border-color)] text-[var(--text-primary)] text-xs font-semibold transition-colors duration-200 cursor-pointer"
-                        >
-                          <Edit size={13} /> Edit
-                        </button>
-                        <button
-                          onClick={() => handleDeleteProject(project)}
-                          className="p-1.5 rounded-lg hover:bg-rose-500/10 text-rose-500 transition-colors duration-200 cursor-pointer"
-                          title="Hapus Proyek"
-                        >
-                          <Trash2 size={15} />
-                        </button>
-                      </div>
+                      <button
+                        onClick={() => goToProjectsPage(projectsPage + 1)}
+                        disabled={projectsPage === totalProjectPages}
+                        className="inline-flex items-center gap-1 px-3 py-2 rounded-lg text-xs font-semibold border border-[var(--border-color)] bg-[var(--bg-card)] text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)] hover:text-[var(--text-primary)] transition-colors duration-200 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-[var(--bg-card)] cursor-pointer"
+                      >
+                        <span className="hidden sm:inline">Next</span>
+                        <ChevronRight size={14} />
+                      </button>
                     </div>
                   </div>
-                ))}
-              </div>
+                )}
+              </>
             )}
           </div>
         )}
@@ -983,7 +1175,8 @@ const AdminDashboard = () => {
                   Kelola Technical Skills & Tools
                 </h2>
                 <p className="text-xs text-[var(--text-muted)]">
-                  Kelola keahlian teknis dan perangkat lunak yang akan muncul di section Technical Skills.
+                  Kelola keahlian teknis dan perangkat lunak yang akan muncul di
+                  section Technical Skills.
                 </p>
               </div>
               <button
@@ -1001,9 +1194,12 @@ const AdminDashboard = () => {
             {skills.length === 0 ? (
               <div className="py-16 text-center rounded-2xl border border-dashed border-[var(--border-color)] p-8">
                 <Wrench className="w-12 h-12 text-[var(--text-muted)] mx-auto mb-3 opacity-40" />
-                <p className="text-sm font-semibold text-[var(--text-primary)]">Belum Ada Skill</p>
+                <p className="text-sm font-semibold text-[var(--text-primary)]">
+                  Belum Ada Skill
+                </p>
                 <p className="text-xs text-[var(--text-muted)] mt-1 mb-4">
-                  Klik tombol "Tambah Skill Baru" untuk menambahkan keahlian teknis Anda.
+                  Klik tombol "Tambah Skill Baru" untuk menambahkan keahlian
+                  teknis Anda.
                 </p>
                 <button
                   onClick={() => {
@@ -1029,7 +1225,8 @@ const AdminDashboard = () => {
                         className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300"
                         onError={(e) => {
                           (e.target as HTMLImageElement).onerror = null;
-                          (e.target as HTMLImageElement).src = "/icon/react.png";
+                          (e.target as HTMLImageElement).src =
+                            "/icon/react.png";
                         }}
                       />
                     </div>
@@ -1077,7 +1274,8 @@ const AdminDashboard = () => {
                   Kelola Kategori Proyek
                 </h2>
                 <p className="text-xs text-[var(--text-muted)]">
-                  Kelola pilihan kategori filter untuk mengelompokkan proyek (misal: WEB, MOBILE, UI/UX).
+                  Kelola pilihan kategori filter untuk mengelompokkan proyek
+                  (misal: WEB, MOBILE, UI/UX).
                 </p>
               </div>
               <button
@@ -1095,9 +1293,12 @@ const AdminDashboard = () => {
             {categories.length === 0 ? (
               <div className="py-16 text-center rounded-2xl border border-dashed border-[var(--border-color)] p-8">
                 <Tag className="w-12 h-12 text-[var(--text-muted)] mx-auto mb-3 opacity-40" />
-                <p className="text-sm font-semibold text-[var(--text-primary)]">Belum Ada Kategori</p>
+                <p className="text-sm font-semibold text-[var(--text-primary)]">
+                  Belum Ada Kategori
+                </p>
                 <p className="text-xs text-[var(--text-muted)] mt-1 mb-4">
-                  Klik tombol "Tambah Kategori Baru" untuk menambahkan kategori pertama Anda.
+                  Klik tombol "Tambah Kategori Baru" untuk menambahkan kategori
+                  pertama Anda.
                 </p>
                 <button
                   onClick={() => {
@@ -1160,7 +1361,8 @@ const AdminDashboard = () => {
                   Kelola Work Experience
                 </h2>
                 <p className="text-xs text-[var(--text-muted)]">
-                  Kelola riwayat posisi, perusahaan, tanggung jawab, dan periode pengalaman kerja.
+                  Kelola riwayat posisi, perusahaan, tanggung jawab, dan periode
+                  pengalaman kerja.
                 </p>
               </div>
               <button
@@ -1178,9 +1380,12 @@ const AdminDashboard = () => {
             {experiences.length === 0 ? (
               <div className="py-16 text-center rounded-2xl border border-dashed border-[var(--border-color)] p-8">
                 <Briefcase className="w-12 h-12 text-[var(--text-muted)] mx-auto mb-3 opacity-40" />
-                <p className="text-sm font-semibold text-[var(--text-primary)]">Belum Ada Pengalaman Kerja</p>
+                <p className="text-sm font-semibold text-[var(--text-primary)]">
+                  Belum Ada Pengalaman Kerja
+                </p>
                 <p className="text-xs text-[var(--text-muted)] mt-1 mb-4">
-                  Klik tombol "Tambah Pengalaman Baru" untuk memasukkan riwayat pengalaman kerja Anda.
+                  Klik tombol "Tambah Pengalaman Baru" untuk memasukkan riwayat
+                  pengalaman kerja Anda.
                 </p>
                 <button
                   onClick={() => {
@@ -1215,21 +1420,27 @@ const AdminDashboard = () => {
                       </div>
 
                       <div className="flex flex-wrap items-center gap-3 text-xs text-[var(--text-muted)]">
-                        <span className="font-semibold text-sky-500">{exp.period}</span>
+                        <span className="font-semibold text-sky-500">
+                          {exp.period}
+                        </span>
                         {exp.location && <span>• {exp.location}</span>}
                       </div>
 
                       {/* Responsibilities list */}
-                      {Array.isArray(exp.responsibilities) && exp.responsibilities.length > 0 && (
-                        <ul className="space-y-1 pt-2">
-                          {exp.responsibilities.map((resp, idx) => (
-                            <li key={idx} className="text-xs text-[var(--text-secondary)] flex items-start gap-2">
-                              <span className="text-sky-500 mt-0.5">•</span>
-                              <span>{resp}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      )}
+                      {Array.isArray(exp.responsibilities) &&
+                        exp.responsibilities.length > 0 && (
+                          <ul className="space-y-1 pt-2">
+                            {exp.responsibilities.map((resp, idx) => (
+                              <li
+                                key={idx}
+                                className="text-xs text-[var(--text-secondary)] flex items-start gap-2"
+                              >
+                                <span className="text-sky-500 mt-0.5">•</span>
+                                <span>{resp}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
 
                       {/* Tech stack */}
                       {Array.isArray(exp.tech) && exp.tech.length > 0 && (
