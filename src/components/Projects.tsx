@@ -213,6 +213,20 @@ const Projects = () => {
     return `${monthName} ${year}`;
   };
 
+  // Format category name for bilingual display
+  const formatCategoryName = (catName: string) => {
+    if (!catName) return "";
+    const lower = catName.toLowerCase().trim();
+    if (lang === "en") {
+      if (lower.includes("pengembangan web") || lower === "web dev") return "Web Development";
+      if (lower.includes("pengujian") || lower.includes("jaminan kualitas")) return "Quality Assurance";
+    } else {
+      if (lower.includes("web development")) return "Pengembangan Web";
+      if (lower.includes("quality assurance")) return "Quality Assurance";
+    }
+    return catName;
+  };
+
   // Sort projects descending by Created At (Bulan & Tahun) - newest year & month first
   const sortedProjects = [...projects].sort((a, b) => {
     const diff = getProjectYearMonthValue(b) - getProjectYearMonthValue(a);
@@ -281,7 +295,7 @@ const Projects = () => {
                         : "bg-[var(--bg-card)] border border-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
                     }`}
                   >
-                    {cat.name}
+                    {formatCategoryName(cat.name)}
                   </button>
                 ))}
               </div>
@@ -328,7 +342,7 @@ const Projects = () => {
                 <div className="space-y-3">
                   <div className="flex items-center justify-between gap-2">
                     <span className="text-[11px] font-extrabold uppercase tracking-wider text-sky-500 px-3 py-1 rounded-full bg-sky-500/10 border border-sky-500/20">
-                      {project.category || "WEB"}
+                      {formatCategoryName(project.category || "WEB")}
                     </span>
 
                     {project.created_at && (

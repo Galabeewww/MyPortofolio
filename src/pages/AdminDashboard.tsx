@@ -785,7 +785,7 @@ const AdminDashboard = () => {
       color: "var(--text-primary)",
     }).then((result) => {
       if (result.isConfirmed) {
-        sessionStorage.setItem("hasSeenIntro", "true");
+        sessionStorage.setItem("skipIntroOnce", "true");
         logout();
         MySwal.fire({
           icon: "success",
@@ -861,7 +861,7 @@ const AdminDashboard = () => {
           <div className="flex items-center gap-3">
             <Link
               to="/"
-              onClick={() => sessionStorage.setItem("hasSeenIntro", "true")}
+              onClick={() => sessionStorage.setItem("skipIntroOnce", "true")}
               className="p-2 rounded-xl border border-[var(--border-color)] hover:bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors duration-200"
               title="Kembali ke Beranda Portofolio"
             >

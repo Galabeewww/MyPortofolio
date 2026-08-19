@@ -170,14 +170,14 @@ const ProjectDetailModal = ({
                   title="Proyek Sebelumnya"
                 >
                   <ChevronLeft size={14} />
-                  <span>Prev</span>
+                  <span>{t.projectDetail?.prev || (lang === "id" ? "Sebelumnya" : "Prev")}</span>
                 </button>
                 <button
                   onClick={handleNextProject}
                   className="px-3.5 py-1.5 rounded-full border border-slate-200 dark:border-zinc-700 text-slate-700 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-zinc-800 text-xs font-bold flex items-center gap-1 transition-colors cursor-pointer"
                   title="Proyek Selanjutnya"
                 >
-                  <span>Next</span>
+                  <span>{t.projectDetail?.next || (lang === "id" ? "Selanjutnya" : "Next")}</span>
                   <ChevronRight size={14} />
                 </button>
               </div>
@@ -264,7 +264,7 @@ const ProjectDetailModal = ({
             {/* Section Description (Sesuai Referensi Gambar di Sisi Kiri Bawah Galeri) */}
             <div className="space-y-3 pt-2 text-left border-t border-slate-100 dark:border-zinc-800">
               <h3 className="text-xl font-extrabold text-slate-900 dark:text-white font-display">
-                Description
+                {t.projectDetail?.description || (lang === "id" ? "Deskripsi" : "Description")}
               </h3>
               <div className="text-sm text-slate-600 dark:text-zinc-300 leading-relaxed whitespace-pre-line space-y-3">
                 {longDescription}
@@ -301,7 +301,7 @@ const ProjectDetailModal = ({
                 </div>
                 <div>
                   <p className="text-[11px] font-semibold text-slate-400 dark:text-zinc-500 uppercase tracking-wider">
-                    Created at
+                    {t.projectDetail?.createdAt || (lang === "id" ? "Dibuat pada" : "Created at")}
                   </p>
                   <p className="text-sm font-bold text-slate-800 dark:text-zinc-200">
                     {formatDate(project.created_at)}
@@ -315,7 +315,7 @@ const ProjectDetailModal = ({
                 </div>
                 <div>
                   <p className="text-[11px] font-semibold text-slate-400 dark:text-zinc-500 uppercase tracking-wider">
-                    Category
+                    {t.projectDetail?.category || (lang === "id" ? "Kategori" : "Category")}
                   </p>
                   <p className="text-sm font-bold text-slate-800 dark:text-zinc-200 uppercase">
                     {project.category || "Web Development"}
@@ -327,7 +327,7 @@ const ProjectDetailModal = ({
             {/* Tags (Tech Stack) */}
             <div className="space-y-2.5 pt-2">
               <h4 className="text-xs font-extrabold uppercase tracking-wider text-slate-800 dark:text-zinc-200">
-                Tags
+                {t.projectDetail?.tags || (lang === "id" ? "Teknologi" : "Tags")}
               </h4>
               <div className="flex flex-wrap gap-2">
                 {techList.map((tag, idx) => (
@@ -345,7 +345,7 @@ const ProjectDetailModal = ({
             {featuresList.length > 0 && (
               <div className="space-y-2.5 pt-2">
                 <h4 className="text-xs font-extrabold uppercase tracking-wider text-slate-800 dark:text-zinc-200">
-                  Key Features
+                  {t.projectDetail?.keyFeatures || (lang === "id" ? "Fitur Utama" : "Key Features")}
                 </h4>
                 <ul className="space-y-2">
                   {featuresList.map((feature, idx) => (
@@ -365,7 +365,7 @@ const ProjectDetailModal = ({
             {(project.live_link || project.github_link) && (
               <div className="space-y-2.5 pt-2">
                 <h4 className="text-xs font-extrabold uppercase tracking-wider text-slate-800 dark:text-zinc-200">
-                  Links
+                  {t.projectDetail?.links || (lang === "id" ? "Tautan" : "Links")}
                 </h4>
                 <div className="space-y-2">
                   {project.live_link && project.live_link.trim() !== "" && (
@@ -399,7 +399,7 @@ const ProjectDetailModal = ({
             {/* Connect With Me */}
             <div className="space-y-3 pt-1 text-center">
               <p className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-zinc-500">
-                Connect With Me
+                {t.projectDetail?.connectWithMe || (lang === "id" ? "Hubungi Saya" : "Connect With Me")}
               </p>
               <div className="flex items-center justify-center gap-3">
                 <a

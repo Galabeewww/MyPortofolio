@@ -8,12 +8,42 @@ import { useScrollReveal } from "../hooks/useScrollReveal";
 const Experience = () => {
   const [experiences, setExperiences] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const { ref: sectionRef, isVisible } = useScrollReveal();
 
   useEffect(() => {
     fetchExperiences();
   }, []);
+
+  // Format and translate period string dynamically according to active language
+  const formatPeriod = (periodStr: string) => {
+    if (!periodStr) return lang === "id" ? "2025 - Sekarang" : "2025 - Present";
+    if (lang === "en") {
+      return periodStr
+        .replace(/sekarang/gi, "Present")
+        .replace(/januari/gi, "January")
+        .replace(/februari/gi, "February")
+        .replace(/maret/gi, "March")
+        .replace(/mei/gi, "May")
+        .replace(/juni/gi, "June")
+        .replace(/juli/gi, "July")
+        .replace(/agustus/gi, "August")
+        .replace(/oktober/gi, "October")
+        .replace(/desember/gi, "December");
+    } else {
+      return periodStr
+        .replace(/present/gi, "Sekarang")
+        .replace(/january/gi, "Januari")
+        .replace(/february/gi, "Februari")
+        .replace(/march/gi, "Maret")
+        .replace(/may/gi, "Mei")
+        .replace(/june/gi, "Juni")
+        .replace(/july/gi, "Juli")
+        .replace(/august/gi, "Agustus")
+        .replace(/october/gi, "Oktober")
+        .replace(/december/gi, "Desember");
+    }
+  };
 
   // Sort experiences: PRESENT items first, then newest start_date / date descending
   const sortExperiences = (list) => {
@@ -132,7 +162,7 @@ const Experience = () => {
                         <div className="flex flex-wrap items-center gap-3">
                           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[var(--bg-secondary)] border border-[var(--border-color)] text-xs font-extrabold text-[var(--text-secondary)]">
                             <Calendar size={13} className="text-sky-500" />
-                            <span>{exp.period || "2025 - Present"}</span>
+                            <span>{formatPeriod(exp.period)}</span>
                           </div>
 
                           {(exp.is_present ||

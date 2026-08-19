@@ -13,6 +13,7 @@ import Projects from './components/Projects';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import FloatingThemeToggle from './components/FloatingThemeToggle';
+import FloatingMusicPlayer from './components/FloatingMusicPlayer';
 import RasenganIntro from './components/RasenganIntro';
 
 import Login from './pages/Login';
@@ -21,11 +22,17 @@ import ProtectedRoute from './components/ProtectedRoute';
 
 function MainPortfolio() {
   const [showIntro, setShowIntro] = useState(() => {
-    return !sessionStorage.getItem("hasSeenIntro");
+    // Check if navigated from admin/login/logout (skip once)
+    const skipOnce = sessionStorage.getItem("skipIntroOnce");
+    if (skipOnce) {
+      sessionStorage.removeItem("skipIntroOnce");
+      return false;
+    }
+    // On page refresh or first visit, show loading
+    return true;
   });
 
   const handleComplete = () => {
-    sessionStorage.setItem("hasSeenIntro", "true");
     setShowIntro(false);
   };
 
@@ -43,6 +50,7 @@ function MainPortfolio() {
           <Contact />
         </main>
         <Footer />
+        <FloatingMusicPlayer />
         <FloatingThemeToggle />
       </div>
     </div>
