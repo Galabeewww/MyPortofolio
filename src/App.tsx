@@ -20,11 +20,18 @@ import AdminDashboard from './pages/AdminDashboard';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function MainPortfolio() {
-  const [showIntro, setShowIntro] = useState(true);
+  const [showIntro, setShowIntro] = useState(() => {
+    return !sessionStorage.getItem("hasSeenIntro");
+  });
+
+  const handleComplete = () => {
+    sessionStorage.setItem("hasSeenIntro", "true");
+    setShowIntro(false);
+  };
 
   return (
     <div className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] relative bg-grid-pattern overflow-x-hidden transition-colors duration-250">
-      {showIntro && <RasenganIntro onComplete={() => setShowIntro(false)} />}
+      {showIntro && <RasenganIntro onComplete={handleComplete} />}
       <div className="relative z-10">
         <Navbar />
         <Hero onReplayIntro={() => setShowIntro(true)} />

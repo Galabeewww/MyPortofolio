@@ -61,6 +61,7 @@ const Login = () => {
     <div className="min-h-screen flex items-center justify-center p-4 bg-[var(--bg-primary)] text-[var(--text-primary)] relative bg-grid-pattern">
       <Link
         to="/"
+        onClick={() => sessionStorage.setItem("hasSeenIntro", "true")}
         className="absolute top-6 left-6 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[var(--bg-card)] border border-[var(--border-color)] text-sm font-semibold text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors duration-200"
       >
         <ArrowLeft size={16} /> Kembali ke Portofolio
