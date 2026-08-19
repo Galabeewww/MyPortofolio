@@ -17,6 +17,7 @@ import {
 import Swal from "sweetalert2";
 import { useAuth } from "../context/AuthContext";
 import { useLanguage } from "../context/LanguageContext";
+import { useMusic } from "../context/MusicContext";
 
 const Navbar = () => {
   const [activeSection, setActiveSection] = useState("home");
@@ -24,6 +25,7 @@ const Navbar = () => {
   const [isAdminDropdownOpen, setIsAdminDropdownOpen] = useState(false);
   const { isAuthenticated, logout } = useAuth();
   const { lang, toggleLanguage, t } = useLanguage();
+  const { isPlaying, togglePlay } = useMusic();
   const navigate = useNavigate();
   const dropdownRef = useRef(null);
 
@@ -117,17 +119,49 @@ const Navbar = () => {
 
   return (
     <nav className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[94%] max-w-5xl">
-      <div className="rounded-full bg-white/90 dark:bg-zinc-900/90 backdrop-blur-xl border border-slate-200/90 dark:border-zinc-800 shadow-xl px-3 py-2 sm:px-4 flex items-center justify-between gap-1 sm:gap-2 transition-all duration-300">
-        {/* Brand / Logo Sesuai Gambar Referensi */}
-        <a
-          href="#home"
-          className="flex items-center gap-1.5 sm:gap-2 pl-2 pr-1 py-1 cursor-pointer group"
-        >
-          <span className="font-extrabold text-base sm:text-lg text-sky-500 font-display tracking-tight group-hover:scale-105 transition-transform">
-            GLBW.
-          </span>
-          <div className="h-4 sm:h-5 w-[1px] bg-slate-300 dark:bg-zinc-700" />
-        </a>
+      <div
+        className={`rounded-full bg-white/90 dark:bg-zinc-900/90 backdrop-blur-xl border shadow-xl px-3 py-2 sm:px-4 flex items-center justify-between gap-1 sm:gap-2 transition-all duration-500 ${
+          isPlaying
+            ? "border-sky-500/60 shadow-[0_0_20px_rgba(14,165,233,0.25)] dark:shadow-[0_0_25px_rgba(14,165,233,0.3)] animate-music-glow"
+            : "border-slate-200/90 dark:border-zinc-800"
+        }`}
+      >
+        {/* Brand / Logo Sesuai Gambar Referensi + Equalizer Animasi Saat Lagu Diputar */}
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          <a
+            href="#home"
+            className="flex items-center gap-1.5 sm:gap-2 pl-2 pr-1 py-1 cursor-pointer group"
+          >
+            <span className="font-extrabold text-base sm:text-lg text-sky-500 font-display tracking-tight group-hover:scale-105 transition-transform">
+              GLBW.
+            </span>
+          </a>
+
+          {/* Animasi Music Visualizer Equalizer saat lagu berputar */}
+          {isPlaying && (
+            <button
+              onClick={togglePlay}
+              className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-sky-500/10 border border-sky-500/30 hover:bg-sky-500/20 text-sky-500 text-xs font-semibold transition-all cursor-pointer group animate-[fadeIn_0.3s_ease-out]"
+              title={
+                lang === "id"
+                  ? "Musik Sedang Diputar: Bink's Sake (Klik untuk jeda)"
+                  : "Playing: Bink's Sake (Click to pause)"
+              }
+            >
+              <div className="flex items-end gap-[2.5px] h-3.5 w-3.5 pb-0.5">
+                <span className="w-[2.5px] bg-sky-500 rounded-full animate-music-bar-1" />
+                <span className="w-[2.5px] bg-purple-500 rounded-full animate-music-bar-2" />
+                <span className="w-[2.5px] bg-pink-500 rounded-full animate-music-bar-3" />
+                <span className="w-[2.5px] bg-sky-400 rounded-full animate-music-bar-4" />
+              </div>
+              <span className="hidden sm:inline text-[10px] font-extrabold font-mono tracking-tight text-sky-600 dark:text-sky-400 uppercase">
+                Bink's Sake
+              </span>
+            </button>
+          )}
+
+          <div className="h-4 sm:h-5 w-[1px] bg-slate-300 dark:bg-zinc-700 mx-0.5" />
+        </div>
 
         {/* Desktop Nav Items */}
         <div className="hidden lg:flex items-center gap-1">

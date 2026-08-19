@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from './context/ThemeContext';
 import { AuthProvider } from './context/AuthContext';
 import { LanguageProvider } from './context/LanguageContext';
+import { MusicProvider } from './context/MusicContext';
 
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
@@ -62,20 +63,22 @@ function App() {
     <ThemeProvider>
       <AuthProvider>
         <LanguageProvider>
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<MainPortfolio />} />
-              <Route path="/admin/login" element={<Login />} />
-              <Route
-                path="/admin"
-                element={
-                  <ProtectedRoute>
-                    <AdminDashboard />
-                  </ProtectedRoute>
-                }
-              />
-            </Routes>
-          </BrowserRouter>
+          <MusicProvider>
+            <BrowserRouter>
+              <Routes>
+                <Route path="/" element={<MainPortfolio />} />
+                <Route path="/admin/login" element={<Login />} />
+                <Route
+                  path="/admin"
+                  element={
+                    <ProtectedRoute>
+                      <AdminDashboard />
+                    </ProtectedRoute>
+                  }
+                />
+              </Routes>
+            </BrowserRouter>
+          </MusicProvider>
         </LanguageProvider>
       </AuthProvider>
     </ThemeProvider>
