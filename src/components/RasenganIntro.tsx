@@ -118,18 +118,34 @@ const LanguangeTextIntro: React.FC<LanguangeTextIntroProps> = ({
             style={{ width: `${progress}%` }}
           />
         </div> */}
-        {/* Progress Bar Track */}
-        <div className="relative w-full h-1.5 sm:h-2 rounded-full bg-[var(--bg-secondary)] border border-[var(--border-color)] overflow-hidden p-0.5 shadow-inner">
-          {/* Progress Fill */}
-          <div
-            className="h-full rounded-full bg-gradient-to-r from-sky-500 via-purple-500 to-pink-500 transition-all duration-100 ease-out shadow-[0_0_10px_rgba(14,165,233,0.5)]"
-            style={{ width: `${progress}%` }}
-          />
+        {/* Progress Bar Gelombang Laut */}
+        <div className="relative w-full h-24 sm:h-28 overflow-hidden">
+          {/* SVG Gelombang bergerak */}
+          <svg
+            className="absolute inset-0 w-full h-full animate-[waveMove_4s_linear_infinite]"
+            viewBox="0 0 1200 200"
+            preserveAspectRatio="none"
+          >
+            <path
+              d="M0 100 Q 300 50 600 100 T 1200 100 V200 H0 Z"
+              fill="url(#waveGradient)"
+            />
+            <defs>
+              <linearGradient id="waveGradient" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stopColor="#0ea5e9" />
+                <stop offset="50%" stopColor="#a855f7" />
+                <stop offset="100%" stopColor="#ec4899" />
+              </linearGradient>
+            </defs>
+          </svg>
 
-          {/* Kapal bergerak sesuai progress */}
+          {/* Kapal mengikuti gelombang */}
           <div
-            className="absolute -top-6 transition-all duration-100 ease-out text-2xl"
-            style={{ left: `calc(${progress}% - 12px)` }} // -12px biar kapal center
+            className="absolute transition-all duration-100 ease-out text-3xl"
+            style={{
+              left: `calc(${progress}% - 16px)`,
+              top: `${50 + Math.sin((progress / 100) * Math.PI * 2) * 20}%`, // naik-turun sesuai gelombang
+            }}
           >
             🚢
           </div>
