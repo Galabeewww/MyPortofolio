@@ -32,7 +32,14 @@ const Navbar = () => {
   // Scroll Spy untuk mendeteksi section aktif (Home, About, Skills, Experience, Projects, Contact)
   useEffect(() => {
     const handleScroll = () => {
-      const sections = ["home", "about", "skills", "experience", "projects", "contact"];
+      const sections = [
+        "home",
+        "about",
+        "skills",
+        "experience",
+        "projects",
+        "contact",
+      ];
       const scrollPosition = window.scrollY + 220;
 
       let current = "home";
@@ -112,7 +119,12 @@ const Navbar = () => {
     { id: "home", label: t.nav.home, icon: Home, href: "#home" },
     { id: "about", label: t.nav.about, icon: User, href: "#about" },
     { id: "skills", label: t.nav.skills, icon: Zap, href: "#skills" },
-    { id: "experience", label: t.nav.experience, icon: Briefcase, href: "#experience" },
+    {
+      id: "experience",
+      label: t.nav.experience,
+      icon: Briefcase,
+      href: "#experience",
+    },
     { id: "projects", label: t.nav.projects, icon: Folder, href: "#projects" },
     { id: "contact", label: t.nav.contact, icon: Mail, href: "#contact" },
   ];
