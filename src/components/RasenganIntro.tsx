@@ -41,11 +41,15 @@ const LanguangeTextIntro: React.FC<LanguangeTextIntroProps> = ({
     // 1. Smooth percentage counter from 0 to 100%
     progressIntervalRef.current = setInterval(() => {
       const elapsed = Date.now() - startTime;
-      const currentPct = Math.min(100, Math.floor((elapsed / totalDuration) * 100));
+      const currentPct = Math.min(
+        100,
+        Math.floor((elapsed / totalDuration) * 100),
+      );
       setProgress(currentPct);
 
       if (currentPct >= 100) {
-        if (progressIntervalRef.current) clearInterval(progressIntervalRef.current);
+        if (progressIntervalRef.current)
+          clearInterval(progressIntervalRef.current);
       }
     }, 25);
 
@@ -67,7 +71,8 @@ const LanguangeTextIntro: React.FC<LanguangeTextIntroProps> = ({
 
     return () => {
       clearInterval(wordInterval);
-      if (progressIntervalRef.current) clearInterval(progressIntervalRef.current);
+      if (progressIntervalRef.current)
+        clearInterval(progressIntervalRef.current);
     };
   }, [onComplete]);
 
@@ -101,15 +106,33 @@ const LanguangeTextIntro: React.FC<LanguangeTextIntroProps> = ({
       {/* Bottom Center Progress Bar & Percentage Counter */}
       <div
         className={`absolute bottom-8 sm:bottom-12 left-1/2 -translate-x-1/2 w-64 sm:w-80 flex flex-col items-center gap-2.5 z-10 px-4 transition-all duration-500 ${
-          phase === "fade" ? "opacity-0 translate-y-4" : "opacity-100 translate-y-0"
+          phase === "fade"
+            ? "opacity-0 translate-y-4"
+            : "opacity-100 translate-y-0"
         }`}
       >
         {/* Progress Bar Track */}
-        <div className="w-full h-1.5 sm:h-2 rounded-full bg-[var(--bg-secondary)] border border-[var(--border-color)] overflow-hidden p-0.5 shadow-inner">
+        {/* <div className="w-full h-1.5 sm:h-2 rounded-full bg-[var(--bg-secondary)] border border-[var(--border-color)] overflow-hidden p-0.5 shadow-inner">
           <div
             className="h-full rounded-full bg-gradient-to-r from-sky-500 via-purple-500 to-pink-500 transition-all duration-100 ease-out shadow-[0_0_10px_rgba(14,165,233,0.5)]"
             style={{ width: `${progress}%` }}
           />
+        </div> */}
+        {/* Progress Bar Track */}
+        <div className="relative w-full h-1.5 sm:h-2 rounded-full bg-[var(--bg-secondary)] border border-[var(--border-color)] overflow-hidden p-0.5 shadow-inner">
+          {/* Progress Fill */}
+          <div
+            className="h-full rounded-full bg-gradient-to-r from-sky-500 via-purple-500 to-pink-500 transition-all duration-100 ease-out shadow-[0_0_10px_rgba(14,165,233,0.5)]"
+            style={{ width: `${progress}%` }}
+          />
+
+          {/* Kapal bergerak sesuai progress */}
+          <div
+            className="absolute -top-6 transition-all duration-100 ease-out text-2xl"
+            style={{ left: `calc(${progress}% - 12px)` }} // -12px biar kapal center
+          >
+            🚢
+          </div>
         </div>
 
         {/* Loading Label & Percentage Display */}
