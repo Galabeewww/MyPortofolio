@@ -98,7 +98,7 @@ const Hero = ({ onReplayIntro }: { onReplayIntro?: () => void }) => {
           <div
             // onClick={onReplayIntro}
             className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-30 pointer-events-auto group cursor-pointer"
-            title="Klik untuk putar ulang animasi Rasengan"
+            // title="Klik untuk putar ulang animasi Rasengan"
           >
             <div className="w-16 h-16 sm:w-24 sm:h-24 rounded-full border-4 border-slate-950/80 overflow-hidden shadow-2xl bg-slate-900 group-hover:scale-110 transition-transform duration-300 ring-4 ring-sky-500/30">
               <img
