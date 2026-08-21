@@ -425,24 +425,44 @@ const About = () => {
 
         {/* ===== MAIN CONTENT ===== */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
-          {/* ===== LEFT COLUMN ===== */}
+          {/* ===== LEFT COLUMN: SLEEK, SIMPLE & BALANCED ===== */}
           <div
-            className={`lg:col-span-7 space-y-7 text-left anim-about-left ${
+            className={`lg:col-span-7 space-y-6 text-left anim-about-left ${
               isVisible ? "is-visible" : ""
             }`}
           >
-            <div>
-              <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-extrabold uppercase tracking-widest bg-sky-500/10 text-sky-500 border border-sky-500/30 shadow-sm">
-                <Briefcase size={13} />
-                {t.about.badge}
-              </span>
+            {/* Top Status & Role Pill */}
+            <div className="flex flex-wrap items-center gap-2">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold bg-sky-500/10 dark:bg-sky-500/15 border border-sky-500/30 text-sky-500 shadow-sm backdrop-blur-sm">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+                </span>
+                <span className="text-emerald-500 uppercase tracking-wider text-[11px] font-extrabold">
+                  {lang === "id" ? "Siap Bekerja" : "Available for Work"}
+                </span>
+                <span className="text-slate-300 dark:text-zinc-700">•</span>
+                <span className="text-sky-600 dark:text-sky-400 font-semibold tracking-wide text-[11px]">
+                  Web Dev & QA Tester
+                </span>
+              </div>
             </div>
 
-            <h3 className="text-2xl sm:text-4xl font-extrabold font-display text-[var(--text-primary)] leading-tight tracking-tight">
-              {t.about.greeting}
-            </h3>
+            {/* Main Greeting Typography */}
+            <div className="space-y-1">
+              <p className="text-xs uppercase font-mono tracking-widest text-[var(--text-muted)] font-semibold">
+                {lang === "id" ? "— Perkenalan Diri" : "— Get to know me"}
+              </p>
+              <h3 className="text-2xl sm:text-4xl font-extrabold font-display text-[var(--text-primary)] leading-[1.2] tracking-tight">
+                {lang === "id" ? "Halo, Saya " : "Hello, I'm "}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 via-sky-500 to-indigo-500">
+                  Muhammad Abi Rafdi Pratama
+                </span>
+              </h3>
+            </div>
 
-            <div className="space-y-4">
+            {/* Bio Paragraphs with subtle accent bar */}
+            <div className="border-l-2 border-sky-500/40 pl-4 py-1 space-y-3">
               <p className="text-[var(--text-secondary)] text-sm sm:text-[15px] leading-relaxed">
                 {t.about.para1}
               </p>
@@ -451,37 +471,76 @@ const About = () => {
               </p>
             </div>
 
-            {/* <div className="flex flex-wrap gap-4 pt-2">
-              <div className="flex items-center gap-3 px-4 py-2.5 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-color)] shadow-sm">
-                <div className="p-2 rounded-xl bg-sky-500/10">
-                  <MapPin size={16} className="text-sky-500" />
+            {/* 2 Modern Capability Bento Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-1">
+              {/* Card 1: Web Development */}
+              <div className="p-4 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-color)] hover:border-sky-500/40 transition-all duration-300 shadow-sm space-y-2 group">
+                <div className="flex items-center gap-2.5">
+                  <div className="p-2 rounded-xl bg-sky-500/10 text-sky-500 group-hover:scale-110 transition-transform">
+                    <Code2 size={16} />
+                  </div>
+                  <h4 className="text-xs sm:text-sm font-bold text-[var(--text-primary)]">
+                    {lang === "id" ? "Pengembangan Web" : "Web Development"}
+                  </h4>
                 </div>
-                <span className="text-xs sm:text-sm font-bold text-[var(--text-primary)]">
-                  {t.about.location}
-                </span>
-              </div>
-              <div className="flex items-center gap-3 px-4 py-2.5 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-color)] shadow-sm">
-                <div className="p-2 rounded-xl bg-emerald-500/10">
-                  <Briefcase size={16} className="text-emerald-500" />
+                <div className="flex flex-wrap gap-1.5 pt-1">
+                  {["React", "Next.js", "Tailwind", "Node.js"].map((skill) => (
+                    <span
+                      key={skill}
+                      className="px-2 py-0.5 rounded-md text-[10px] font-mono font-semibold bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-secondary)]"
+                    >
+                      {skill}
+                    </span>
+                  ))}
                 </div>
-                <span className="text-xs sm:text-sm font-bold text-[var(--text-primary)]">
-                  {t.about.role}
-                </span>
               </div>
-            </div> */}
 
-            {/* Actions: Download CV + 3D Rotate Hint */}
-            <div className="flex flex-wrap items-center gap-4 pt-2">
-              <button
-                onClick={handleDownloadCV}
-                className="inline-flex items-center gap-2.5 px-6 py-3 rounded-2xl bg-sky-500 hover:bg-sky-600 text-white font-extrabold text-xs sm:text-sm tracking-wider uppercase shadow-lg shadow-sky-500/20 hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer group"
-              >
-                <Download
-                  size={17}
-                  className="group-hover:translate-y-0.5 transition-transform"
-                />
-                <span>{t.about.downloadCV || "DOWNLOAD CV"}</span>
-              </button>
+              {/* Card 2: Quality Assurance */}
+              <div className="p-4 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-color)] hover:border-emerald-500/40 transition-all duration-300 shadow-sm space-y-2 group">
+                <div className="flex items-center gap-2.5">
+                  <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-500 group-hover:scale-110 transition-transform">
+                    <ShieldCheck size={16} />
+                  </div>
+                  <h4 className="text-xs sm:text-sm font-bold text-[var(--text-primary)]">
+                    {lang === "id"
+                      ? "Jaminan Kualitas (QA)"
+                      : "Quality Assurance"}
+                  </h4>
+                </div>
+                <div className="flex flex-wrap gap-1.5 pt-1">
+                  {["Manual Testing", "Bug Tracking"].map((tool) => (
+                    <span
+                      key={tool}
+                      className="px-2 py-0.5 rounded-md text-[10px] font-mono font-semibold bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-secondary)]"
+                    >
+                      {tool}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Bottom Meta & Action Area */}
+            <div className="flex flex-wrap items-center justify-between gap-4 pt-2 border-t border-[var(--border-color)]/60">
+              {/* Location Badge */}
+              <div className="flex items-center gap-2 text-xs text-[var(--text-secondary)] font-medium">
+                <MapPin size={14} className="text-sky-500 shrink-0" />
+                <span>Bandung, Indonesia</span>
+              </div>
+
+              {/* CTA Action Buttons */}
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={handleDownloadCV}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-gradient-to-r from-sky-500 to-sky-600 hover:from-sky-600 hover:to-sky-700 text-white font-extrabold text-xs tracking-wider uppercase shadow-lg shadow-sky-500/25 hover:shadow-sky-500/40 hover:scale-[1.02] active:scale-95 transition-all duration-300 cursor-pointer group"
+                >
+                  <Download
+                    size={15}
+                    className="group-hover:translate-y-0.5 transition-transform"
+                  />
+                  <span>{t.about.downloadCV || "DOWNLOAD CV"}</span>
+                </button>
+              </div>
             </div>
           </div>
 
@@ -740,31 +799,15 @@ const About = () => {
 
                       {/* Bottom Typography (Sesuai Referensi Gambar) */}
                       <div className="absolute bottom-0 inset-x-0 p-5 z-20 text-left">
-                        {/* Glow Accent Dot */}
-                        <div className="flex items-center gap-1.5 mb-1">
-                          <span className="w-1.5 h-1.5 rounded-full bg-sky-400 animate-pulse" />
-                          <span className="text-[10px] font-mono tracking-widest text-sky-400 uppercase font-semibold">
-                            GLBW // 024
-                          </span>
-                        </div>
-
                         {/* Name in Bold White Typography */}
-                        <h4 className="text-2xl font-black font-display text-white tracking-tight leading-tight drop-shadow-md">
-                          Abi Pratama
+                        <h4 className="text-1xl font-black font-display text-white tracking-tight leading-tight drop-shadow-md">
+                          Muhammad Abi Rafdi Pratama
                         </h4>
 
                         {/* Subtitle Role */}
                         <p className="text-xs font-semibold text-zinc-300 mt-0.5 tracking-wide flex items-center gap-1.5">
                           <span>Web Dev & QA Tester</span>
                         </p>
-
-                        {/* Drag & 360 hint badge */}
-                        <div className="mt-3 flex items-center justify-between pt-2 border-t border-white/10 text-[9px] font-mono text-zinc-400">
-                          <span>PORTFOLIO ID</span>
-                          <span className="text-sky-400 font-bold flex items-center gap-1">
-                            <Rotate3d size={10} /> 360° DRAG
-                          </span>
-                        </div>
                       </div>
                     </div>
 
@@ -829,7 +872,7 @@ const About = () => {
                               className="text-purple-400 shrink-0"
                             />
                             <span className="text-[11px] font-semibold text-zinc-200">
-                              Node.js • Express • MySQL
+                              Node.js • Express • PostgreSQL
                             </span>
                           </div>
 
@@ -839,7 +882,7 @@ const About = () => {
                               className="text-emerald-400 shrink-0"
                             />
                             <span className="text-[11px] font-semibold text-zinc-200">
-                              QA Testing • Cypress • Jest
+                              QA Testing
                             </span>
                           </div>
                         </div>
