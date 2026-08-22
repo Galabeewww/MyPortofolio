@@ -424,505 +424,521 @@ const About = () => {
         </div>
 
         {/* ===== MAIN CONTENT ===== */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
-          {/* ===== LEFT COLUMN: SLEEK, SIMPLE & BALANCED ===== */}
-          <div
-            className={`lg:col-span-7 space-y-6 text-left anim-about-left ${
-              isVisible ? "is-visible" : ""
-            }`}
-          >
-            {/* Top Status & Role Pill */}
-            <div className="flex flex-wrap items-center gap-2">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold bg-sky-500/10 dark:bg-sky-500/15 border border-sky-500/30 text-sky-500 shadow-sm backdrop-blur-sm">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
-                </span>
-                <span className="text-emerald-500 uppercase tracking-wider text-[11px] font-extrabold">
-                  {lang === "id" ? "Siap Bekerja" : "Available for Work"}
-                </span>
-                <span className="text-slate-300 dark:text-zinc-700">•</span>
-                <span className="text-sky-600 dark:text-sky-400 font-semibold tracking-wide text-[11px]">
-                  Web Dev & QA Tester
-                </span>
-              </div>
-            </div>
-
-            {/* Main Greeting Typography */}
-            <div className="space-y-1">
-              <p className="text-xs uppercase font-mono tracking-widest text-[var(--text-muted)] font-semibold">
-                {lang === "id" ? "— Perkenalan Diri" : "— Get to know me"}
-              </p>
-              <h3 className="text-2xl sm:text-4xl font-extrabold font-display text-[var(--text-primary)] leading-[1.2] tracking-tight">
-                {lang === "id" ? "Halo, Saya " : "Hello, I'm "}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 via-sky-500 to-indigo-500">
-                  Muhammad Abi Rafdi Pratama
-                </span>
-              </h3>
-            </div>
-
-            {/* Bio Paragraphs with subtle accent bar */}
-            <div className="border-l-2 border-sky-500/40 pl-4 py-1 space-y-3">
-              <p className="text-[var(--text-secondary)] text-sm sm:text-[15px] leading-relaxed">
-                {t.about.para1}
-              </p>
-              <p className="text-[var(--text-secondary)] text-sm sm:text-[15px] leading-relaxed">
-                {t.about.para2}
-              </p>
-            </div>
-
-            {/* 2 Modern Capability Bento Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-1">
-              {/* Card 1: Web Development */}
-              <div className="p-4 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-color)] hover:border-sky-500/40 transition-all duration-300 shadow-sm space-y-2 group">
-                <div className="flex items-center gap-2.5">
-                  <div className="p-2 rounded-xl bg-sky-500/10 text-sky-500 group-hover:scale-110 transition-transform">
-                    <Code2 size={16} />
-                  </div>
-                  <h4 className="text-xs sm:text-sm font-bold text-[var(--text-primary)]">
-                    {lang === "id" ? "Pengembangan Web" : "Web Development"}
-                  </h4>
-                </div>
-                <div className="flex flex-wrap gap-1.5 pt-1">
-                  {["React", "Next.js", "Tailwind", "Node.js"].map((skill) => (
-                    <span
-                      key={skill}
-                      className="px-2 py-0.5 rounded-md text-[10px] font-mono font-semibold bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-secondary)]"
-                    >
-                      {skill}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              {/* Card 2: Quality Assurance */}
-              <div className="p-4 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-color)] hover:border-emerald-500/40 transition-all duration-300 shadow-sm space-y-2 group">
-                <div className="flex items-center gap-2.5">
-                  <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-500 group-hover:scale-110 transition-transform">
-                    <ShieldCheck size={16} />
-                  </div>
-                  <h4 className="text-xs sm:text-sm font-bold text-[var(--text-primary)]">
-                    {lang === "id"
-                      ? "Jaminan Kualitas (QA)"
-                      : "Quality Assurance"}
-                  </h4>
-                </div>
-                <div className="flex flex-wrap gap-1.5 pt-1">
-                  {["Manual Testing", "Bug Tracking"].map((tool) => (
-                    <span
-                      key={tool}
-                      className="px-2 py-0.5 rounded-md text-[10px] font-mono font-semibold bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-secondary)]"
-                    >
-                      {tool}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Bottom Meta & Action Area */}
-            <div className="flex flex-wrap items-center justify-between gap-4 pt-2 border-t border-[var(--border-color)]/60">
-              {/* Location Badge */}
-              <div className="flex items-center gap-2 text-xs text-[var(--text-secondary)] font-medium">
-                <MapPin size={14} className="text-sky-500 shrink-0" />
-                <span>Bandung, Indonesia</span>
-              </div>
-
-              {/* CTA Action Buttons */}
-              <div className="flex items-center gap-3">
-                <button
-                  onClick={handleDownloadCV}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-gradient-to-r from-sky-500 to-sky-600 hover:from-sky-600 hover:to-sky-700 text-white font-extrabold text-xs tracking-wider uppercase shadow-lg shadow-sky-500/25 hover:shadow-sky-500/40 hover:scale-[1.02] active:scale-95 transition-all duration-300 cursor-pointer group"
-                >
-                  <Download
-                    size={15}
-                    className="group-hover:translate-y-0.5 transition-transform"
-                  />
-                  <span>{t.about.downloadCV || "DOWNLOAD CV"}</span>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* ===== RIGHT COLUMN: 360 INTERACTIVE LANYARD CARD ===== */}
-          <div
-            className={`lg:col-span-5 anim-about-right ${isVisible ? "is-visible" : ""}`}
-          >
+        <div className="p-10 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-color)] hover:border-sky-500/40 transition-all duration-300 shadow-sm space-y-2 group">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
+            {/* ===== LEFT COLUMN: SLEEK, SIMPLE & BALANCED ===== */}
             <div
-              className="relative select-none"
-              style={{
-                width: `${CARD_WIDTH}px`,
-                height: "640px",
-                margin: "0 auto",
-                perspective: "1400px",
-              }}
+              className={`lg:col-span-7 space-y-6 text-left anim-about-left ${
+                isVisible ? "is-visible" : ""
+              }`}
             >
-              {/* ===== SVG LANYARD STRAP ===== */}
-              <svg
-                className="absolute inset-0 w-full h-full pointer-events-none z-10"
-                style={{ overflow: "visible" }}
-              >
-                <defs>
-                  {/* Sky Blue & Deep Cyan Texture Gradient */}
-                  <linearGradient id="lanyardFill" x1="0" y1="0" x2="1" y2="0">
-                    <stop offset="0%" stopColor="#0284c7" />
-                    <stop offset="25%" stopColor="#0ea5e9" />
-                    <stop offset="50%" stopColor="#38bdf8" />
-                    <stop offset="75%" stopColor="#0ea5e9" />
-                    <stop offset="100%" stopColor="#0369a1" />
-                  </linearGradient>
+              {/* Top Status & Role Pill */}
+              <div className="flex flex-wrap items-center gap-2">
+                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold bg-sky-500/10 dark:bg-sky-500/15 border border-sky-500/30 text-sky-500 shadow-sm backdrop-blur-sm">
+                  {/* <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+                  </span> */}
+                  {/* <span className="text-emerald-500 uppercase tracking-wider text-[11px] font-extrabold">
+                    {lang === "id" ? "Siap Bekerja" : "Available for Work"}
+                  </span> */}
+                  {/* <span className="text-slate-300 dark:text-zinc-700">•</span> */}
+                  <span className="text-sky-600 dark:text-sky-400 font-semibold tracking-wide text-[11px]">
+                    Web Dev & QA Tester
+                  </span>
+                </div>
+              </div>
 
-                  {/* Satin Sheen Line */}
-                  <linearGradient id="lanyardShine" x1="0" y1="0" x2="1" y2="0">
-                    <stop offset="0%" stopColor="rgba(255,255,255,0)" />
-                    <stop offset="45%" stopColor="rgba(255,255,255,0.4)" />
-                    <stop offset="55%" stopColor="rgba(255,255,255,0.4)" />
-                    <stop offset="100%" stopColor="rgba(255,255,255,0)" />
-                  </linearGradient>
-                </defs>
+              {/* Main Greeting Typography */}
+              <div className="space-y-1">
+                <p className="text-xs uppercase font-mono tracking-widest text-[var(--text-muted)] font-semibold">
+                  {lang === "id" ? "— Perkenalan Diri" : "— Get to know me"}
+                </p>
+                <h3 className="text-2xl sm:text-4xl font-extrabold font-display text-[var(--text-primary)] leading-[1.2] tracking-tight">
+                  {lang === "id" ? "Halo, Saya " : "Hello, I'm "}
+                  <span className=" bg-clip-text text-sky-500">Abeewww</span>
+                </h3>
+              </div>
 
-                {/* Strap Shadow */}
-                <path
-                  d={strapPolygonPath}
-                  fill="rgba(0,0,0,0.12)"
-                  style={{ transform: "translate(3px, 4px)" }}
-                />
+              {/* Bio Paragraphs with subtle accent bar */}
+              <div className="border-l-2 border-sky-500/40 pl-4 py-1 space-y-3">
+                <p className="text-[var(--text-secondary)] text-sm sm:text-[15px] leading-relaxed">
+                  {t.about.para1}
+                </p>
+                <p className="text-[var(--text-secondary)] text-sm sm:text-[15px] leading-relaxed">
+                  {t.about.para2}
+                </p>
+              </div>
 
-                {/* Main Satin Ribbon Strap */}
-                <path d={strapPolygonPath} fill="url(#lanyardFill)" />
+              {/* 2 Modern Capability Bento Cards */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-1">
+                {/* Card 1: Web Development */}
+                <div className="p-4 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-color)] hover:border-sky-500/40 transition-all duration-300 shadow-sm space-y-2 group">
+                  <div className="flex items-center gap-2.5">
+                    <div className="p-2 rounded-xl bg-sky-500/10 text-sky-500 group-hover:scale-110 transition-transform">
+                      <Code2 size={16} />
+                    </div>
+                    <h4 className="text-xs sm:text-sm font-bold text-[var(--text-primary)]">
+                      {lang === "id" ? "Pengembangan Web" : "Web Development"}
+                    </h4>
+                  </div>
+                  <div className="flex flex-wrap gap-1.5 pt-1">
+                    {["React", "Next.js", "Tailwind", "Node.js"].map(
+                      (skill) => (
+                        <span
+                          key={skill}
+                          className="px-2 py-0.5 rounded-md text-[10px] font-mono font-semibold bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-secondary)]"
+                        >
+                          {skill}
+                        </span>
+                      ),
+                    )}
+                  </div>
+                </div>
 
-                {/* Outer Border Stroke for depth */}
-                <path
-                  d={strapCenterPath}
-                  fill="none"
-                  stroke="rgba(3,105,161,0.5)"
-                  strokeWidth={STRAP_WIDTH + 1}
-                  strokeLinecap="round"
-                  opacity="0.35"
-                />
+                {/* Card 2: Quality Assurance */}
+                <div className="p-4 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-color)] hover:border-emerald-500/40 transition-all duration-300 shadow-sm space-y-2 group">
+                  <div className="flex items-center gap-2.5">
+                    <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-500 group-hover:scale-110 transition-transform">
+                      <ShieldCheck size={16} />
+                    </div>
+                    <h4 className="text-xs sm:text-sm font-bold text-[var(--text-primary)]">
+                      {lang === "id"
+                        ? "Jaminan Kualitas (QA)"
+                        : "Quality Assurance"}
+                    </h4>
+                  </div>
+                  <div className="flex flex-wrap gap-1.5 pt-1">
+                    {["Manual Testing", "Bug Tracking"].map((tool) => (
+                      <span
+                        key={tool}
+                        className="px-2 py-0.5 rounded-md text-[10px] font-mono font-semibold bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-secondary)]"
+                      >
+                        {tool}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
 
-                {/* Center Satin Highlight */}
-                <path
-                  d={strapCenterPath}
-                  fill="none"
-                  stroke="url(#lanyardShine)"
-                  strokeWidth={STRAP_WIDTH * 0.35}
-                  strokeLinecap="round"
-                />
+              {/* Bottom Meta & Action Area */}
+              <div className="flex flex-wrap items-center justify-between gap-4 pt-2 border-t border-[var(--border-color)]/60">
+                {/* Location Badge */}
+                <div className="flex items-center gap-2 text-xs text-[var(--text-secondary)] font-medium">
+                  <MapPin size={14} className="text-sky-500 shrink-0" />
+                  <span>Bandung, Indonesia</span>
+                </div>
 
-                {/* Anchor Top Ring */}
-                <circle
-                  cx={CARD_WIDTH / 2}
-                  cy={ANCHOR_Y}
-                  r="7"
-                  fill="none"
-                  stroke="#94a3b8"
-                  strokeWidth="3.5"
-                />
-                <circle
-                  cx={CARD_WIDTH / 2}
-                  cy={ANCHOR_Y}
-                  r="3"
-                  fill="#475569"
-                />
-              </svg>
+                {/* CTA Action Buttons */}
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={handleDownloadCV}
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-gradient-to-r from-sky-500 to-sky-600 hover:from-sky-600 hover:to-sky-700 text-white font-extrabold text-xs tracking-wider uppercase shadow-lg shadow-sky-500/25 hover:shadow-sky-500/40 hover:scale-[1.02] active:scale-95 transition-all duration-300 cursor-pointer group"
+                  >
+                    <Download
+                      size={15}
+                      className="group-hover:translate-y-0.5 transition-transform"
+                    />
+                    <span>{t.about.downloadCV || "DOWNLOAD CV"}</span>
+                  </button>
+                </div>
+              </div>
+            </div>
 
-              {/* ===== 3D CARD WRAPPER ===== */}
+            {/* ===== RIGHT COLUMN: 360 INTERACTIVE LANYARD CARD ===== */}
+            <div
+              className={`lg:col-span-5 anim-about-right ${isVisible ? "is-visible" : ""}`}
+            >
               <div
-                className={`absolute z-20 ${
-                  isVisible ? "animate-id-card-fall" : "opacity-0"
-                }`}
+                className="relative select-none"
                 style={{
                   width: `${CARD_WIDTH}px`,
-                  left: "50%",
-                  top: `${CARD_REST_Y}px`,
-                  ...(hasFallen
-                    ? {
-                        animation: "none",
-                        opacity: 1,
-                        transform: `translate(calc(-50% + ${cardOffset.x}px), ${cardOffset.y}px)`,
-                        transformStyle: "preserve-3d",
-                        transition: isDragging ? "none" : undefined,
-                      }
-                    : {
-                        transformStyle: "preserve-3d",
-                      }),
+                  height: "640px",
+                  margin: "0 auto",
+                  perspective: "1400px",
                 }}
               >
+                {/* ===== SVG LANYARD STRAP ===== */}
+                <svg
+                  className="absolute inset-0 w-full h-full pointer-events-none z-10"
+                  style={{ overflow: "visible" }}
+                >
+                  <defs>
+                    {/* Sky Blue & Deep Cyan Texture Gradient */}
+                    <linearGradient
+                      id="lanyardFill"
+                      x1="0"
+                      y1="0"
+                      x2="1"
+                      y2="0"
+                    >
+                      <stop offset="0%" stopColor="#0284c7" />
+                      <stop offset="25%" stopColor="#0ea5e9" />
+                      <stop offset="50%" stopColor="#38bdf8" />
+                      <stop offset="75%" stopColor="#0ea5e9" />
+                      <stop offset="100%" stopColor="#0369a1" />
+                    </linearGradient>
+
+                    {/* Satin Sheen Line */}
+                    <linearGradient
+                      id="lanyardShine"
+                      x1="0"
+                      y1="0"
+                      x2="1"
+                      y2="0"
+                    >
+                      <stop offset="0%" stopColor="rgba(255,255,255,0)" />
+                      <stop offset="45%" stopColor="rgba(255,255,255,0.4)" />
+                      <stop offset="55%" stopColor="rgba(255,255,255,0.4)" />
+                      <stop offset="100%" stopColor="rgba(255,255,255,0)" />
+                    </linearGradient>
+                  </defs>
+
+                  {/* Strap Shadow */}
+                  <path
+                    d={strapPolygonPath}
+                    fill="rgba(0,0,0,0.12)"
+                    style={{ transform: "translate(3px, 4px)" }}
+                  />
+
+                  {/* Main Satin Ribbon Strap */}
+                  <path d={strapPolygonPath} fill="url(#lanyardFill)" />
+
+                  {/* Outer Border Stroke for depth */}
+                  <path
+                    d={strapCenterPath}
+                    fill="none"
+                    stroke="rgba(3,105,161,0.5)"
+                    strokeWidth={STRAP_WIDTH + 1}
+                    strokeLinecap="round"
+                    opacity="0.35"
+                  />
+
+                  {/* Center Satin Highlight */}
+                  <path
+                    d={strapCenterPath}
+                    fill="none"
+                    stroke="url(#lanyardShine)"
+                    strokeWidth={STRAP_WIDTH * 0.35}
+                    strokeLinecap="round"
+                  />
+
+                  {/* Anchor Top Ring */}
+                  <circle
+                    cx={CARD_WIDTH / 2}
+                    cy={ANCHOR_Y}
+                    r="7"
+                    fill="none"
+                    stroke="#94a3b8"
+                    strokeWidth="3.5"
+                  />
+                  <circle
+                    cx={CARD_WIDTH / 2}
+                    cy={ANCHOR_Y}
+                    r="3"
+                    fill="#475569"
+                  />
+                </svg>
+
+                {/* ===== 3D CARD WRAPPER ===== */}
                 <div
-                  onMouseDown={(e) => {
-                    e.preventDefault();
-                    handlePointerDown(e.clientX, e.clientY);
-                  }}
-                  onTouchStart={(e) => {
-                    if (e.touches[0]) {
-                      handlePointerDown(
-                        e.touches[0].clientX,
-                        e.touches[0].clientY,
-                      );
-                    }
-                  }}
-                  className={`relative ${isDragging ? "cursor-grabbing" : "cursor-grab"}`}
+                  className={`absolute z-20 ${
+                    isVisible ? "animate-id-card-fall" : "opacity-0"
+                  }`}
                   style={{
-                    transform: `rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)`,
-                    transformStyle: "preserve-3d",
-                    transition: isDragging
-                      ? "none"
-                      : "transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)",
+                    width: `${CARD_WIDTH}px`,
+                    left: "50%",
+                    top: `${CARD_REST_Y}px`,
+                    ...(hasFallen
+                      ? {
+                          animation: "none",
+                          opacity: 1,
+                          transform: `translate(calc(-50% + ${cardOffset.x}px), ${cardOffset.y}px)`,
+                          transformStyle: "preserve-3d",
+                          transition: isDragging ? "none" : undefined,
+                        }
+                      : {
+                          transformStyle: "preserve-3d",
+                        }),
                   }}
                 >
-                  {/* Metal Carabiner Clip Hooking into the Card Slot */}
-                  <div className="flex justify-center -mb-2 relative z-30 pointer-events-none">
-                    <div className="w-9 h-7 rounded-t-lg bg-gradient-to-b from-zinc-300 via-zinc-400 to-zinc-600 border border-zinc-500 shadow-md flex items-end justify-center pb-1">
-                      <div className="w-3.5 h-3.5 rounded-full border-2 border-zinc-800 bg-zinc-400" />
-                    </div>
-                  </div>
-
-                  {/* ===== CARD MAIN CONTAINER (3D FLIP) ===== */}
                   <div
-                    className="relative w-full rounded-3xl shadow-2xl"
+                    onMouseDown={(e) => {
+                      e.preventDefault();
+                      handlePointerDown(e.clientX, e.clientY);
+                    }}
+                    onTouchStart={(e) => {
+                      if (e.touches[0]) {
+                        handlePointerDown(
+                          e.touches[0].clientX,
+                          e.touches[0].clientY,
+                        );
+                      }
+                    }}
+                    className={`relative ${isDragging ? "cursor-grabbing" : "cursor-grab"}`}
                     style={{
-                      height: `${CARD_HEIGHT}px`,
+                      transform: `rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)`,
                       transformStyle: "preserve-3d",
+                      transition: isDragging
+                        ? "none"
+                        : "transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)",
                     }}
                   >
-                    {/* ==================================================== */}
-                    {/* ===== SISI DEPAN (FRONT FACE - EXACT REFERENSI) ===== */}
-                    {/* ==================================================== */}
-                    <div
-                      className="absolute inset-0 rounded-3xl overflow-hidden border border-zinc-700/60 dark:border-zinc-700/80 bg-zinc-950 text-white shadow-2xl flex flex-col justify-between"
-                      style={{
-                        backfaceVisibility: "hidden",
-                        WebkitBackfaceVisibility: "hidden",
-                        transform: "rotateY(0deg)",
-                      }}
-                    >
-                      {/* Top Slot Hole (Pill Punch Hole) */}
-                      <div className="absolute top-2 left-1/2 -translate-x-1/2 w-8 h-2.5 rounded-full bg-zinc-950 border border-zinc-700/80 shadow-inner z-30" />
-
-                      {/* Futuristic Curved Panel Background Overlay (Reference style) */}
-                      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-                        {/* Top Curved Dark Metallic Layer */}
-                        <div className="absolute -top-10 -left-10 w-48 h-48 rounded-full bg-gradient-to-br from-zinc-700/40 to-transparent blur-md" />
-                        {/* Futuristic Geometric Arc/Polygon matching reference */}
-                        <svg
-                          className="absolute inset-0 w-full h-full opacity-40"
-                          viewBox="0 0 290 440"
-                          fill="none"
-                        >
-                          <path
-                            d="M0 0 L140 0 C160 40, 160 70, 140 100 L0 180 Z"
-                            fill="url(#frontPanelGrad1)"
-                          />
-                          <path
-                            d="M290 0 L160 0 C180 50, 180 110, 290 140 Z"
-                            fill="url(#frontPanelGrad2)"
-                          />
-                          <path
-                            d="M0 240 C90 260, 110 320, 0 380 Z"
-                            fill="url(#frontPanelGrad3)"
-                          />
-                          <defs>
-                            <linearGradient
-                              id="frontPanelGrad1"
-                              x1="0"
-                              y1="0"
-                              x2="1"
-                              y2="1"
-                            >
-                              <stop
-                                offset="0%"
-                                stopColor="#52525b"
-                                stopOpacity="0.8"
-                              />
-                              <stop
-                                offset="100%"
-                                stopColor="#27272a"
-                                stopOpacity="0.2"
-                              />
-                            </linearGradient>
-                            <linearGradient
-                              id="frontPanelGrad2"
-                              x1="0"
-                              y1="0"
-                              x2="1"
-                              y2="1"
-                            >
-                              <stop
-                                offset="0%"
-                                stopColor="#3f3f46"
-                                stopOpacity="0.7"
-                              />
-                              <stop
-                                offset="100%"
-                                stopColor="#18181b"
-                                stopOpacity="0.3"
-                              />
-                            </linearGradient>
-                            <linearGradient
-                              id="frontPanelGrad3"
-                              x1="0"
-                              y1="0"
-                              x2="1"
-                              y2="1"
-                            >
-                              <stop
-                                offset="0%"
-                                stopColor="#0ea5e9"
-                                stopOpacity="0.3"
-                              />
-                              <stop
-                                offset="100%"
-                                stopColor="#000000"
-                                stopOpacity="0"
-                              />
-                            </linearGradient>
-                          </defs>
-                        </svg>
-
-                        {/* Diagonal Gloss / Specular Sheen */}
-                        <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent opacity-80" />
-                      </div>
-
-                      {/* Foreground Portrait Photo */}
-                      <div className="relative w-full h-full flex items-center justify-center pt-6 overflow-hidden">
-                        <img
-                          src="/img/abi.jpg"
-                          alt="Muhammad Abi Rafdi Pratama"
-                          className="w-full h-full object-cover object-top scale-105 pointer-events-none select-none contrast-[1.08] brightness-[0.98]"
-                          draggable="false"
-                        />
-
-                        {/* Smooth bottom gradient vignette */}
-                        <div className="absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-black via-black/85 to-transparent z-10" />
-                      </div>
-
-                      {/* Bottom Typography (Sesuai Referensi Gambar) */}
-                      <div className="absolute bottom-0 inset-x-0 p-5 z-20 text-left">
-                        {/* Name in Bold White Typography */}
-                        <h4 className="text-1xl font-black font-display text-white tracking-tight leading-tight drop-shadow-md">
-                          Muhammad Abi Rafdi Pratama
-                        </h4>
-
-                        {/* Subtitle Role */}
-                        <p className="text-xs font-semibold text-zinc-300 mt-0.5 tracking-wide flex items-center gap-1.5">
-                          <span>Web Dev & QA Tester</span>
-                        </p>
+                    {/* Metal Carabiner Clip Hooking into the Card Slot */}
+                    <div className="flex justify-center -mb-2 relative z-30 pointer-events-none">
+                      <div className="w-9 h-7 rounded-t-lg bg-gradient-to-b from-zinc-300 via-zinc-400 to-zinc-600 border border-zinc-500 shadow-md flex items-end justify-center pb-1">
+                        <div className="w-3.5 h-3.5 rounded-full border-2 border-zinc-800 bg-zinc-400" />
                       </div>
                     </div>
 
-                    {/* ==================================================== */}
-                    {/* ===== SISI BELAKANG (BACK FACE - SLEEK CYBER BADGE) ===== */}
-                    {/* ==================================================== */}
+                    {/* ===== CARD MAIN CONTAINER (3D FLIP) ===== */}
                     <div
-                      className="absolute inset-0 rounded-3xl overflow-hidden border border-zinc-700/80 bg-zinc-950 text-white shadow-2xl p-6 flex flex-col justify-between"
+                      className="relative w-full rounded-3xl shadow-2xl"
                       style={{
-                        backfaceVisibility: "hidden",
-                        WebkitBackfaceVisibility: "hidden",
-                        transform: "rotateY(180deg)",
+                        height: `${CARD_HEIGHT}px`,
+                        transformStyle: "preserve-3d",
                       }}
                     >
-                      {/* Top Slot Hole */}
-                      <div className="absolute top-2 left-1/2 -translate-x-1/2 w-8 h-2.5 rounded-full bg-zinc-950 border border-zinc-700/80 shadow-inner z-30" />
+                      {/* ==================================================== */}
+                      {/* ===== SISI DEPAN (FRONT FACE - EXACT REFERENSI) ===== */}
+                      {/* ==================================================== */}
+                      <div
+                        className="absolute inset-0 rounded-3xl overflow-hidden border border-zinc-700/60 dark:border-zinc-700/80 bg-zinc-950 text-white shadow-2xl flex flex-col justify-between"
+                        style={{
+                          backfaceVisibility: "hidden",
+                          WebkitBackfaceVisibility: "hidden",
+                          transform: "rotateY(0deg)",
+                        }}
+                      >
+                        {/* Top Slot Hole (Pill Punch Hole) */}
+                        <div className="absolute top-2 left-1/2 -translate-x-1/2 w-8 h-2.5 rounded-full bg-zinc-950 border border-zinc-700/80 shadow-inner z-30" />
 
-                      {/* Header Back Side */}
-                      <div className="pt-3 flex justify-between items-center border-b border-zinc-800 pb-3">
-                        <div className="flex items-center gap-2">
-                          <span className="font-extrabold text-lg text-sky-400 font-display tracking-tight">
-                            GLBW.
-                          </span>
-                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-sky-500/10 border border-sky-500/30 text-sky-400 font-mono font-bold">
-                            VERIFIED
-                          </span>
+                        {/* Futuristic Curved Panel Background Overlay (Reference style) */}
+                        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                          {/* Top Curved Dark Metallic Layer */}
+                          <div className="absolute -top-10 -left-10 w-48 h-48 rounded-full bg-gradient-to-br from-zinc-700/40 to-transparent blur-md" />
+                          {/* Futuristic Geometric Arc/Polygon matching reference */}
+                          <svg
+                            className="absolute inset-0 w-full h-full opacity-40"
+                            viewBox="0 0 290 440"
+                            fill="none"
+                          >
+                            <path
+                              d="M0 0 L140 0 C160 40, 160 70, 140 100 L0 180 Z"
+                              fill="url(#frontPanelGrad1)"
+                            />
+                            <path
+                              d="M290 0 L160 0 C180 50, 180 110, 290 140 Z"
+                              fill="url(#frontPanelGrad2)"
+                            />
+                            <path
+                              d="M0 240 C90 260, 110 320, 0 380 Z"
+                              fill="url(#frontPanelGrad3)"
+                            />
+                            <defs>
+                              <linearGradient
+                                id="frontPanelGrad1"
+                                x1="0"
+                                y1="0"
+                                x2="1"
+                                y2="1"
+                              >
+                                <stop
+                                  offset="0%"
+                                  stopColor="#52525b"
+                                  stopOpacity="0.8"
+                                />
+                                <stop
+                                  offset="100%"
+                                  stopColor="#27272a"
+                                  stopOpacity="0.2"
+                                />
+                              </linearGradient>
+                              <linearGradient
+                                id="frontPanelGrad2"
+                                x1="0"
+                                y1="0"
+                                x2="1"
+                                y2="1"
+                              >
+                                <stop
+                                  offset="0%"
+                                  stopColor="#3f3f46"
+                                  stopOpacity="0.7"
+                                />
+                                <stop
+                                  offset="100%"
+                                  stopColor="#18181b"
+                                  stopOpacity="0.3"
+                                />
+                              </linearGradient>
+                              <linearGradient
+                                id="frontPanelGrad3"
+                                x1="0"
+                                y1="0"
+                                x2="1"
+                                y2="1"
+                              >
+                                <stop
+                                  offset="0%"
+                                  stopColor="#0ea5e9"
+                                  stopOpacity="0.3"
+                                />
+                                <stop
+                                  offset="100%"
+                                  stopColor="#000000"
+                                  stopOpacity="0"
+                                />
+                              </linearGradient>
+                            </defs>
+                          </svg>
+
+                          {/* Diagonal Gloss / Specular Sheen */}
+                          <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent opacity-80" />
                         </div>
-                        <ShieldCheck size={18} className="text-emerald-400" />
-                      </div>
 
-                      {/* Credentials & Details */}
-                      <div className="space-y-3.5 my-auto text-left">
-                        {/* Profile Info */}
-                        <div>
-                          <p className="text-[10px] uppercase font-mono text-zinc-400 tracking-wider">
-                            FULL NAME
-                          </p>
-                          <p className="text-xs font-bold text-white tracking-wide">
+                        {/* Foreground Portrait Photo */}
+                        <div className="relative w-full h-full flex items-center justify-center pt-6 overflow-hidden">
+                          <img
+                            src="/img/abi.jpg"
+                            alt="Muhammad Abi Rafdi Pratama"
+                            className="w-full h-full object-cover object-top scale-105 pointer-events-none select-none contrast-[1.08] brightness-[0.98]"
+                            draggable="false"
+                          />
+
+                          {/* Smooth bottom gradient vignette */}
+                          <div className="absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-black via-black/85 to-transparent z-10" />
+                        </div>
+
+                        {/* Bottom Typography (Sesuai Referensi Gambar) */}
+                        <div className="absolute bottom-0 inset-x-0 p-5 z-20 text-left">
+                          {/* Name in Bold White Typography */}
+                          <h4 className="text-1xl font-black font-display text-white tracking-tight leading-tight drop-shadow-md">
                             Muhammad Abi Rafdi Pratama
+                          </h4>
+
+                          {/* Subtitle Role */}
+                          <p className="text-xs font-semibold text-zinc-300 mt-0.5 tracking-wide flex items-center gap-1.5">
+                            <span>Web Dev & QA Tester</span>
                           </p>
-                        </div>
-
-                        {/* Verified Stack */}
-                        <div className="space-y-2">
-                          <p className="text-[10px] uppercase font-mono text-zinc-400 tracking-wider">
-                            CORE CAPABILITIES
-                          </p>
-
-                          <div className="flex items-center gap-2 text-xs bg-zinc-900/80 p-2 rounded-xl border border-zinc-800">
-                            <Code2
-                              size={14}
-                              className="text-sky-400 shrink-0"
-                            />
-                            <span className="text-[11px] font-semibold text-zinc-200">
-                              React • Next.js • Tailwind CSS
-                            </span>
-                          </div>
-
-                          <div className="flex items-center gap-2 text-xs bg-zinc-900/80 p-2 rounded-xl border border-zinc-800">
-                            <Sparkles
-                              size={14}
-                              className="text-purple-400 shrink-0"
-                            />
-                            <span className="text-[11px] font-semibold text-zinc-200">
-                              Node.js • Express • PostgreSQL
-                            </span>
-                          </div>
-
-                          <div className="flex items-center gap-2 text-xs bg-zinc-900/80 p-2 rounded-xl border border-zinc-800">
-                            <CheckCircle2
-                              size={14}
-                              className="text-emerald-400 shrink-0"
-                            />
-                            <span className="text-[11px] font-semibold text-zinc-200">
-                              QA Testing
-                            </span>
-                          </div>
-                        </div>
-
-                        {/* Location */}
-                        <div className="flex items-center justify-between text-[11px] text-zinc-400 pt-1">
-                          <span className="flex items-center gap-1.5">
-                            <MapPin size={12} className="text-sky-400" />{" "}
-                            Bandung, Indonesia
-                          </span>
-                          <span className="text-emerald-400 font-bold uppercase text-[10px] flex items-center gap-1">
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
-                            Available
-                          </span>
                         </div>
                       </div>
 
-                      {/* Barcode & Security Hologram Footer */}
-                      <div className="pt-2 border-t border-zinc-800/80 flex flex-col items-center gap-1">
-                        {/* Barcode */}
-                        <div className="flex gap-[1.5px] justify-center w-full">
-                          {[...Array(44)].map((_, i) => (
-                            <div
-                              key={i}
-                              className="bg-zinc-200"
-                              style={{
-                                height: "22px",
-                                width: [0, 4, 9, 15, 22, 28, 35, 41].includes(i)
-                                  ? "2.5px"
-                                  : i % 2 === 0
-                                    ? "1.8px"
-                                    : "1px",
-                                opacity: 0.85,
-                              }}
-                            />
-                          ))}
+                      {/* ==================================================== */}
+                      {/* ===== SISI BELAKANG (BACK FACE - SLEEK CYBER BADGE) ===== */}
+                      {/* ==================================================== */}
+                      <div
+                        className="absolute inset-0 rounded-3xl overflow-hidden border border-zinc-700/80 bg-zinc-950 text-white shadow-2xl p-6 flex flex-col justify-between"
+                        style={{
+                          backfaceVisibility: "hidden",
+                          WebkitBackfaceVisibility: "hidden",
+                          transform: "rotateY(180deg)",
+                        }}
+                      >
+                        {/* Top Slot Hole */}
+                        <div className="absolute top-2 left-1/2 -translate-x-1/2 w-8 h-2.5 rounded-full bg-zinc-950 border border-zinc-700/80 shadow-inner z-30" />
+
+                        {/* Header Back Side */}
+                        <div className="pt-3 flex justify-between items-center border-b border-zinc-800 pb-3">
+                          <div className="flex items-center gap-2">
+                            <span className="font-extrabold text-lg text-sky-400 font-display tracking-tight">
+                              GLBW.
+                            </span>
+                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-sky-500/10 border border-sky-500/30 text-sky-400 font-mono font-bold">
+                              VERIFIED
+                            </span>
+                          </div>
+                          <ShieldCheck size={18} className="text-emerald-400" />
                         </div>
-                        <p className="text-[8px] font-mono text-zinc-400 tracking-[0.25em]">
-                          DEV — 2024 — ID — 024
-                        </p>
+
+                        {/* Credentials & Details */}
+                        <div className="space-y-3.5 my-auto text-left">
+                          {/* Profile Info */}
+                          <div>
+                            <p className="text-[10px] uppercase font-mono text-zinc-400 tracking-wider">
+                              FULL NAME
+                            </p>
+                            <p className="text-xs font-bold text-white tracking-wide">
+                              Muhammad Abi Rafdi Pratama
+                            </p>
+                          </div>
+
+                          {/* Verified Stack */}
+                          <div className="space-y-2">
+                            <p className="text-[10px] uppercase font-mono text-zinc-400 tracking-wider">
+                              CORE CAPABILITIES
+                            </p>
+
+                            <div className="flex items-center gap-2 text-xs bg-zinc-900/80 p-2 rounded-xl border border-zinc-800">
+                              <Code2
+                                size={14}
+                                className="text-sky-400 shrink-0"
+                              />
+                              <span className="text-[11px] font-semibold text-zinc-200">
+                                React • Next.js • Tailwind CSS
+                              </span>
+                            </div>
+
+                            <div className="flex items-center gap-2 text-xs bg-zinc-900/80 p-2 rounded-xl border border-zinc-800">
+                              <Sparkles
+                                size={14}
+                                className="text-purple-400 shrink-0"
+                              />
+                              <span className="text-[11px] font-semibold text-zinc-200">
+                                Node.js • Express • PostgreSQL
+                              </span>
+                            </div>
+
+                            <div className="flex items-center gap-2 text-xs bg-zinc-900/80 p-2 rounded-xl border border-zinc-800">
+                              <CheckCircle2
+                                size={14}
+                                className="text-emerald-400 shrink-0"
+                              />
+                              <span className="text-[11px] font-semibold text-zinc-200">
+                                QA Testing
+                              </span>
+                            </div>
+                          </div>
+
+                          {/* Location */}
+                          <div className="flex items-center justify-between text-[11px] text-zinc-400 pt-1">
+                            <span className="flex items-center gap-1.5">
+                              <MapPin size={12} className="text-sky-400" />{" "}
+                              Bandung, Indonesia
+                            </span>
+                            <span className="text-emerald-400 font-bold uppercase text-[10px] flex items-center gap-1">
+                              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+                              Available
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Barcode & Security Hologram Footer */}
+                        <div className="pt-2 border-t border-zinc-800/80 flex flex-col items-center gap-1">
+                          {/* Barcode */}
+                          <div className="flex gap-[1.5px] justify-center w-full">
+                            {[...Array(44)].map((_, i) => (
+                              <div
+                                key={i}
+                                className="bg-zinc-200"
+                                style={{
+                                  height: "22px",
+                                  width: [0, 4, 9, 15, 22, 28, 35, 41].includes(
+                                    i,
+                                  )
+                                    ? "2.5px"
+                                    : i % 2 === 0
+                                      ? "1.8px"
+                                      : "1px",
+                                  opacity: 0.85,
+                                }}
+                              />
+                            ))}
+                          </div>
+                          <p className="text-[8px] font-mono text-zinc-400 tracking-[0.25em]">
+                            DEV — 2024 — ID — 024
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </div>
